@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#14213d">
 <title>Welcome · Amanthos Living Zurich Airport</title>
 <style>
 :root{
@@ -249,6 +253,14 @@ for (let k = 0; k < 26; k++) {
   s.style.animationDelay = (-(k * 3.7 % 30)) + 's';
   stars.appendChild(s);
 }
+
+// one tap/click anywhere -> browser fullscreen (hides the toolbar)
+document.addEventListener('pointerdown', () => {
+  const el = document.documentElement;
+  if (document.fullscreenElement || document.webkitFullscreenElement) return;
+  if (el.requestFullscreen) { el.requestFullscreen().catch(() => {}); }
+  else if (el.webkitRequestFullscreen) { el.webkitRequestFullscreen(); }
+}, { passive: true });
 
 // signage hygiene: reload nightly at ~04:30 to pick up updates
 (function(){
