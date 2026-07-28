@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex">
-<title>Welcome · Amanthos Living Zürich Airport</title>
+<title>Welcome · Amanthos Living Zurich Airport</title>
 <style>
 :root{
   --navy:#14213d; --navy2:#1c2c4f; --gold:#b8963e; --gold-light:#d4b26a;
@@ -45,9 +45,9 @@ header{display:flex;justify-content:space-between;align-items:center;padding:3.2
 .loc strong{color:var(--white);letter-spacing:.3em}
 
 main{flex:1;position:relative}
-.slide{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transform:scale(.985);transition:opacity 1.6s ease,transform 1.6s ease,visibility 0s 1.6s}
+.slide{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transform:scale(.985);transition:opacity 1.6s ease,transform 1.6s ease,visibility 0s 1.6s;padding-right:16vw;padding-left:4vw}
 .slide.on{opacity:1;visibility:visible;transform:scale(1);transition:opacity 1.6s ease,transform 1.6s ease}
-.inner{width:86vw;max-width:1680px;text-align:center}
+.inner{width:78vw;max-width:1560px;text-align:center}
 
 /* staged entrance inside active slide */
 .st{opacity:0;transform:translateY(3.5vh)}
@@ -58,34 +58,35 @@ main{flex:1;position:relative}
 @keyframes up{to{opacity:1;transform:none}}
 
 .kicker{font-family:Helvetica,Arial,sans-serif;font-size:2vh;letter-spacing:.42em;text-transform:uppercase;color:var(--gold);margin-bottom:3.4vh}
-h1{font-size:9.2vh;line-height:1.12;font-weight:400;letter-spacing:.01em}
+h1{font-size:9vh;line-height:1.12;font-weight:400;letter-spacing:.01em}
 h1 em{font-style:italic;color:var(--gold-light)}
-h2{font-size:6.8vh;line-height:1.15;font-weight:400;margin-bottom:1.2vh}
-.sub{font-family:Helvetica,Arial,sans-serif;font-size:2.7vh;line-height:1.65;color:#c9d3e6;max-width:62vw;margin:3vh auto 0}
+h2{font-size:6.6vh;line-height:1.15;font-weight:400;margin-bottom:1.2vh}
+h2 em{font-style:italic;color:var(--gold-light)}
+.sub{font-family:Helvetica,Arial,sans-serif;font-size:2.8vh;line-height:1.65;color:#c9d3e6;max-width:58vw;margin:3vh auto 0}
 .sub b{color:var(--white)}
-.en{font-family:Helvetica,Arial,sans-serif;font-size:2.1vh;line-height:1.6;color:var(--muted);max-width:60vw;margin:1.6vh auto 0}
+.small{font-family:Helvetica,Arial,sans-serif;font-size:2vh;line-height:1.6;color:var(--muted);max-width:56vw;margin:1.6vh auto 0}
 .rule{width:9vw;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:3.6vh auto}
 
 /* stat band (slide 2) */
-.stats{display:flex;justify-content:center;gap:3.2vw;margin-top:5.5vh}
-.stat{background:rgba(255,255,255,.045);border:1px solid rgba(184,150,62,.35);border-radius:1.8vh;padding:3.4vh 3vw;min-width:17vw}
+.stats{display:flex;justify-content:center;gap:2.6vw;margin-top:5.5vh}
+.stat{background:rgba(255,255,255,.045);border:1px solid rgba(184,150,62,.35);border-radius:1.8vh;padding:3.4vh 2.6vw;min-width:16vw}
 .stat b{display:block;font-size:5.4vh;color:var(--gold-light);font-family:Georgia,serif;font-weight:400}
-.stat span{display:block;font-family:Helvetica,Arial,sans-serif;font-size:1.85vh;letter-spacing:.14em;text-transform:uppercase;color:#c9d3e6;margin-top:1.4vh;line-height:1.5}
+.stat span{display:block;font-family:Helvetica,Arial,sans-serif;font-size:1.85vh;letter-spacing:.12em;text-transform:uppercase;color:#c9d3e6;margin-top:1.4vh;line-height:1.5}
 
 /* check-in slide */
-.checkin{display:flex;align-items:center;justify-content:center;gap:5vw;text-align:left}
+.checkin{display:flex;align-items:center;justify-content:center;gap:4.5vw;text-align:left}
 .qrbox{background:var(--white);border-radius:2.4vh;padding:2.6vh;box-shadow:0 3vh 9vh rgba(0,0,0,.45)}
-.qrbox img{width:30vh;height:30vh;display:block}
+.qrbox img{width:29vh;height:29vh;display:block}
 .qrcap{font-family:Helvetica,Arial,sans-serif;text-align:center;color:var(--navy);font-size:1.7vh;letter-spacing:.08em;margin-top:1.2vh;font-weight:700}
-.steps{max-width:46vw}
-.step{display:flex;gap:2vw;align-items:flex-start;margin:3.6vh 0}
+.steps{max-width:44vw}
+.step{display:flex;gap:1.8vw;align-items:flex-start;margin:3.6vh 0}
 .num{flex:none;width:6vh;height:6vh;border-radius:50%;background:var(--gold);color:var(--navy);font-family:Helvetica,Arial,sans-serif;font-weight:800;font-size:3vh;display:flex;align-items:center;justify-content:center}
 .step h3{font-family:Helvetica,Arial,sans-serif;font-size:2.9vh;font-weight:700;line-height:1.35}
 .step p{font-family:Helvetica,Arial,sans-serif;font-size:2vh;color:var(--muted);margin-top:.6vh;line-height:1.5}
 
 /* flexipass slide */
-.flexi{display:flex;align-items:center;justify-content:center;gap:6vw;text-align:left}
-.phone{flex:none;width:24vh;height:46vh;border-radius:5vh;border:.9vh solid #2c3d63;background:linear-gradient(170deg,#1d2c4e,#141f3a);position:relative;box-shadow:0 3vh 9vh rgba(0,0,0,.5)}
+.flexi{display:flex;align-items:center;justify-content:center;gap:5vw;text-align:left}
+.phone{flex:none;width:23vh;height:44vh;border-radius:5vh;border:.9vh solid #2c3d63;background:linear-gradient(170deg,#1d2c4e,#141f3a);position:relative;box-shadow:0 3vh 9vh rgba(0,0,0,.5)}
 .phone:before{content:"";position:absolute;top:2.2vh;left:50%;transform:translateX(-50%);width:7vh;height:1.2vh;border-radius:1vh;background:#2c3d63}
 .keyicon{position:absolute;top:44%;left:50%;transform:translate(-50%,-50%);width:11vh;height:11vh;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;animation:pulse 2.6s ease-in-out infinite}
 .keyicon svg{width:5.6vh;height:5.6vh;fill:var(--navy)}
@@ -99,6 +100,15 @@ h2{font-size:6.8vh;line-height:1.15;font-weight:400;margin-bottom:1.2vh}
 /* help slide */
 .bigphone{font-family:Helvetica,Arial,sans-serif;font-size:7vh;font-weight:800;letter-spacing:.04em;color:var(--white);margin-top:2.5vh}
 .always{font-family:Helvetica,Arial,sans-serif;font-size:2.1vh;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-top:2vh}
+
+/* ── persistent check-in QR dock ────────────────── */
+.qrdock{position:fixed;right:2.6vw;bottom:5.5vh;z-index:4;text-align:center;
+  background:var(--white);border-radius:2vh;padding:1.6vh 1.6vh 1.2vh;
+  box-shadow:0 2.5vh 7vh rgba(0,0,0,.5);animation:dockfloat 6s ease-in-out infinite}
+.qrdock img{width:16vh;height:16vh;display:block}
+.qrdock .cap{font-family:Helvetica,Arial,sans-serif;color:var(--navy);font-weight:800;font-size:1.55vh;letter-spacing:.12em;text-transform:uppercase;margin-top:1vh}
+.qrdock .cap span{display:block;font-weight:600;color:#5a6b80;font-size:1.25vh;letter-spacing:.06em;margin-top:.4vh;text-transform:none}
+@keyframes dockfloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-1vh)}}
 
 /* progress dots */
 footer{display:flex;justify-content:center;align-items:center;gap:1.6vh;padding:0 0 3.4vh}
@@ -115,7 +125,7 @@ footer{display:flex;justify-content:center;align-items:center;gap:1.6vh;padding:
 <div class="frame">
   <header>
     <div class="wordmark">amanthos <b>living</b></div>
-    <div class="loc"><strong>Amanthos Living Zürich Airport</strong><br>Glattbrugg · Switzerland</div>
+    <div class="loc"><strong>Amanthos Living Zurich Airport</strong><br>Glattbrugg · Switzerland</div>
   </header>
 
   <main>
@@ -123,23 +133,23 @@ footer{display:flex;justify-content:center;align-items:center;gap:1.6vh;padding:
     <section class="slide" id="s1">
       <div class="inner">
         <div class="kicker st">Welcome · Willkommen · Bienvenue · Benvenuti</div>
-        <h1 class="st d1">Ankommen.<br><em>Zuhause sein.</em></h1>
+        <h1 class="st d1">Arrive.<br><em>Feel at home.</em></h1>
         <div class="rule st d2"></div>
-        <p class="sub st d3">Schön, sind Sie da. Ihr Apartment ist bereit — <b>checken Sie in einer Minute selbst ein.</b></p>
-        <p class="en st d4">Great to have you here. Your apartment is ready — check yourself in within a minute.</p>
+        <p class="sub st d3">Great to have you here. Your apartment is ready — <b>check yourself in within a minute.</b></p>
+        <p class="small st d4">No reception needed. Everything happens on your phone — around the clock, in your language.</p>
       </div>
     </section>
 
     <!-- 2 · PITCH -->
     <section class="slide" id="s2">
       <div class="inner">
-        <div class="kicker st">Serviced Apartments · Anders übernachten</div>
-        <h2 class="st d1">Mehr als ein Hotelzimmer:<br><em>Ihr Apartment auf Zeit.</em></h2>
-        <p class="en st d2">More than a hotel room — your own fully equipped apartment, minutes from the runway.</p>
+        <div class="kicker st">Serviced Apartments · A better way to stay</div>
+        <h2 class="st d1">More than a hotel room:<br><em>your own apartment.</em></h2>
+        <p class="small st d2">Fully equipped, quiet and private — minutes from the runway.</p>
         <div class="stats">
-          <div class="stat st d2"><b>600 m</b><span>zum Flughafen Zürich<br>to Zurich Airport</span></div>
-          <div class="stat st d3"><b>24 / 7</b><span>Digitaler Check-in<br>rund um die Uhr</span></div>
-          <div class="stat st d4"><b>100 %</b><span>Voll ausgestattet — Küche,<br>Arbeitsplatz, eigenes Bad</span></div>
+          <div class="stat st d2"><b>600 m</b><span>to Zurich Airport —<br>early flight? No stress.</span></div>
+          <div class="stat st d3"><b>24 / 7</b><span>digital check-in,<br>whenever you land</span></div>
+          <div class="stat st d4"><b>100 %</b><span>equipped — kitchen,<br>workspace, your own bath</span></div>
         </div>
       </div>
     </section>
@@ -147,16 +157,16 @@ footer{display:flex;justify-content:center;align-items:center;gap:1.6vh;padding:
     <!-- 3 · SELF CHECK-IN -->
     <section class="slide" id="s3">
       <div class="inner">
-        <div class="kicker st">Self Check-in · Keine Rezeption nötig</div>
+        <div class="kicker st">Self check-in · No reception needed</div>
         <div class="checkin" style="margin-top:4vh">
           <div class="qrbox st d1">
             <img src="qr-checkin-gbal.png" alt="Check-in QR">
             <div class="qrcap">checkin.amanthosliving.com</div>
           </div>
           <div class="steps">
-            <div class="step st d2"><div class="num">1</div><div><h3>Code mit der Handykamera scannen</h3><p>Scan the code with your phone camera — no app needed, in your language.</p></div></div>
-            <div class="step st d3"><div class="num">2</div><div><h3>Buchung bestätigen &amp; Ausweis fotografieren</h3><p>Confirm your booking &amp; photograph your ID (passport or ID card).</p></div></div>
-            <div class="step st d4"><div class="num">3</div><div><h3>Türcode erhalten — willkommen!</h3><p>Get your door code on screen or by SMS. Welcome home!</p></div></div>
+            <div class="step st d2"><div class="num">1</div><div><h3>Scan the code with your phone camera</h3><p>No app needed — it opens our secure check-in page, in your language.</p></div></div>
+            <div class="step st d3"><div class="num">2</div><div><h3>Confirm your booking &amp; photograph your ID</h3><p>Passport or ID card — so we can confirm it's really you.</p></div></div>
+            <div class="step st d4"><div class="num">3</div><div><h3>Get your door code — welcome!</h3><p>Right on your screen or by SMS. Welcome home.</p></div></div>
           </div>
         </div>
       </div>
@@ -165,17 +175,17 @@ footer{display:flex;justify-content:center;align-items:center;gap:1.6vh;padding:
     <!-- 4 · FLEXIPASS -->
     <section class="slide" id="s4">
       <div class="inner">
-        <div class="kicker st">Flexipass · Digitaler Schlüssel</div>
+        <div class="kicker st">Flexipass · Your digital key</div>
         <div class="flexi" style="margin-top:3vh">
           <div class="phone st d1">
             <span class="ring"></span><span class="ring r2"></span>
             <div class="keyicon"><svg viewBox="0 0 24 24"><path d="M12.65 10A6 6 0 1 0 7 16a6 6 0 0 0 5.65-4H17v4h4v-4h2v-2H12.65zM7 14a2 2 0 1 1 0-4 2 2 0 0 1 0 4z"/></svg></div>
             <div class="unlocktxt">TAP · OPEN</div>
           </div>
-          <div style="max-width:48vw;text-align:left">
-            <h2 class="st d2">Ihr Handy ist<br><em>Ihr Schlüssel.</em></h2>
-            <p class="sub st d3" style="margin-left:0;max-width:none">Nach dem Check-in erhalten Sie Ihren <b>Flexipass</b> — den digitalen Schlüssel, direkt aufs Handy. Link öffnen, <b>«Öffnen» tippen</b>, und Eingangstür wie Apartment entriegeln sich. Kein Schlüssel, keine Karte, kein Warten.</p>
-            <p class="en st d4" style="margin-left:0;max-width:none">After check-in you receive your <b>Flexipass</b> — your digital key, straight to your phone. Open the link, tap “unlock”, and both the entrance and your apartment door open. No key, no card, no waiting. It stays valid for your entire stay.</p>
+          <div style="max-width:44vw;text-align:left">
+            <h2 class="st d2">Your phone is<br><em>your key.</em></h2>
+            <p class="sub st d3" style="margin-left:0;max-width:none">After check-in you receive your <b>Flexipass</b> — your digital key, sent straight to your phone. Open the link, <b>tap “unlock”</b>, and both the entrance and your apartment door open.</p>
+            <p class="small st d4" style="margin-left:0;max-width:none">No key, no card, no waiting — your Flexipass stays valid for your entire stay. Tip: keep the link on your home screen.</p>
           </div>
         </div>
       </div>
@@ -184,19 +194,26 @@ footer{display:flex;justify-content:center;align-items:center;gap:1.6vh;padding:
     <!-- 5 · HELP -->
     <section class="slide" id="s5">
       <div class="inner">
-        <div class="kicker st">Wir sind für Sie da · We're here for you</div>
-        <h2 class="st d1">Fragen? <em>Ein Anruf genügt.</em></h2>
-        <p class="sub st d2">Probleme beim Scannen, Check-in oder mit der Tür?<br>Trouble scanning, checking in or opening your door?</p>
+        <div class="kicker st">We're here for you · Around the clock</div>
+        <h2 class="st d1">Questions? <em>Just call us.</em></h2>
+        <p class="sub st d2">Trouble scanning, checking in or opening your door?<br>We answer any time — day and night.</p>
         <div class="bigphone st d3">+41 43 217 86 94</div>
-        <div class="always st d4">rund um die Uhr erreichbar · available around the clock</div>
+        <div class="always st d4">available around the clock</div>
         <div class="rule st d5"></div>
-        <p class="en st d5">Wir wünschen Ihnen einen wunderbaren Aufenthalt. — We wish you a wonderful stay.<br>Ihr Amanthos-Living-Team</p>
+        <p class="small st d5">We wish you a wonderful stay. — Your Amanthos Living team</p>
       </div>
     </section>
   </main>
 
   <footer id="dots"></footer>
 </div>
+
+<!-- persistent check-in QR — always visible on every slide -->
+<div class="qrdock">
+  <img src="qr-checkin-gbal.png" alt="Check-in QR">
+  <div class="cap">Scan to check in<span>checkin.amanthosliving.com</span></div>
+</div>
+
 <div class="pbar" id="pbar"></div>
 
 <script>
