@@ -223,7 +223,7 @@ footer{display:flex;justify-content:center;align-items:center;gap:1.6vh;padding:
 <script>
 // slide rotation — kiosk loop
 const SLIDES = ['s1','s2','s3','s4','s5'];
-const DUR = [12000, 14000, 20000, 18000, 12000]; // ms per slide
+const DUR = [20000, 25000, 35000, 30000, 20000]; // ms per slide
 let i = 0, t0 = Date.now();
 const dots = document.getElementById('dots');
 SLIDES.forEach(() => { const d = document.createElement('div'); d.className = 'dot'; dots.appendChild(d); });
