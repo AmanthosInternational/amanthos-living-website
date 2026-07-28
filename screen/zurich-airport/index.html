@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Welcome · Amanthos Living Zürich Airport</title>
+<style>
+:root{
+  --navy:#14213d; --navy2:#1c2c4f; --gold:#b8963e; --gold-light:#d4b26a;
+  --cream:#f6f2ea; --white:#ffffff; --muted:#8fa0bd;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;overflow:hidden;cursor:none;background:var(--navy)}
+body{font-family:Georgia,'Times New Roman',serif;color:var(--white);-webkit-font-smoothing:antialiased}
+
+/* ── ambient background ─────────────────────────── */
+.bg{position:fixed;inset:0;background:
+  radial-gradient(120vmax 120vmax at 15% 110%, #223458 0%, transparent 50%),
+  linear-gradient(160deg,var(--navy) 0%,var(--navy2) 55%,#101a30 100%)}
+.blob{position:fixed;border-radius:50%;filter:blur(90px);opacity:.5;will-change:transform}
+.blob.b1{width:60vmax;height:60vmax;left:-20vmax;top:-25vmax;background:radial-gradient(circle,#24365e,transparent 65%);animation:drift1 46s ease-in-out infinite alternate}
+.blob.b2{width:52vmax;height:52vmax;right:-18vmax;bottom:-24vmax;background:radial-gradient(circle,rgba(184,150,62,.30),transparent 65%);animation:drift2 58s ease-in-out infinite alternate}
+.blob.b3{width:34vmax;height:34vmax;left:34vw;top:50vh;background:radial-gradient(circle,rgba(84,110,168,.24),transparent 65%);animation:drift3 39s ease-in-out infinite alternate}
+@keyframes drift1{to{transform:translate(9vmax,7vmax) scale(1.12)}}
+@keyframes drift2{to{transform:translate(-8vmax,-6vmax) scale(1.08)}}
+@keyframes drift3{to{transform:translate(-6vmax,-9vmax) scale(.92)}}
+
+/* fine gold particles */
+.stars{position:fixed;inset:0;overflow:hidden;pointer-events:none}
+.star{position:absolute;bottom:-2vh;border-radius:50%;background:var(--gold-light);opacity:0;animation:rise linear infinite}
+@keyframes rise{
+  0%{transform:translateY(0);opacity:0}
+  12%{opacity:.55}
+  88%{opacity:.35}
+  100%{transform:translateY(-108vh);opacity:0}
+}
+
+/* ── frame ──────────────────────────────────────── */
+.frame{position:fixed;inset:0;display:flex;flex-direction:column;z-index:2}
+header{display:flex;justify-content:space-between;align-items:center;padding:3.2vh 4.5vw 0}
+.wordmark{font-size:3.4vh;letter-spacing:.04em;color:var(--white)}
+.wordmark b{color:var(--gold);font-weight:700}
+.loc{font-family:Helvetica,Arial,sans-serif;font-size:1.7vh;letter-spacing:.34em;text-transform:uppercase;color:var(--muted);text-align:right;line-height:1.8}
+.loc strong{color:var(--white);letter-spacing:.3em}
+
+main{flex:1;position:relative}
+.slide{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transform:scale(.985);transition:opacity 1.6s ease,transform 1.6s ease,visibility 0s 1.6s}
+.slide.on{opacity:1;visibility:visible;transform:scale(1);transition:opacity 1.6s ease,transform 1.6s ease}
+.inner{width:86vw;max-width:1680px;text-align:center}
+
+/* staged entrance inside active slide */
+.st{opacity:0;transform:translateY(3.5vh)}
+.on .st{animation:up 1.4s cubic-bezier(.2,.7,.2,1) forwards}
+.on .st.d1{animation-delay:.25s}.on .st.d2{animation-delay:.75s}
+.on .st.d3{animation-delay:1.25s}.on .st.d4{animation-delay:1.75s}
+.on .st.d5{animation-delay:2.35s}
+@keyframes up{to{opacity:1;transform:none}}
+
+.kicker{font-family:Helvetica,Arial,sans-serif;font-size:2vh;letter-spacing:.42em;text-transform:uppercase;color:var(--gold);margin-bottom:3.4vh}
+h1{font-size:9.2vh;line-height:1.12;font-weight:400;letter-spacing:.01em}
+h1 em{font-style:italic;color:var(--gold-light)}
+h2{font-size:6.8vh;line-height:1.15;font-weight:400;margin-bottom:1.2vh}
+.sub{font-family:Helvetica,Arial,sans-serif;font-size:2.7vh;line-height:1.65;color:#c9d3e6;max-width:62vw;margin:3vh auto 0}
+.sub b{color:var(--white)}
+.en{font-family:Helvetica,Arial,sans-serif;font-size:2.1vh;line-height:1.6;color:var(--muted);max-width:60vw;margin:1.6vh auto 0}
+.rule{width:9vw;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:3.6vh auto}
+
+/* stat band (slide 2) */
+.stats{display:flex;justify-content:center;gap:3.2vw;margin-top:5.5vh}
+.stat{background:rgba(255,255,255,.045);border:1px solid rgba(184,150,62,.35);border-radius:1.8vh;padding:3.4vh 3vw;min-width:17vw}
+.stat b{display:block;font-size:5.4vh;color:var(--gold-light);font-family:Georgia,serif;font-weight:400}
+.stat span{display:block;font-family:Helvetica,Arial,sans-serif;font-size:1.85vh;letter-spacing:.14em;text-transform:uppercase;color:#c9d3e6;margin-top:1.4vh;line-height:1.5}
+
+/* check-in slide */
+.checkin{display:flex;align-items:center;justify-content:center;gap:5vw;text-align:left}
+.qrbox{background:var(--white);border-radius:2.4vh;padding:2.6vh;box-shadow:0 3vh 9vh rgba(0,0,0,.45)}
+.qrbox img{width:30vh;height:30vh;display:block}
+.qrcap{font-family:Helvetica,Arial,sans-serif;text-align:center;color:var(--navy);font-size:1.7vh;letter-spacing:.08em;margin-top:1.2vh;font-weight:700}
+.steps{max-width:46vw}
+.step{display:flex;gap:2vw;align-items:flex-start;margin:3.6vh 0}
+.num{flex:none;width:6vh;height:6vh;border-radius:50%;background:var(--gold);color:var(--navy);font-family:Helvetica,Arial,sans-serif;font-weight:800;font-size:3vh;display:flex;align-items:center;justify-content:center}
+.step h3{font-family:Helvetica,Arial,sans-serif;font-size:2.9vh;font-weight:700;line-height:1.35}
+.step p{font-family:Helvetica,Arial,sans-serif;font-size:2vh;color:var(--muted);margin-top:.6vh;line-height:1.5}
+
+/* flexipass slide */
+.flexi{display:flex;align-items:center;justify-content:center;gap:6vw;text-align:left}
+.phone{flex:none;width:24vh;height:46vh;border-radius:5vh;border:.9vh solid #2c3d63;background:linear-gradient(170deg,#1d2c4e,#141f3a);position:relative;box-shadow:0 3vh 9vh rgba(0,0,0,.5)}
+.phone:before{content:"";position:absolute;top:2.2vh;left:50%;transform:translateX(-50%);width:7vh;height:1.2vh;border-radius:1vh;background:#2c3d63}
+.keyicon{position:absolute;top:44%;left:50%;transform:translate(-50%,-50%);width:11vh;height:11vh;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;animation:pulse 2.6s ease-in-out infinite}
+.keyicon svg{width:5.6vh;height:5.6vh;fill:var(--navy)}
+.ring{position:absolute;top:44%;left:50%;width:11vh;height:11vh;border-radius:50%;border:2px solid var(--gold-light);transform:translate(-50%,-50%);animation:ripple 2.6s ease-out infinite}
+.ring.r2{animation-delay:.9s}
+@keyframes pulse{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-50%) scale(1.07)}}
+@keyframes ripple{0%{opacity:.9;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-50%) scale(2.6)}}
+.unlocktxt{position:absolute;bottom:5vh;left:0;right:0;text-align:center;font-family:Helvetica,Arial,sans-serif;font-size:1.9vh;letter-spacing:.22em;color:var(--gold-light);animation:blinksoft 2.6s ease-in-out infinite}
+@keyframes blinksoft{0%,100%{opacity:.5}50%{opacity:1}}
+
+/* help slide */
+.bigphone{font-family:Helvetica,Arial,sans-serif;font-size:7vh;font-weight:800;letter-spacing:.04em;color:var(--white);margin-top:2.5vh}
+.always{font-family:Helvetica,Arial,sans-serif;font-size:2.1vh;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-top:2vh}
+
+/* progress dots */
+footer{display:flex;justify-content:center;align-items:center;gap:1.6vh;padding:0 0 3.4vh}
+.dot{width:1.15vh;height:1.15vh;border-radius:50%;background:rgba(255,255,255,.22);transition:.6s}
+.dot.on{background:var(--gold);transform:scale(1.35)}
+.pbar{position:fixed;left:0;bottom:0;height:.55vh;background:linear-gradient(90deg,var(--gold),var(--gold-light));width:0%;z-index:3}
+</style>
+</head>
+<body>
+<div class="bg"></div>
+<div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+<div class="stars" id="stars"></div>
+
+<div class="frame">
+  <header>
+    <div class="wordmark">amanthos <b>living</b></div>
+    <div class="loc"><strong>Amanthos Living Zürich Airport</strong><br>Glattbrugg · Switzerland</div>
+  </header>
+
+  <main>
+    <!-- 1 · WELCOME -->
+    <section class="slide" id="s1">
+      <div class="inner">
+        <div class="kicker st">Welcome · Willkommen · Bienvenue · Benvenuti</div>
+        <h1 class="st d1">Ankommen.<br><em>Zuhause sein.</em></h1>
+        <div class="rule st d2"></div>
+        <p class="sub st d3">Schön, sind Sie da. Ihr Apartment ist bereit — <b>checken Sie in einer Minute selbst ein.</b></p>
+        <p class="en st d4">Great to have you here. Your apartment is ready — check yourself in within a minute.</p>
+      </div>
+    </section>
+
+    <!-- 2 · PITCH -->
+    <section class="slide" id="s2">
+      <div class="inner">
+        <div class="kicker st">Serviced Apartments · Anders übernachten</div>
+        <h2 class="st d1">Mehr als ein Hotelzimmer:<br><em>Ihr Apartment auf Zeit.</em></h2>
+        <p class="en st d2">More than a hotel room — your own fully equipped apartment, minutes from the runway.</p>
+        <div class="stats">
+          <div class="stat st d2"><b>600 m</b><span>zum Flughafen Zürich<br>to Zurich Airport</span></div>
+          <div class="stat st d3"><b>24 / 7</b><span>Digitaler Check-in<br>rund um die Uhr</span></div>
+          <div class="stat st d4"><b>100 %</b><span>Voll ausgestattet — Küche,<br>Arbeitsplatz, eigenes Bad</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3 · SELF CHECK-IN -->
+    <section class="slide" id="s3">
+      <div class="inner">
+        <div class="kicker st">Self Check-in · Keine Rezeption nötig</div>
+        <div class="checkin" style="margin-top:4vh">
+          <div class="qrbox st d1">
+            <img src="qr-checkin-gbal.png" alt="Check-in QR">
+            <div class="qrcap">checkin.amanthosliving.com</div>
+          </div>
+          <div class="steps">
+            <div class="step st d2"><div class="num">1</div><div><h3>Code mit der Handykamera scannen</h3><p>Scan the code with your phone camera — no app needed, in your language.</p></div></div>
+            <div class="step st d3"><div class="num">2</div><div><h3>Buchung bestätigen &amp; Ausweis fotografieren</h3><p>Confirm your booking &amp; photograph your ID (passport or ID card).</p></div></div>
+            <div class="step st d4"><div class="num">3</div><div><h3>Türcode erhalten — willkommen!</h3><p>Get your door code on screen or by SMS. Welcome home!</p></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4 · FLEXIPASS -->
+    <section class="slide" id="s4">
+      <div class="inner">
+        <div class="kicker st">Flexipass · Digitaler Schlüssel</div>
+        <div class="flexi" style="margin-top:3vh">
+          <div class="phone st d1">
+            <span class="ring"></span><span class="ring r2"></span>
+            <div class="keyicon"><svg viewBox="0 0 24 24"><path d="M12.65 10A6 6 0 1 0 7 16a6 6 0 0 0 5.65-4H17v4h4v-4h2v-2H12.65zM7 14a2 2 0 1 1 0-4 2 2 0 0 1 0 4z"/></svg></div>
+            <div class="unlocktxt">TAP · OPEN</div>
+          </div>
+          <div style="max-width:48vw;text-align:left">
+            <h2 class="st d2">Ihr Handy ist<br><em>Ihr Schlüssel.</em></h2>
+            <p class="sub st d3" style="margin-left:0;max-width:none">Nach dem Check-in erhalten Sie Ihren <b>Flexipass</b> — den digitalen Schlüssel, direkt aufs Handy. Link öffnen, <b>«Öffnen» tippen</b>, und Eingangstür wie Apartment entriegeln sich. Kein Schlüssel, keine Karte, kein Warten.</p>
+            <p class="en st d4" style="margin-left:0;max-width:none">After check-in you receive your <b>Flexipass</b> — your digital key, straight to your phone. Open the link, tap “unlock”, and both the entrance and your apartment door open. No key, no card, no waiting. It stays valid for your entire stay.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5 · HELP -->
+    <section class="slide" id="s5">
+      <div class="inner">
+        <div class="kicker st">Wir sind für Sie da · We're here for you</div>
+        <h2 class="st d1">Fragen? <em>Ein Anruf genügt.</em></h2>
+        <p class="sub st d2">Probleme beim Scannen, Check-in oder mit der Tür?<br>Trouble scanning, checking in or opening your door?</p>
+        <div class="bigphone st d3">+41 43 217 86 94</div>
+        <div class="always st d4">rund um die Uhr erreichbar · available around the clock</div>
+        <div class="rule st d5"></div>
+        <p class="en st d5">Wir wünschen Ihnen einen wunderbaren Aufenthalt. — We wish you a wonderful stay.<br>Ihr Amanthos-Living-Team</p>
+      </div>
+    </section>
+  </main>
+
+  <footer id="dots"></footer>
+</div>
+<div class="pbar" id="pbar"></div>
+
+<script>
+// slide rotation — kiosk loop
+const SLIDES = ['s1','s2','s3','s4','s5'];
+const DUR = [12000, 14000, 20000, 18000, 12000]; // ms per slide
+let i = 0, t0 = Date.now();
+const dots = document.getElementById('dots');
+SLIDES.forEach(() => { const d = document.createElement('div'); d.className = 'dot'; dots.appendChild(d); });
+
+function show(n){
+  SLIDES.forEach((id, k) => document.getElementById(id).classList.toggle('on', k === n));
+  document.querySelectorAll('.dot').forEach((d, k) => d.classList.toggle('on', k === n));
+  t0 = Date.now();
+}
+function tick(){
+  const el = document.getElementById('pbar');
+  el.style.width = Math.min(100, (Date.now() - t0) / DUR[i] * 100) + '%';
+  if (Date.now() - t0 >= DUR[i]) { i = (i + 1) % SLIDES.length; show(i); }
+  requestAnimationFrame(tick);
+}
+show(0); tick();
+
+// gold particles
+const stars = document.getElementById('stars');
+for (let k = 0; k < 26; k++) {
+  const s = document.createElement('span');
+  s.className = 'star';
+  const size = 2 + (k % 4) * 1.4;
+  s.style.width = s.style.height = size + 'px';
+  s.style.left = (k * 137.5 % 100) + 'vw';
+  s.style.animationDuration = (16 + (k * 7 % 22)) + 's';
+  s.style.animationDelay = (-(k * 3.7 % 30)) + 's';
+  stars.appendChild(s);
+}
+
+// signage hygiene: reload nightly at ~04:30 to pick up updates
+(function(){
+  const now = new Date();
+  const next = new Date(now); next.setHours(4,30,0,0);
+  if (next <= now) next.setDate(next.getDate() + 1);
+  setTimeout(() => location.reload(true), next - now);
+})();
+</script>
+</body>
+</html>
