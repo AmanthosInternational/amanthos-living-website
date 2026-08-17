@@ -120,6 +120,11 @@ footer{display:flex;justify-content:center;align-items:center;gap:1.6vh;padding:
 .dot.on{background:var(--gold);transform:scale(1.35)}
 .pbar{position:fixed;left:0;bottom:0;height:.55vh;background:linear-gradient(90deg,var(--gold),var(--gold-light));width:0%;z-index:3}
 </style>
+  <!-- Sentry: error + performance monitoring. Config in js/sentry-init.js -->
+  <script src="https://browser.sentry-cdn.com/10.68.0/bundle.tracing.replay.min.js"
+          integrity="sha384-XaWdQ+280/sFZD3fFzNgO2vpH3FjdOqMQiQBMoyG5itU99/FvV8v4lrmQNIF4Mau"
+          crossorigin="anonymous" defer></script>
+  <script src="../../js/sentry-init.js" defer></script>
 </head>
 <body>
 <div class="bg"></div>
