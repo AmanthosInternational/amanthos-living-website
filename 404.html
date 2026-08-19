@@ -44,6 +44,23 @@
     a:hover { background: #745812; }
     a:focus-visible { outline: 2px solid #8B6914; outline-offset: 2px; }
   </style>
+  <!-- Sentry: error + performance monitoring. Config in js/sentry-init.js -->
+  <script src="https://browser.sentry-cdn.com/10.68.0/bundle.tracing.replay.min.js"
+          integrity="sha384-XaWdQ+280/sFZD3fFzNgO2vpH3FjdOqMQiQBMoyG5itU99/FvV8v4lrmQNIF4Mau"
+          crossorigin="anonymous" defer></script>
+  <script src="./js/sentry-init.js" defer></script>
+  <!-- Privacy-friendly analytics by Plausible -->
+  <script async src="https://plausible.io/js/pa-mc5nRTWoiejRsYUjlX_QM.js"></script>
+  <script>
+    window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+    plausible.init()
+  </script>
+  <script>
+    // Plausible zaehlt Fehlerseiten nicht von allein, deshalb hier von Hand.
+    // Nur der Pfad, nie die volle URL: Query-Parameter koennen Namen oder
+    // Buchungsnummern enthalten.
+    plausible('404', { props: { path: location.pathname } });
+  </script>
 </head>
 <body>
   <!-- Google Tag Manager (noscript) -->
