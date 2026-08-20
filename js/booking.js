@@ -474,6 +474,7 @@ function buildLocationDropdown() {
 
 function selectLocation(val) {
   if (locationInput) locationInput.value = val;
+  if (typeof clampGuestsToMax === 'function') clampGuestsToMax();
   if (locationLabel) {
     locationLabel.textContent = PROPERTIES[val] ? PROPERTIES[val].name : val;
     locationLabel.classList.add('has-value');
@@ -590,19 +591,41 @@ function buildGuestsDropdown() {
   });
 }
 
+// Max. Belegung je Liegenschaft (Apaleo). Immer mind. 1 Erwachsener;
+// Kinder = Max - Erwachsene; Total <= Max.
+// GBAL (Zurich Airport) = 3, NYAL (Nyon) = 4, GNBE (Solothurn/Grenchen) = 4 (zu bestaetigen).
+var MAX_GUESTS = { GBAL: 3, GNBE: 4, NYAL: 4 };
+function getMaxGuests() {
+  var pid = locationInput ? locationInput.value : '';
+  return MAX_GUESTS[pid] || 4;
+}
+function clampGuestsToMax() {
+  var max = getMaxGuests();
+  var adults = parseInt(guestInput.value) || 1;
+  var children = parseInt(childInput.value) || 0;
+  if (adults < 1) adults = 1;
+  if (adults > max) adults = max;
+  if (adults + children > max) children = Math.max(0, max - adults);
+  guestInput.value = adults; childInput.value = children;
+  var a = document.getElementById('adultCount'); if (a) a.textContent = adults;
+  var c = document.getElementById('childCount'); if (c) c.textContent = children;
+  if (typeof updateGuestsLabel === 'function') updateGuestsLabel();
+}
 function updateGuestCount(type, dir) {
+  var max = getMaxGuests();
+  var adults = parseInt(guestInput.value) || 1;
+  var children = parseInt(childInput.value) || 0;
   if (type === 'adults') {
-    var val = parseInt(guestInput.value) || 1;
-    var newVal = Math.max(1, Math.min(6, val + dir));
-    guestInput.value = newVal;
+    var na = Math.max(1, Math.min(max, adults + dir));
+    if (na + children > max) na = Math.max(1, max - children);
+    guestInput.value = na;
     var el = document.getElementById('adultCount');
-    if (el) el.textContent = newVal;
+    if (el) el.textContent = na;
   } else {
-    var val2 = parseInt(childInput.value) || 0;
-    var newVal2 = Math.max(0, Math.min(4, val2 + dir));
-    childInput.value = newVal2;
+    var nc = Math.max(0, Math.min(max - adults, children + dir));
+    childInput.value = nc;
     var el2 = document.getElementById('childCount');
-    if (el2) el2.textContent = newVal2;
+    if (el2) el2.textContent = nc;
   }
   updateGuestsLabel();
 }
