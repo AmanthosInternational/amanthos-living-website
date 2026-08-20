@@ -353,16 +353,4 @@ document.body.style.overflow = '';
 });
 }
 }
-// Cookie Banner
-var cookieBanner = document.getElementById('cookieBanner');
-var cookieAccept = document.getElementById('cookieAccept');
-if (cookieBanner && !localStorage.getItem('cookies_accepted')) {
-cookieBanner.style.display = 'block';
-}
-if (cookieAccept) {
-cookieAccept.addEventListener('click', function () {
-localStorage.setItem('cookies_accepted', '1');
-cookieBanner.style.display = 'none';
-});
-}
 })();

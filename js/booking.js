@@ -41,11 +41,66 @@ function plausibleEvent(name, data) {
   } catch (e) { /* Analytics darf die Buchungsstrecke nie brechen */ }
 }
 
+// GA4: dieselbe Event-Taxonomie, gemappt auf die GA4-E-Commerce-Standardnamen,
+// mit einer abschliessenden Parameter-Whitelist je Ereignis. Draussen bleiben
+// Namen, E-Mail, Telefon, Reisedaten (check_in/check_out/children), promo_code
+// und error_message. Einzige zulaessige Kennung ist transaction_id. Umsatz zaehlt
+// genau einmal, am purchase -- payment_completed traegt bewusst keinen Betrag.
+function ga4Event(name, data) {
+  try {
+    if (typeof window.gtag !== 'function') return;
+    var d = data || {};
+    var evt = name;
+    var p = {};
+    function put(key, value) { if (value !== undefined && value !== null) p[key] = value; }
+    if (name === 'search_availability') {
+      put('location', d.location);
+      put('guests', d.guests);
+    } else if (name === 'view_offers') {
+      evt = 'view_item_list';
+      put('item_list_name', d.location);
+      put('offer_count', d.offer_count);
+    } else if (name === 'select_offer') {
+      evt = 'select_item';
+      put('currency', d.currency || 'CHF');
+      p.items = [{
+        item_name: d.rate_name || '',
+        item_category: d.unit_type || '',
+        item_variant: d.category || '',
+        price: d.total_price || 0,
+        quantity: 1
+      }];
+    } else if (name === 'begin_checkout') {
+      put('currency', 'CHF');
+      put('value', (d.total_price || 0) + (d.extras_total || 0));
+      p.items = [{ item_name: d.rate_name || '', quantity: 1 }];
+    } else if (name === 'submit_booking') {
+      put('location', d.location);
+      put('rate_name', d.rate_name);
+    } else if (name === 'booking_confirmed') {
+      evt = 'purchase';
+      put('transaction_id', d.booking_id || '');
+      put('value', d.total_price);
+      put('currency', d.currency || 'CHF');
+    } else if (name === 'payment_initiated' || name === 'payment_completed' ||
+               name === 'booking_cancelled_no_payment') {
+      put('transaction_id', d.booking_id || '');
+    } else if (name === 'booking_error') {
+      put('step', d.step);
+    } else if (name === 'promo_code_applied') {
+      p = {};
+    } else {
+      return; // nicht auf der Whitelist: nichts senden
+    }
+    window.gtag('event', evt, p);
+  } catch (e) { /* Analytics darf die Buchungsstrecke nie brechen */ }
+}
+
 function gtmPush(event, data) {
   try { plausibleEvent(event, data); } catch (e) { /* nie die Buchung brechen */ }
-  var obj = { event: event };
-  if (data) { var k = Object.keys(data); for (var i = 0; i < k.length; i++) { obj[k[i]] = data[k[i]]; } }
-  window.dataLayer.push(obj);
+  try { ga4Event(event, data); } catch (e) { /* nie die Buchung brechen */ }
+  // dataLayer.push entfernt: gtag.js nutzt denselben dataLayer, ein {event:...}-Push
+  // wuerde Ereignisse doppelt ausloesen (GTM ist weg, der Transport ist tot).
 }
 
 // Promo code configuration
