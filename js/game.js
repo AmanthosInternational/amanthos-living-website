@@ -803,7 +803,7 @@
         var redeemBtn = document.createElement('button');
         redeemBtn.className = 'redeem-btn';
         redeemBtn.textContent = 'Copy & Redeem';
-        redeemBtn.style.cssText = 'margin-top:.5rem;padding:.4rem 1rem;background:var(--color-accent,#8B6914);color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:.8rem;font-weight:600;';
+        redeemBtn.style.cssText = 'margin-top:.5rem;padding:.4rem 1rem;background:var(--color-accent,#886714);color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:.8rem;font-weight:600;';
         redeemBtn.addEventListener('click', function () {
           if (isCodeRedeemed(code)) return;
           // Copy to clipboard

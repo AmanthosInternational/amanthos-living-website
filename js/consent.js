@@ -192,12 +192,12 @@
       'font-family:inherit;font-size:14px;line-height:1.5;box-shadow:0 -2px 12px rgba(0,0,0,.25)}' +
       '.am-consent-inner{max-width:1100px;margin:0 auto;padding:16px 20px;display:flex;flex-wrap:wrap;' +
       'gap:12px 20px;align-items:center;justify-content:space-between}' +
-      '.am-consent-text{margin:0;flex:1 1 320px}' +
+      '.am-consent-text{margin:0;flex:1 1 320px;color:#f5f5f5}' +
       '.am-consent-actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center}' +
       '.am-consent-btn{font:inherit;font-weight:600;padding:10px 22px;min-width:130px;border:1px solid #f5f5f5;' +
       'border-radius:4px;background:#f5f5f5;color:#1c1c1c;cursor:pointer}' +
       '.am-consent-btn:hover{opacity:.85}' +
-      '.am-consent-btn:focus-visible{outline:2px solid #8B6914;outline-offset:2px}' +
+      '.am-consent-btn:focus-visible{outline:2px solid #886714;outline-offset:2px}' +
       '.am-consent-link{color:#f5f5f5;text-decoration:underline;white-space:nowrap}';
     var el = document.createElement('style');
     el.id = STYLE_ID;
