@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- Google Tag Manager -->
-  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-  })(window,document,'script','dataLayer','GTM-5JL7R64S');</script>
-  <!-- End Google Tag Manager -->
+  <!-- Consent Mode v2 defaults + cookie banner (must run before gtag) -->
+  <script src="./js/consent.js"></script>
+  <!-- Google Analytics 4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-8LPLG0BPJ6"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-8LPLG0BPJ6');
+  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Amanthos Living | Serviced Apartments in Switzerland</title>
@@ -190,10 +193,6 @@
   </script>
 </head>
 <body>
-  <!-- Google Tag Manager (noscript) -->
-  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5JL7R64S"
-  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-  <!-- End Google Tag Manager (noscript) -->
   <a href="#main" class="sr-only sr-only-focusable">Skip to main content</a>
 
   <!-- Navigation -->
@@ -1063,17 +1062,6 @@
         </span>
         <span class="urgency-text"><strong id="urgencyCount">11</strong> apartments booked in the last 24h &mdash; <strong>only <span id="urgencyLeft">6</span> left this week</strong></span>
         <a href="#booking" class="urgency-cta" data-scroll-to="bookingBar" data-i18n="urgency_banner.secure_yours">Secure Yours Now</a>
-      </div>
-    </div>
-  </div>
-
-  <!-- Cookie Banner -->
-  <div id="cookieBanner" class="cookie-banner" style="display:none" role="dialog" aria-label="Cookie consent">
-    <div class="cookie-banner-inner">
-      <p data-i18n="cookies.text">We use essential cookies for functionality and localStorage for your language preference. No tracking cookies.</p>
-      <div class="cookie-actions">
-        <button class="btn btn-accent cookie-accept" id="cookieAccept" data-i18n="cookies.accept">Got it</button>
-        <a href="./privacy/" class="cookie-link" data-i18n="cookies.learn_more">Privacy Policy</a>
       </div>
     </div>
   </div>
