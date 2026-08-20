@@ -143,6 +143,11 @@
       window['ga-disable-' + GA4_ID] = false;
       gtag('consent', 'update', { analytics_storage: 'granted' });
     }
+    // meta.js haengt an dieser Meldung: es laedt mit defer und damit NACH
+    // dem synchronen Erstlauf, bekommt spaetere Wechsel aber sofort mit.
+    try {
+      document.dispatchEvent(new CustomEvent('am:consent-change', { detail: { state: state } }));
+    } catch (e) { /* nie werfen */ }
   }
 
   // 1. Global-Default: Messen erlaubt, Ads-Signale immer aus.
