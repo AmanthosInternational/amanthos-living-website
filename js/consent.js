@@ -29,49 +29,49 @@
 
   var TEXTS = {
     en: {
-      text: 'We use Google Analytics to see how this site is used. Analytics cookies are only set once you agree. Everything else on this site works either way.',
+      text: 'We use Google Analytics to see how this site is used, and the Meta pixel to measure how our advertising performs. The Meta pixel only loads once you agree. Everything else on this site works either way.',
       accept: 'Accept',
       decline: 'Decline',
       more: 'Privacy Policy',
       label: 'Analytics consent'
     },
     de: {
-      text: 'Wir nutzen Google Analytics, um die Nutzung dieser Seite zu verstehen. Analyse-Cookies werden erst nach Ihrer Zustimmung gesetzt. Alles andere funktioniert in beiden F\u00E4llen.',
+      text: 'Wir nutzen Google Analytics, um die Nutzung dieser Seite zu verstehen, und den Meta-Pixel, um den Erfolg unserer Werbung zu messen. Der Meta-Pixel wird erst nach Ihrer Zustimmung geladen. Alles andere funktioniert in beiden F\u00E4llen.',
       accept: 'Akzeptieren',
       decline: 'Ablehnen',
       more: 'Datenschutz',
       label: 'Einwilligung in die Analyse'
     },
     fr: {
-      text: 'Nous utilisons Google Analytics pour comprendre l\u2019utilisation de ce site. Les cookies d\u2019analyse ne sont d\u00E9pos\u00E9s qu\u2019apr\u00E8s votre accord. Le reste du site fonctionne dans les deux cas.',
+      text: 'Nous utilisons Google Analytics pour comprendre l\u2019utilisation de ce site, et le pixel Meta pour mesurer la performance de nos publicit\xe9s. Le pixel Meta n\u2019est charg\xe9 qu\u2019apr\xe8s votre accord. Le reste du site fonctionne dans les deux cas.',
       accept: 'Accepter',
       decline: 'Refuser',
       more: 'Confidentialit\u00E9',
       label: 'Consentement \u00E0 la mesure d\u2019audience'
     },
     it: {
-      text: 'Utilizziamo Google Analytics per capire come viene usato questo sito. I cookie di analisi vengono impostati solo dopo il suo consenso. Tutto il resto funziona in entrambi i casi.',
+      text: 'Utilizziamo Google Analytics per capire come viene usato questo sito e il pixel Meta per misurare l\u2019efficacia della nostra pubblicit\xe0. Il pixel Meta viene caricato solo dopo il suo consenso. Tutto il resto funziona in entrambi i casi.',
       accept: 'Accetta',
       decline: 'Rifiuta',
       more: 'Privacy',
       label: 'Consenso alla misurazione'
     },
     ja: {
-      text: '\u3053\u306E\u30B5\u30A4\u30C8\u306E\u5229\u7528\u72B6\u6CC1\u3092\u628A\u63E1\u3059\u308B\u305F\u3081 Google Analytics \u3092\u4F7F\u7528\u3057\u307E\u3059\u3002\u5206\u6790\u7528 Cookie \u306F\u540C\u610F\u3055\u308C\u305F\u5834\u5408\u306B\u306E\u307F\u8A2D\u5B9A\u3055\u308C\u307E\u3059\u3002\u305D\u306E\u4ED6\u306E\u6A5F\u80FD\u306F\u3069\u3061\u3089\u3067\u3082\u5229\u7528\u3067\u304D\u307E\u3059\u3002',
+      text: '\u3053\u306e\u30b5\u30a4\u30c8\u306e\u5229\u7528\u72b6\u6cc1\u3092\u628a\u63e1\u3059\u308b\u305f\u3081 Google Analytics \u3092\u3001\u5e83\u544a\u306e\u52b9\u679c\u3092\u6e2c\u5b9a\u3059\u308b\u305f\u3081 Meta \u30d4\u30af\u30bb\u30eb\u3092\u4f7f\u7528\u3057\u307e\u3059\u3002Meta \u30d4\u30af\u30bb\u30eb\u306f\u540c\u610f\u3055\u308c\u305f\u5834\u5408\u306b\u306e\u307f\u8aad\u307f\u8fbc\u307e\u308c\u307e\u3059\u3002\u305d\u306e\u4ed6\u306e\u6a5f\u80fd\u306f\u3069\u3061\u3089\u3067\u3082\u5229\u7528\u3067\u304d\u307e\u3059\u3002',
       accept: '\u540C\u610F\u3059\u308B',
       decline: '\u540C\u610F\u3057\u306A\u3044',
       more: '\u30D7\u30E9\u30A4\u30D0\u30B7\u30FC',
       label: '\u5206\u6790\u3078\u306E\u540C\u610F'
     },
     ko: {
-      text: '\uC774 \uC0AC\uC774\uD2B8\uC758 \uC774\uC6A9 \uC0C1\uD669\uC744 \uD30C\uC545\uD558\uAE30 \uC704\uD574 Google Analytics\uB97C \uC0AC\uC6A9\uD569\uB2C8\uB2E4. \uBD84\uC11D \uCFE0\uD0A4\uB294 \uB3D9\uC758\uD558\uC2E0 \uACBD\uC6B0\uC5D0\uB9CC \uC124\uC815\uB429\uB2C8\uB2E4. \uADF8 \uC678 \uAE30\uB2A5\uC740 \uC5B4\uB290 \uCABD\uC774\uB4E0 \uC774\uC6A9\uD558\uC2E4 \uC218 \uC788\uC2B5\uB2C8\uB2E4.',
+      text: '\uc774 \uc0ac\uc774\ud2b8\uc758 \uc774\uc6a9 \uc0c1\ud669\uc744 \ud30c\uc545\ud558\uae30 \uc704\ud574 Google Analytics\ub97c, \uad11\uace0 \uc131\uacfc\ub97c \uce21\uc815\ud558\uae30 \uc704\ud574 Meta \ud53d\uc140\uc744 \uc0ac\uc6a9\ud569\ub2c8\ub2e4. Meta \ud53d\uc140\uc740 \ub3d9\uc758\ud558\uc2e0 \uacbd\uc6b0\uc5d0\ub9cc \ub85c\ub4dc\ub429\ub2c8\ub2e4. \uadf8 \uc678 \uae30\ub2a5\uc740 \uc5b4\ub290 \ucabd\uc774\ub4e0 \uc774\uc6a9\ud558\uc2e4 \uc218 \uc788\uc2b5\ub2c8\ub2e4.',
       accept: '\uB3D9\uC758',
       decline: '\uAC70\uBD80',
       more: '\uAC1C\uC778\uC815\uBCF4',
       label: '\uBD84\uC11D \uB3D9\uC758'
     },
     zh: {
-      text: '\u6211\u4EEC\u4F7F\u7528 Google Analytics \u4E86\u89E3\u672C\u7F51\u7AD9\u7684\u4F7F\u7528\u60C5\u51B5\u3002\u4EC5\u5728\u60A8\u540C\u610F\u540E\u624D\u4F1A\u8BBE\u7F6E\u5206\u6790 Cookie\u3002\u5176\u4F59\u529F\u80FD\u5728\u4E24\u79CD\u60C5\u51B5\u4E0B\u5747\u53EF\u6B63\u5E38\u4F7F\u7528\u3002',
+      text: '\u6211\u4eec\u4f7f\u7528 Google Analytics \u4e86\u89e3\u672c\u7f51\u7ad9\u7684\u4f7f\u7528\u60c5\u51b5\uff0c\u5e76\u4f7f\u7528 Meta \u50cf\u7d20\u8861\u91cf\u5e7f\u544a\u6548\u679c\u3002Meta \u50cf\u7d20\u4ec5\u5728\u60a8\u540c\u610f\u540e\u624d\u4f1a\u52a0\u8f7d\u3002\u5176\u4f59\u529f\u80fd\u5728\u4e24\u79cd\u60c5\u51b5\u4e0b\u5747\u53ef\u6b63\u5e38\u4f7f\u7528\u3002',
       accept: '\u540C\u610F',
       decline: '\u62D2\u7EDD',
       more: '\u9690\u79C1\u653F\u7B56',
