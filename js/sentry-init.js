@@ -5,7 +5,9 @@
  * Sentry's EU region, and keeping the whole configuration here means sampling
  * rates and privacy settings are reviewable in git instead of hidden behind a
  * dashboard toggle. The bundle is pinned to an exact version and guarded by an
- * SRI hash, so a compromised CDN cannot execute anything on these pages.
+ * SRI hash, so a compromised CDN cannot execute anything on these pages. The one
+ * exception is the replay chunk further down: the SDK injects it itself, without an
+ * integrity attribute, so that single file is version-pinned but not hash-pinned.
  *
  * Both script tags are `defer`, and this file is ordered before the site's own
  * scripts. Deferred scripts run in document order, so Sentry is initialised
@@ -27,13 +29,6 @@
 
     integrations: [
       Sentry.browserTracingIntegration(),
-      Sentry.replayIntegration({
-        // All three default to true — set explicitly so the privacy posture is
-        // stated in the file rather than inherited silently.
-        maskAllText: true,
-        maskAllInputs: true,
-        blockAllMedia: true,
-      }),
     ],
 
     // Core Web Vitals and page load timings. 10% is enough to see trends on a
@@ -53,7 +48,10 @@
     // Record a replay only when something actually broke: no blanket recording
     // of every visitor, and the material that matters (what the guest did
     // before the booking failed) is still captured. Raise the session rate only
-    // together with the cookie banner and the privacy policy.
+    // together with the cookie banner and the privacy policy. Both are root
+    // options and are read by the replay integration that is added lazily below,
+    // so they have to stay here even though the integration is no longer in the
+    // list above.
     replaysSessionSampleRate: 0,
     replaysOnErrorSampleRate: 1.0,
 
@@ -84,6 +82,47 @@
       /^chrome:\/\//,
     ],
   });
+
+  // Replay wiegt 150 KB (der Chunk kommt unkomprimiert vom CDN) und ist nur fuer
+  // die Buchungsstrecke wertvoll (Analyse von Buchungsabbruechen). Er laedt deshalb
+  // erst bei der ersten Interaktion mit der Buchungsleiste, nicht bei jedem
+  // Seitenaufruf. Auf Unterseiten ohne #bookingBar laedt er nie — gewollt.
+  //
+  // Der schlanke Bundle bringt einen Platzhalter namens replayIntegration mit, der
+  // nur warnt und nichts tut. lazyLoadIntegration() gibt einen vorhandenen Export
+  // unveraendert zurueck, sofern er nicht das Flag _isShim traegt — und im Bundle
+  // 10.68.0 traegt nur der Feedback-Platzhalter dieses Flag, der Replay-Platzhalter
+  // nicht (am 21.08.2026 im heruntergeladenen Bundle nachgesehen). Ohne die naechsten
+  // Zeilen laedt replay.min.js also nie, und die Konsole meldet lediglich "You are
+  // using replayIntegration() even though this bundle does not include replay."
+  // Der Platzhalter wird deshalb vorher entfernt, aber nur wenn er nachweislich
+  // einer ist: replayIntegration da, getReplay nicht. Wird hier spaeter wieder ein
+  // Bundle mit echtem Replay eingebunden, tut die Zeile nichts.
+  var replayArmed = false;
+  function armReplay() {
+    if (replayArmed) return;
+    replayArmed = true;
+    if (typeof Sentry.replayIntegration === 'function' && typeof Sentry.getReplay !== 'function') {
+      delete Sentry.replayIntegration;
+    }
+    Sentry.lazyLoadIntegration('replayIntegration').then(function (replayIntegration) {
+      Sentry.addIntegration(replayIntegration({
+        // All three default to true — set explicitly so the privacy posture is
+        // stated in the file rather than inherited silently.
+        maskAllText: true,
+        maskAllInputs: true,
+        blockAllMedia: true,
+      }));
+    }).catch(function () {
+      // Adblocker oder Netzproblem: Replay entfaellt, Fehler-Reporting laeuft weiter.
+    });
+  }
+  var bookingBar = document.getElementById('bookingBar');
+  if (bookingBar) {
+    ['focusin', 'pointerdown'].forEach(function (t) {
+      bookingBar.addEventListener(t, armReplay, { once: true, passive: true });
+    });
+  }
 
   // Which of the four sites an event came from, without relying on the URL.
   Sentry.setTag('site', 'amanthos-living-website');
