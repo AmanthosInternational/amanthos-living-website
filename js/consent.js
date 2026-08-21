@@ -137,11 +137,11 @@
     if (state === 'denied') {
       // Offizieller Kill-Switch: kein Hit, auch kein cookieloser.
       window['ga-disable-' + GA4_ID] = true;
-      gtag('consent', 'update', { analytics_storage: 'denied' });
+      gtag('consent', 'update', { analytics_storage: 'denied', ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied' });
       clearGoogleCookies();
     } else if (state === 'granted') {
       window['ga-disable-' + GA4_ID] = false;
-      gtag('consent', 'update', { analytics_storage: 'granted' });
+      gtag('consent', 'update', { analytics_storage: 'granted', ad_storage: 'granted', ad_user_data: 'granted', ad_personalization: 'granted' });
     }
     // meta.js haengt an dieser Meldung: es laedt mit defer und damit NACH
     // dem synchronen Erstlauf, bekommt spaetere Wechsel aber sofort mit.
