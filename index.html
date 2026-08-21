@@ -111,7 +111,15 @@
       .hamburger{display:block}
       .hero{padding:4rem 1rem 2rem}
     }
-  </style>
+  
+/* Hero-Typografie der Bruchpunkte aus css/style.css, hier woertlich wiederholt.
+   Grund: style.css laedt mit media=print onload und greift erst nach dem ersten
+   Rendern. Fehlen diese Regeln hier, rendert ein Telefon zuerst in Desktop-Groesse
+   und springt danach um rund 31px nach oben (gemessen bei 412px: 0,1625 CLS).
+   ACHTUNG: Aendert sich die Hero-Typografie in css/style.css, muss sie hier mit. */
+@media(max-width:768px){.hero h1{font-size:clamp(1.8rem,7vw,2.6rem);margin-bottom:.5rem;letter-spacing:-.01em}.hero h1 br{display:none}.hero-sub{font-size:.95rem;margin-bottom:1.25rem;padding:0 .25rem}}
+@media(max-width:480px){.hero h1{font-size:clamp(1.6rem,6.5vw,2.2rem)}.hero-sub{font-size:.88rem}}
+</style>
 
   <!-- Full stylesheet async -->
   <link rel="stylesheet" href="./css/style.css" media="print" onload="this.media='all'">
