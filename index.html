@@ -49,12 +49,9 @@
   <link rel="preload" href="./css/style.css" as="style">
   <link rel="dns-prefetch" href="https://amanthos-website-api.onrender.com">
   <link rel="preconnect" href="https://amanthos-website-api.onrender.com" crossorigin>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <!-- Async Google Fonts (non-render-blocking) -->
-  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"></noscript>
-
+  <link rel="preload" href="/assets/fonts/PlayfairDisplay.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/Inter.woff2" as="font" type="font/woff2" crossorigin>
+  <style>@font-face{font-family:'Playfair Display';font-style:normal;font-weight:400 700;font-display:swap;src:url(/assets/fonts/PlayfairDisplay.woff2) format('woff2')}@font-face{font-family:'Inter';font-style:normal;font-weight:300 700;font-display:swap;src:url(/assets/fonts/Inter.woff2) format('woff2')}</style>
   <!-- Critical CSS (above-the-fold) -->
   <style>
     *{margin:0;padding:0;box-sizing:border-box}
@@ -68,9 +65,11 @@
 
        size-adjust matches the fallback's average advance width to the web font's, so
        the text keeps its line count across the swap; the ascent/descent overrides
-       match the line box. Ratios were measured in Chrome against the pinned Google
-       Fonts faces (Inter v20, Playfair Display v40) and are per weight, because
-       Arial and Georgia only have a regular and a bold cut.
+       match the line box. Ratios were measured in Chrome against the pinned faces
+       (Inter v20, Playfair Display v40) and are per weight, because
+       Arial and Georgia only have a regular and a bold cut. The faces are now served
+       locally from assets/fonts/ instead of fonts.gstatic.com; the local variable face renders
+       identical advance widths, so the ratios still hold.
 
        Where the local face does not exist (Android, most Linux) the src fails, the
        face is dropped and the stack falls back exactly as it did before. */
