@@ -58,7 +58,30 @@
   <!-- Critical CSS (above-the-fold) -->
   <style>
     *{margin:0;padding:0;box-sizing:border-box}
-    :root{--color-bg:#FAF8F5;--color-bg-alt:#F3EDE7;--color-surface:#FFF;--color-primary:#1A2B4A;--color-secondary:#8B7355;--color-accent:#886714;--color-accent-hover:#745812;--color-text:#2D2D3A;--color-text-muted:#4A4A5A;--color-border:#E8E2DA;--color-success:#2D7A5F;--color-error:#9B2C2C;--font-heading:'Playfair Display',Georgia,serif;--font-body:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;--max-width:1200px;--radius:12px;--radius-sm:8px}
+    /* Metric-compatible fallbacks for the two web fonts.
+
+       Both faces arrive asynchronously with display=swap, so the browser paints in
+       the fallback and re-lays the page out when the real face lands. Measured
+       21.08.2026 with Lighthouse mobile: that swap was the single largest layout
+       shift on this page (0.1413, the consent banner re-wrapping when Inter landed;
+       up to 0.19 on the headline when Playfair landed late).
+
+       size-adjust matches the fallback's average advance width to the web font's, so
+       the text keeps its line count across the swap; the ascent/descent overrides
+       match the line box. Ratios were measured in Chrome against the pinned Google
+       Fonts faces (Inter v20, Playfair Display v40) and are per weight, because
+       Arial and Georgia only have a regular and a bold cut.
+
+       Where the local face does not exist (Android, most Linux) the src fails, the
+       face is dropped and the stack falls back exactly as it did before. */
+    @font-face{font-family:'Inter Fallback';src:local('Arial');font-weight:300;size-adjust:104.77%;ascent-override:92.49%;descent-override:23.00%;line-gap-override:0%}
+    @font-face{font-family:'Inter Fallback';src:local('Arial');font-weight:400;size-adjust:106.59%;ascent-override:90.91%;descent-override:22.61%;line-gap-override:0%}
+    @font-face{font-family:'Inter Fallback';src:local('Arial');font-weight:500;size-adjust:107.70%;ascent-override:89.97%;descent-override:22.38%;line-gap-override:0%}
+    @font-face{font-family:'Inter Fallback';src:local('Arial Bold'),local('Arial');font-weight:600;size-adjust:101.50%;ascent-override:95.47%;descent-override:23.74%;line-gap-override:0%}
+    @font-face{font-family:'Playfair Fallback';src:local('Georgia');font-weight:400;size-adjust:101.27%;ascent-override:106.84%;descent-override:24.79%;line-gap-override:0%}
+    @font-face{font-family:'Playfair Fallback';src:local('Georgia Bold'),local('Georgia');font-weight:600;size-adjust:88.59%;ascent-override:122.14%;descent-override:28.33%;line-gap-override:0%}
+    @font-face{font-family:'Playfair Fallback';src:local('Georgia Bold'),local('Georgia');font-weight:700;size-adjust:89.33%;ascent-override:121.13%;descent-override:28.10%;line-gap-override:0%}
+    :root{--color-bg:#FAF8F5;--color-bg-alt:#F3EDE7;--color-surface:#FFF;--color-primary:#1A2B4A;--color-secondary:#8B7355;--color-accent:#886714;--color-accent-hover:#745812;--color-text:#2D2D3A;--color-text-muted:#4A4A5A;--color-border:#E8E2DA;--color-success:#2D7A5F;--color-error:#9B2C2C;--font-heading:'Playfair Display','Playfair Fallback',Georgia,serif;--font-body:'Inter','Inter Fallback',-apple-system,BlinkMacSystemFont,sans-serif;--max-width:1200px;--radius:12px;--radius-sm:8px}
     body{font-family:var(--font-body);background:var(--color-bg);color:var(--color-text);-webkit-font-smoothing:antialiased;overflow-x:hidden}
     .nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;transition:all .3s ease}
     .nav.scrolled{background:rgba(255,255,255,.95);backdrop-filter:blur(12px);box-shadow:0 2px 20px rgba(0,0,0,.06)}
@@ -182,8 +205,8 @@
   }
   </script>
   <!-- Sentry: error + performance monitoring. Config in js/sentry-init.js -->
-  <script src="https://browser.sentry-cdn.com/10.68.0/bundle.tracing.replay.min.js"
-          integrity="sha384-XaWdQ+280/sFZD3fFzNgO2vpH3FjdOqMQiQBMoyG5itU99/FvV8v4lrmQNIF4Mau"
+  <script src="https://browser.sentry-cdn.com/10.68.0/bundle.tracing.min.js"
+          integrity="sha384-IDGicfmkFBjzbyXFRgxkdVAjmPeBqxWZUv7oUbKSCAc+OEMdNXzrciXnPJzd17Xc"
           crossorigin="anonymous" defer></script>
   <script src="./js/sentry-init.js" defer></script>
   <!-- Privacy-friendly analytics by Plausible -->
@@ -234,6 +257,60 @@
     </div>
     <h1 data-i18n="hero.heading">You're Paying Double for Half the Space.</h1>
     <p class="hero-sub" data-i18n="hero.subheading">1,220+ guests already made the switch. Premium serviced apartments from CHF 49/night &mdash; fully equipped, professionally cleaned, and yours tonight.</p>
+
+    <!--
+      Hero copy is applied before the first paint, on purpose.
+
+      js/i18n.js fetches locales/<lang>.json over XHR and only swaps the hero copy
+      after DOMContentLoaded. In every language but English that changes how many
+      lines the headline and the subheadline occupy, and the layout jumps: measured
+      21.08.2026 with Lighthouse mobile on ?lang=de, p.hero-sub alone scored a 0.0084
+      layout shift.
+
+      This block anticipates exactly the three hero strings, resolving the language
+      the same way js/i18n.js does (?lang -> localStorage -> navigator.language -> en).
+      When i18n.js sets the same strings a moment later it is a no-op with no change
+      in geometry. The visible text is unchanged - only the moment it appears is.
+
+      DUPLICATE ON PURPOSE: the strings below are verbatim copies of hero.badge,
+      hero.heading and hero.subheading in locales/<lang>.json. Change a hero string
+      there and it has to be carried over here, otherwise the jump comes back. The
+      pair is machine-checkable; the check is quoted in the pull request.
+    -->
+    <script>
+      (function () {
+        var HERO_I18N = {
+        "en": {"badge":"4.3 Stars · 1,220+ Happy Guests · Swiss Quality","heading":"You're Paying Double for Half the Space.","subheading":"1,220+ guests already made the switch. Premium serviced apartments from CHF 49/night — fully equipped, professionally cleaned, and yours tonight."},
+        "de": {"badge":"4.3 Sterne · 1'220+ zufriedene Gäste · Schweizer Qualität","heading":"Sie zahlen das Doppelte für den halben Platz.","subheading":"Über 1'220 Gäste haben bereits gewechselt. Premium Serviced Apartments ab CHF 49/Nacht — voll ausgestattet, professionell gereinigt, heute noch verfügbar."},
+        "fr": {"badge":"4.3 étoiles · 1 220+ clients satisfaits · Qualité suisse","heading":"Vous payez le double pour moitié moins d'espace.","subheading":"Plus de 1 220 clients ont déjà fait le changement. Appartements meublés haut de gamme dès CHF 49/nuit — entièrement équipés, nettoyés professionnellement, disponibles dès ce soir."},
+        "it": {"badge":"4.3 stelle · 1.220+ ospiti soddisfatti · Qualità svizzera","heading":"Sta pagando il doppio per la metà dello spazio.","subheading":"Oltre 1.220 ospiti hanno già fatto il cambio. Appartamenti serviti premium da CHF 49/notte — completamente attrezzati, puliti professionalmente, Suoi già stasera."},
+        "zh": {"badge":"4.3星 · 1,220+位满意住客 · 瑞士品质","heading":"您正在花双倍的钱，只换来一半的空间。","subheading":"1,220+位住客已做出明智之选。高端服务式公寓每晚仅需CHF 49起——设施齐全、专业清洁，今晚即可入住。"},
+        "ja": {"badge":"4.3つ星 · 1,220名以上のゲスト · スイス品質","heading":"ホテルに倍額を払って、半分のスペースで過ごしていませんか？","subheading":"1,220名以上のゲストがすでにAmanthos Livingに切り替えました。CHF 49/泊からのプレミアム・サービスアパートメント — 設備完備、プロによる清掃済み、今夜からご利用可能。"},
+        "ko": {"badge":"4.3점 · 1,220명 이상 만족 고객 · 스위스 품질","heading":"호텔에서 두 배를 지불하고 절반의 공간을 쓰고 계십니다.","subheading":"이미 1,220명 이상의 고객이 전환하셨습니다. CHF 49/박부터 시작하는 프리미엄 서비스 아파트먼트 — 완비된 시설, 전문 청소, 오늘 밤 바로 입주 가능합니다."}
+      };
+        var el = {
+          badge: document.querySelector('.hero-badge [data-i18n="hero.badge"]'),
+          heading: document.querySelector('.hero h1[data-i18n="hero.heading"]'),
+          subheading: document.querySelector('.hero .hero-sub[data-i18n="hero.subheading"]')
+        };
+        function pick() {
+          try {
+            var p = new URLSearchParams(window.location.search).get('lang');
+            if (p && HERO_I18N[p.toLowerCase()]) return p.toLowerCase();
+          } catch (e) { /* no URLSearchParams: fall through */ }
+          try {
+            var s = localStorage.getItem('amanthos_lang');
+            if (s && HERO_I18N[s]) return s;
+          } catch (e) { /* storage blocked: fall through */ }
+          var b = (navigator.language || navigator.userLanguage || '').toLowerCase().split('-')[0];
+          return HERO_I18N[b] ? b : 'en';
+        }
+        var copy = HERO_I18N[pick()];
+        for (var k in el) {
+          if (el[k] && copy[k]) el[k].textContent = copy[k];
+        }
+      })();
+    </script>
 
     <!-- Booking Bar -->
     <div class="hero-booking" id="bookingBar">
