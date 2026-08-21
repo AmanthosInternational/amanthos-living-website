@@ -82,7 +82,7 @@
     @font-face{font-family:'Playfair Fallback';src:local('Georgia Bold'),local('Georgia');font-weight:600;size-adjust:88.59%;ascent-override:122.14%;descent-override:28.33%;line-gap-override:0%}
     @font-face{font-family:'Playfair Fallback';src:local('Georgia Bold'),local('Georgia');font-weight:700;size-adjust:89.33%;ascent-override:121.13%;descent-override:28.10%;line-gap-override:0%}
     :root{--color-bg:#FAF8F5;--color-bg-alt:#F3EDE7;--color-surface:#FFF;--color-primary:#1A2B4A;--color-secondary:#8B7355;--color-accent:#886714;--color-accent-hover:#745812;--color-text:#2D2D3A;--color-text-muted:#4A4A5A;--color-border:#E8E2DA;--color-success:#2D7A5F;--color-error:#9B2C2C;--font-heading:'Playfair Display','Playfair Fallback',Georgia,serif;--font-body:'Inter','Inter Fallback',-apple-system,BlinkMacSystemFont,sans-serif;--max-width:1200px;--radius:12px;--radius-sm:8px}
-    body{font-family:var(--font-body);background:var(--color-bg);color:var(--color-text);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+    body{font-family:var(--font-body);background:var(--color-bg);color:var(--color-text);-webkit-font-smoothing:antialiased;overflow-x:hidden;line-height:1.6}
     .nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;transition:all .3s ease}
     .nav.scrolled{background:rgba(255,255,255,.95);backdrop-filter:blur(12px);box-shadow:0 2px 20px rgba(0,0,0,.06)}
     .nav-logo{font-family:var(--font-heading);font-size:1.4rem;color:#fff;text-decoration:none;font-weight:600;transition:color .3s}
@@ -115,10 +115,26 @@
 /* Hero-Typografie der Bruchpunkte aus css/style.css, hier woertlich wiederholt.
    Grund: style.css laedt mit media=print onload und greift erst nach dem ersten
    Rendern. Fehlen diese Regeln hier, rendert ein Telefon zuerst in Desktop-Groesse
-   und springt danach um rund 31px nach oben (gemessen bei 412px: 0,1625 CLS).
+   und springt danach nach oben. Entscheidend ist dabei min-height: 100vh gegen
+   100svh - auf dem Telefon unterscheidet sich das um die Hoehe der Browserleisten,
+   und weil .hero ein Flex-Container mit justify-content:center ist, verschiebt das
+   ALLE Kinder (gemessen bei 412px: 0,165 CLS).
    ACHTUNG: Aendert sich die Hero-Typografie in css/style.css, muss sie hier mit. */
-@media(max-width:768px){.hero h1{font-size:clamp(1.8rem,7vw,2.6rem);margin-bottom:.5rem;letter-spacing:-.01em}.hero h1 br{display:none}.hero-sub{font-size:.95rem;margin-bottom:1.25rem;padding:0 .25rem}}
-@media(max-width:480px){.hero h1{font-size:clamp(1.6rem,6.5vw,2.2rem)}.hero-sub{font-size:.88rem}}
+@media(max-width:768px){.hero{min-height:100svh;padding:4rem 1.25rem 2rem}.hero h1{font-size:clamp(1.8rem,7vw,2.6rem);margin-bottom:.5rem;letter-spacing:-.01em}.hero h1 br{display:none}.hero-sub{font-size:.95rem;margin-bottom:1.25rem;padding:0 .25rem}}
+@media(max-width:480px){.hero{padding:3.5rem 1rem 1.5rem}.hero h1{font-size:clamp(1.6rem,6.5vw,2.2rem)}.hero-sub{font-size:.88rem}}
+
+/* Layoutregeln des Hero-Inhalts, woertlich aus css/style.css.
+   Der Hero zentriert seinen Inhalt (justify-content:center). Fehlen diese Regeln
+   beim ersten Rendern, ist die Buchungsleiste 93px statt 260px hoch, und alles
+   darueber rutscht beim Nachladen um 123px nach oben (gemessen bei 412px).
+   ACHTUNG: Aendern sich diese Regeln in css/style.css, muessen sie hier mit. */
+.hero-live-ticker{display:inline-flex;align-items:center;gap:0.5rem;background:rgba(0,0,0,0.25);backdrop-filter:blur(8px);padding:0.4rem 1rem;border-radius:var(--radius-full);color:rgba(255,255,255,0.9);font-size:0.75rem;font-weight:500;margin-bottom:1rem}.ticker-dot{width:8px;height:8px;background:#4ADE80;border-radius:50%;animation:tickerPulse 2s ease-in-out infinite}.hero-live-ticker{font-size:.68rem;padding:.35rem .85rem;margin-bottom:.75rem}.hero-booking{display:flex;align-items:center;background:rgba(26,43,74,.85);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-radius:60px;padding:.65rem .65rem .65rem 1.5rem;gap:0;max-width:900px;width:100%;position:relative;margin:1.5rem auto 0;z-index:10;animation:bookingBarIn .8s var(--ease) .3s both;box-shadow:0 8px 32px rgba(0,0,0,.35),0 0 0 1px rgba(255,255,255,.15)}.hero-bb-field{display:flex;align-items:center;gap:.6rem;padding:.75rem .5rem;cursor:pointer;color:rgba(255,255,255,.9);font-size:.88rem;font-weight:400;white-space:nowrap;transition:color .2s}.hero-bb-field:hover{color:#fff}.hero-bb-field svg{flex-shrink:0;opacity:.7}.hero-bb-location{flex-shrink:0}.hero-bb-dates{flex:1}.hero-bb-dates span{transition:color .2s}.hero-bb-dates span.has-value{color:#fff;font-weight:500}.hero-bb-divider{width:1px;height:28px;background:rgba(255,255,255,.2);flex-shrink:0;margin:0 .25rem}.hero-bb-guests{flex-shrink:0}.hero-bb-search{padding:.85rem 2rem;background:var(--color-accent);color:#fff;border:none;border-radius:60px;font-size:.78rem;font-weight:600;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;transition:all .25s;white-space:nowrap;margin-left:.5rem;flex-shrink:0;font-family:var(--font-body);box-shadow:0 2px 8px rgba(139,105,20,0.3)}.hero-bb-search:hover{background:var(--color-accent-hover);box-shadow:0 4px 16px rgba(139,105,20,0.4)}.hero-booking .nights-badge{position:absolute;top:-10px;left:50%;transform:translateX(-50%)}
+@media(max-width:768px){.hero-live-ticker{font-size:.68rem;padding:.35rem .85rem;margin-bottom:.75rem}.hero-booking{flex-direction:column;border-radius:var(--radius);padding:1rem;gap:.5rem;max-width:100%}.hero-bb-divider{width:100%;height:1px;margin:0}.hero-bb-field{width:100%;justify-content:center}.hero-bb-search{width:100%;text-align:center;justify-content:center;margin-left:0;margin-top:.25rem}}
+
+/* Steht in css/style.css nach den Bruchpunkten und ueberschreibt deren
+   padding-bottom (Repositionierung der Buchungsleiste). Deshalb auch hier
+   ganz am Ende. */
+.hero{padding-bottom:4rem}
 </style>
 
   <!-- Full stylesheet async -->
