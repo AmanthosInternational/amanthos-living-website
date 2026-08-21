@@ -265,3 +265,13 @@
 
 /* Links im Fliesstext der Rechtsseiten muessen ohne Farbe erkennbar sein (WCAG 1.4.1, axe link-in-text-block): global gilt text-decoration:none, im Fliesstext ist die Unterstreichung aber das einzige nichtfarbliche Merkmal. */
 .legal-content a{text-decoration:underline;text-underline-offset:.15em}
+
+/* Die Akzentfarbe braucht auf dunklem Grund eine hellere Fassung: #886714 auf
+   dem Dunkelblau der Fomo-Leiste ergibt 2.41:1. Gold auf dunklem Grund, deshalb
+   heller statt dunkler. Gemessen 21.08.2026. */
+.fomo-strip #fomoViewers,
+.fomo-strip #fomoTime{color:#c99a28}
+/* .highlight sitzt auf --color-accent-light, was gemischt #efeadf ergibt; dort
+   fehlen dem Akzent 0,13 Punkte auf die geforderten 4.5:1. */
+.milestone.highlight,
+.highlight{color:#856514}
