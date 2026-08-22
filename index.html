@@ -5,13 +5,33 @@
   <script src="./js/consent.js"></script>
   <script defer src="./js/meta.js"></script>
   <!-- Google Analytics 4 -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-8LPLG0BPJ6"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-8LPLG0BPJ6');
-  </script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-8LPLG0BPJ6');
+      // gtag.js wiegt 183 KB uebertragen. Bei Ablehnung wurde es bisher trotzdem
+      // geholt und danach vom ga-disable-Kill-Switch stillgelegt. Jetzt kommt es
+      // nur, wenn keine Ablehnung gespeichert ist; wer spaeter zustimmt, bekommt
+      // es ueber am:consent-change sofort nachgereicht.
+      (function () {
+        var geholt = false;
+        function laden() {
+          if (geholt) return;
+          geholt = true;
+          var s = document.createElement('script');
+          s.async = true;
+          s.src = 'https://www.googletagmanager.com/gtag/js?id=G-8LPLG0BPJ6';
+          (document.head || document.documentElement).appendChild(s);
+        }
+        var wahl = null;
+        try { wahl = window.localStorage.getItem('am_consent_analytics'); } catch (e) { /* Privatmodus */ }
+        if (wahl !== 'denied') { laden(); }
+        document.addEventListener('am:consent-change', function (e) {
+          if (e && e.detail && e.detail.state === 'granted') { laden(); }
+        });
+      })();
+    </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Amanthos Living | Serviced Apartments in Switzerland</title>
