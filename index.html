@@ -154,7 +154,17 @@
    padding-bottom (Repositionierung der Buchungsleiste). Deshalb auch hier
    ganz am Ende. */
 .hero{padding-bottom:4rem}
-</style>
+
+    /* Der Footer-Hintergrund steht frueher als die Linkfarbe aus der
+       nachgeladenen style.css. In diesem Fenster, unter langsamer
+       Verbindung rund 900 ms, rendert der Browser seine Standardfarbe
+       fuer Links: #0000EE auf #1A2B4A, ein Kontrast von 1,5:1 und damit
+       praktisch unlesbar. Gemessen, nicht vermutet. Die Farben gehoeren
+       deshalb dorthin, wo auch der Hintergrund frueh gilt. */
+    .footer a{color:rgba(255,255,255,0.8)}
+    .footer-brand h3,.footer-links h4,.footer-contact h4{color:#fff}
+    .footer-social a{color:rgba(255,255,255,0.75)}
+  </style>
 
   <!-- Full stylesheet async -->
   <link rel="stylesheet" href="./css/style.css" media="print" onload="this.media='all'">
