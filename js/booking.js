@@ -977,6 +977,41 @@ function renderOffers(data) {
   });
 }
 
+// Translation with a guaranteed fallback (window.t may be absent, or return the raw
+// key when a string is missing).
+function _polT(key, fb) {
+  var v = window.t ? window.t(key) : fb;
+  return (!v || v === key) ? fb : v;
+}
+// Friendly rate-plan label. Apaleo returns raw names ("NON-REFUNDABLE MLBE",
+// "STANDARD MLBE"); guests should just see "Non-Refundable" / "Standard".
+function friendlyRateName(offer) {
+  return offer.category === 'Non-Refundable'
+    ? _polT('booking.rate_nonrefundable', 'Non-Refundable')
+    : _polT('booking.rate_standard', 'Standard');
+}
+// Cancellation policy from Apaleo cancellationFee + category, as readable text with
+// the actual deadline instead of just "Non-Refundable"/"Free Cancellation".
+function formatPolicyDate(iso) {
+  var d = new Date(iso);
+  if (isNaN(d.getTime())) return '';
+  var day = ('0' + d.getDate()).slice(-2);
+  var mon = ('0' + (d.getMonth() + 1)).slice(-2);
+  return day + '.' + mon + '.' + d.getFullYear();
+}
+function getCancellationPolicy(offer) {
+  if (!offer) return { free: false, text: '' };
+  if (offer.category === 'Non-Refundable') {
+    return { free: false, text: _polT('booking.policy_nonref', 'Non-refundable, no free cancellation') };
+  }
+  var fee = offer.cancellationFee || {};
+  var due = fee.dueDateTime ? formatPolicyDate(fee.dueDateTime) : '';
+  if (due) {
+    return { free: true, text: _polT('booking.policy_free_until', 'Free cancellation until') + ' ' + due };
+  }
+  return { free: true, text: _polT('booking.policy_free', 'Free cancellation') };
+}
+
 function renderOfferCard(offer, categoryClass, index, isBestPrice) {
   var total = offer.totalGrossAmount || {};
   var perNight = offer.averagePerNight || {};
@@ -989,7 +1024,7 @@ function renderOfferCard(offer, categoryClass, index, isBestPrice) {
   html += '<div class="offer-unit">' + escapeHtml(offer.unitGroupName || (window.t ? window.t('booking.apartment') : 'Apartment')) + '</div>';
   html += '<span class="offer-category ' + categoryClass + '">' + (categoryClass === 'refundable' ? (window.t ? window.t('booking.flexible') : 'Flexible') : (window.t ? window.t('booking.best_price_tag') : 'Best Price')) + '</span>';
   html += '</div>';
-  html += '<div class="offer-rate-name">' + escapeHtml(offer.ratePlanName || '') + '</div>';
+  html += '<div class="offer-rate-name">' + escapeHtml(friendlyRateName(offer)) + '</div>';
   html += '<div class="offer-bottom">';
   html += '<div>';
   html += '<div class="offer-pricing">';
@@ -999,9 +1034,12 @@ function renderOfferCard(offer, categoryClass, index, isBestPrice) {
   if (offer.availableUnits > 0 && offer.availableUnits <= 3) {
     html += '<div class="offer-scarcity">' + (window.t ? window.t('booking.only_left', { n: offer.availableUnits }) : 'Only ' + offer.availableUnits + ' left!') + '</div>';
   }
+  var _pol = getCancellationPolicy(offer);
   html += '<div class="offer-trust">';
-  html += '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> ';
-  html += categoryClass === 'refundable' ? (window.t ? window.t('booking.free_cancellation') : 'Free cancellation') : (window.t ? window.t('booking.best_rate_guaranteed') : 'Best rate guaranteed');
+  html += (_pol.free
+    ? '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#2e7d32" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> '
+    : '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> ');
+  html += escapeHtml(_pol.text);
   html += '</div>';
   html += '</div>';
   html += '<div class="offer-select-btn">' + (window.t ? window.t('booking.select') : 'Select') + ' &rarr;</div>';
