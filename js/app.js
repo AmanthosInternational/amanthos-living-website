@@ -7,6 +7,7 @@ var nav = document.getElementById('nav');
 var hamburger = document.getElementById('hamburger');
 var navLinks = document.getElementById('navLinks');
 function updateNav() {
+if (!nav) return;
 if (window.scrollY > 60) {
 nav.classList.add('scrolled');
 } else {
