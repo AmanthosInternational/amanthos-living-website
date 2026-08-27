@@ -1,6 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Content-Security-Policy. Muss als ERSTES im head stehen, sonst greift sie fuer
+       bereits geparste Elemente nicht. GitHub Pages erlaubt keine eigenen HTTP-Header,
+       deshalb als Meta-Tag; damit steht auch Report-Only nicht zur Verfuegung.
+       Erhoben am 28.08.2026 aus einem echten Seitenaufruf mit Zustimmung plus
+       vollstaendiger Code-Suche, nicht von der Schwesterseite kopiert.
+       frame-src none: Die Seite bettet nichts ein. Adyen laeuft ueber eine Weiterleitung
+       (window.location.href in js/booking.js), nicht im iframe, und braucht deshalb
+       keinen Eintrag. Wer spaeter ein Video einbettet, muss hier ergaenzen.
+       fonts.googleapis.com und fonts.gstatic.com: nur fuer die CJK-Fassungen, die
+       js/i18n.js nachlaedt. Ohne sie stehen ja, zh und ko ohne Schrift da. -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://browser.sentry-cdn.com https://www.googletagmanager.com https://plausible.io https://connect.facebook.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https://amanthos-website-api.onrender.com https://plausible.io https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com https://stats.g.doubleclick.net https://o4511372064915456.ingest.de.sentry.io https://www.facebook.com; worker-src 'self' blob:; frame-src 'none'; form-action 'self'; base-uri 'self'; object-src 'none'">
+
   <meta charset="UTF-8">
   <meta http-equiv="refresh" content="0;url=https://www.amanthosliving.com/solothurn/">
   <link rel="canonical" href="https://www.amanthosliving.com/solothurn/">
