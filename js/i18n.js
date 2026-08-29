@@ -39,14 +39,16 @@
       var urlLang = urlParams.get('lang');
       if (urlLang && SUPPORTED_LANGS[urlLang.toLowerCase()]) {
         var lang = urlLang.toLowerCase();
-        localStorage.setItem(STORAGE_KEY, lang);
+        try { localStorage.setItem(STORAGE_KEY, lang); } catch (e2) { /* Storage gesperrt */ }
         return lang;
       }
     } catch (e) { /* URLSearchParams not supported */ }
 
     // 1. User preference from localStorage
-    var stored = localStorage.getItem(STORAGE_KEY);
-    if (stored && SUPPORTED_LANGS[stored]) return stored;
+    try {
+      var stored = localStorage.getItem(STORAGE_KEY);
+      if (stored && SUPPORTED_LANGS[stored]) return stored;
+    } catch (e) { /* Storage gesperrt */ }
 
     // 2. Browser language
     var browserLang = (navigator.language || navigator.userLanguage || '').toLowerCase();
@@ -175,7 +177,7 @@
   function switchLanguage(lang) {
     if (!SUPPORTED_LANGS[lang]) return;
     currentLang = lang;
-    localStorage.setItem(STORAGE_KEY, lang);
+    try { localStorage.setItem(STORAGE_KEY, lang); } catch (e) { /* Storage gesperrt */ }
     loadTranslation(lang, function (dict) {
       applyTranslations(dict);
       updateSelector();
