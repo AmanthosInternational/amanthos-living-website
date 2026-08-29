@@ -26,7 +26,8 @@
   // Game state
   var isRunning = false;
   var score = 0;
-  var highScore = parseInt(localStorage.getItem('amanthos_penguin_high') || '0');
+  var highScore = 0;
+  try { highScore = parseInt(localStorage.getItem('amanthos_penguin_high') || '0'); } catch (e) { /* Storage gesperrt */ }
   var speed = BASE_SPEED;
   var frameCount = 0;
   var combo = 0;
@@ -68,7 +69,7 @@
     var codes = getRedeemedCodes();
     if (codes.indexOf(code) === -1) {
       codes.push(code);
-      localStorage.setItem(REDEEMED_KEY, JSON.stringify(codes));
+      try { localStorage.setItem(REDEEMED_KEY, JSON.stringify(codes)); } catch (e) { /* Storage gesperrt */ }
     }
   }
 
@@ -200,7 +201,7 @@
     screenShake = 8;
     if (score > highScore) {
       highScore = score;
-      localStorage.setItem('amanthos_penguin_high', highScore);
+      try { localStorage.setItem('amanthos_penguin_high', highScore); } catch (e) { /* Storage gesperrt */ }
     }
     updateHighDisplay();
 

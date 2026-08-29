@@ -98,6 +98,7 @@ bookingBar.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 });
 });
+try {
 var preselect = localStorage.getItem('preselect_location');
 if (preselect) {
 if (window.amanthosBooking && window.amanthosBooking.selectLocation) {
@@ -105,6 +106,7 @@ window.amanthosBooking.selectLocation(preselect);
 }
 localStorage.removeItem('preselect_location');
 }
+} catch (e) { /* Storage gesperrt: Private Mode, Cookie-Blocker */ }
 var tickerText = document.getElementById('tickerText');
 if (tickerText) {
 var tickerKeys = [
