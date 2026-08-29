@@ -19,6 +19,12 @@
   // the users we cannot observe anyway.
   if (typeof Sentry === 'undefined') return;
 
+  // Never report from a local test server. On 29.08.2026 two runs against
+  // 127.0.0.1, serving a copy of this site to reproduce a storage bug, created
+  // two real issues in the production project. The DSN ships inside the page, so
+  // any copy of it reports as production unless this guard stops it.
+  if (/^(localhost|127\.0\.0\.1|0\.0\.0\.0|\[::1\])$/.test(location.hostname)) return;
+
   Sentry.init({
     dsn: 'https://3bd21c8c41472fd79d39b47a16bf7fcc@o4511372064915456.ingest.de.sentry.io/4511927219126352',
     environment: 'production',
@@ -71,7 +77,32 @@
       'Load failed',
       // Safari/iOS quirks with no actionable stack.
       'Non-Error promise rejection captured',
+      // Extensions that inject into the page. Their frames carry our document
+      // URL, so denyUrls never sees them; only the message identifies them.
+      /Invalid call to runtime\.sendMessage/,
+      /xbrowser is not defined/,
     ],
+
+    // Google Translate rewrites the page and runs its own minified bundle. Sentry
+    // attributes those frames to the document URL, not to a Google origin, so
+    // denyUrls cannot reach them: reports arrive as "/zurich/:226:382 in Gk"
+    // while that line is plain HTML of the booking bar. Two landed here, a
+    // RangeError on 29.08.2026 and a truncated "Error: Ca" on chalet-swiss.ch,
+    // both with a breadcrumb clicking "a > font > font", the <font> tags
+    // Translate injects.
+    //
+    // The trade-off is deliberate: while a page is translated its DOM is no
+    // longer ours, so an error raised in it cannot be attributed to our code
+    // with any confidence. Dropping the whole class is better than a stream of
+    // reports nobody can act on. Translate marks the document itself, which is
+    // what this reads.
+    beforeSend: function (event) {
+      var wurzel = document.documentElement;
+      if (wurzel && /(^|\s)translated-(ltr|rtl)(\s|$)/.test(wurzel.className || '')) {
+        return null;
+      }
+      return event;
+    },
 
     denyUrls: [
       // Third-party tags: their errors belong to their owners, not to us.
