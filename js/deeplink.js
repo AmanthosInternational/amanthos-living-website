@@ -18,37 +18,29 @@
   var MAX_LEAD_DAYS = 365;
   var DAY_MS = 86400000;
 
-  function pad2(n) { return n < 10 ? '0' + n : '' + n; }
-
   function value(params, key) {
     var raw = params.get(key);
     return raw === null || raw === undefined ? null : String(raw).trim();
   }
 
-  // Tagesgenauer Zeitpunkt, unabhaengig von Sommerzeit und Uhrzeit.
+  // Tagesgenauer Zeitpunkt, unabhaengig von Uhrzeit und Sommerzeit.
   function midnight(date) {
     return new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
   }
-
   function days(fromMs, toMs) { return Math.round((toMs - fromMs) / DAY_MS); }
+  function pad2(n) { return n < 10 ? '0' + n : '' + n; }
+  function toISO(d) { return d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate()); }
 
   // YYYY-M-D mit ein- oder zweistelligem Monat und Tag; muss ein echtes
-  // Kalenderdatum sein (der 30. Februar faellt hier durch).
+  // Kalenderdatum sein, der 30. Februar faellt hier durch.
   function toDate(raw) {
-    if (!raw) return null;
-    var m = DATE_RE.exec(raw);
+    var m = raw ? DATE_RE.exec(raw) : null;
     if (!m) return null;
-    var y = parseInt(m[1], 10);
-    var mon = parseInt(m[2], 10);
-    var day = parseInt(m[3], 10);
+    var y = parseInt(m[1], 10), mon = parseInt(m[2], 10), day = parseInt(m[3], 10);
     if (mon < 1 || mon > 12 || day < 1 || day > 31) return null;
     var d = new Date(y, mon - 1, day);
     if (d.getFullYear() !== y || d.getMonth() !== mon - 1 || d.getDate() !== day) return null;
     return d;
-  }
-
-  function toISO(d) {
-    return d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate());
   }
 
   function toInt(raw, fallback) {
@@ -79,26 +71,25 @@
     return out;
   }
 
-  // Deterministische Quellableitung in fester Reihenfolge (K1). Bewertet werden
-  // nur die bereits geprueften utm-Werte; ein verworfenes utm_campaign kann also
-  // keine Quelle mehr setzen.
+  // Deterministische Quellableitung in fester Reihenfolge. Bewertet werden nur
+  // die schon geprueften utm-Werte; ein verworfenes utm_campaign kann also keine
+  // Quelle mehr setzen.
   function readSource(params, campaign) {
     if (value(params, 'gverify') === 'true') return 'google_verify';
-    if (!campaign) return null;
-    if (campaign.utm_source !== 'google') return null;
+    if (!campaign || campaign.utm_source !== 'google') return null;
     if (!campaign.utm_campaign || campaign.utm_campaign.indexOf('hotel-') !== 0) return null;
     if (campaign.utm_medium === 'organic') return 'google_fbl';
     if (campaign.utm_medium === 'cpc') return 'google_hotel_ads';
     return null;
   }
 
+  // Beide Schluessel immer gesetzt; als Ganzes null, wenn beide ungueltig sind.
   function readGoogle(params) {
     var ucur = value(params, 'ucur');
     var gtotal = value(params, 'gtotal');
     if (!ucur || !CURRENCY_RE.test(ucur)) ucur = null;
     if (!gtotal || !GTOTAL_RE.test(gtotal)) gtotal = null;
-    if (!ucur && !gtotal) return null;
-    return { ucur: ucur, gtotal: gtotal };
+    return !ucur && !gtotal ? null : { ucur: ucur, gtotal: gtotal };
   }
 
   function readPreselect(params) {
@@ -106,8 +97,7 @@
     var rate = value(params, 'rate');
     room = room ? room.toUpperCase() : null;
     rate = rate ? rate.toUpperCase() : null;
-    if (!room && !rate) return null;
-    return { room: room, rate: rate };
+    return !room && !rate ? null : { room: room, rate: rate };
   }
 
   function readSearch(params, cfg) {
@@ -119,12 +109,10 @@
     var arrival = toDate(value(params, 'arrival'));
     var departure = toDate(value(params, 'departure'));
     if (!arrival || !departure) return null;
-
     var today = midnight(cfg.today ? cfg.today : new Date());
     var a = midnight(arrival);
-    var d = midnight(departure);
     if (a < today || days(today, a) > MAX_LEAD_DAYS) return null;
-    var nights = days(a, d);
+    var nights = days(a, midnight(departure));
     if (nights < 1 || nights > MAX_NIGHTS) return null;
 
     var max = properties[property];
@@ -136,6 +124,7 @@
     if (adults + children > max) children = max - adults;
     if (children < 0) children = 0;
 
+    // Erste zwei Zeichen, damit auch de-CH greift; unbekannt heisst en, nicht null.
     var langs = cfg.langs || [];
     var langRaw = value(params, 'lang');
     var lang = null;
@@ -145,18 +134,14 @@
     }
 
     return {
-      property: property,
-      arrival: toISO(arrival),
-      departure: toISO(departure),
-      adults: adults,
-      children: children,
-      lang: lang
+      property: property, arrival: toISO(arrival), departure: toISO(departure),
+      adults: adults, children: children, lang: lang
     };
   }
 
   /**
    * parse(search, cfg)
-   * search: der Query-String der Seite, mit oder ohne fuehrendes Fragezeichen.
+   * search: Query-String der Seite, mit oder ohne fuehrendes Fragezeichen.
    * cfg: { today: Date, properties: { <code>: <MAX> }, langs: [..], defaultProperty }
    * Quelle, Kampagne und Google-Werte kommen auch dann zurueck, wenn die Suche
    * ungueltig ist; ungueltige Daten heissen search null, nicht Fehler.

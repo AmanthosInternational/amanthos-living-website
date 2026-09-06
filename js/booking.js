@@ -13,6 +13,27 @@ var currentOffers = [];
 var searchParams = {};
 var selectedExtras = { parking: false, towels: false, pillows: false };
 
+// Deep Link (Kontrakt K1b). Bleibt null, solange js/deeplink.js nicht geladen
+// ist; die Seite verhaelt sich dann exakt wie bisher.
+var deepLink = null;
+var deepLinkDone = false;
+var deepLinkPreselectIndex = -1;
+var deepLinkMismatchDone = false;
+
+// Die Buchungsquelle haengt an genau drei Ereignissen (K4). Sie wird kopiert
+// und nicht in das uebergebene Objekt geschrieben, damit kein Aufrufer sie
+// unbemerkt weitertraegt.
+var SOURCE_EVENTS = ['search_availability', 'view_offers', 'booking_confirmed'];
+function withBookingSource(event, data) {
+  if (!deepLink || !deepLink.source || SOURCE_EVENTS.indexOf(event) === -1) return data;
+  var out = {};
+  for (var k in data) {
+    if (Object.prototype.hasOwnProperty.call(data, k)) out[k] = data[k];
+  }
+  out.source = deepLink.source;
+  return out;
+}
+
 // dataLayer helper for GTM
 window.dataLayer = window.dataLayer || [];
 // Plausible: dieselbe Event-Taxonomie wie GTM, aber ausschliesslich mit einer
@@ -56,10 +77,16 @@ function ga4Event(name, data) {
     if (name === 'search_availability') {
       put('location', d.location);
       put('guests', d.guests);
+      put('booking_source', d.source);
     } else if (name === 'view_offers') {
       evt = 'view_item_list';
       put('item_list_name', d.location);
       put('offer_count', d.offer_count);
+      put('booking_source', d.source);
+    } else if (name === 'deeplink_applied') {
+      put('booking_source', d.source);
+    } else if (name === 'deeplink_price_mismatch') {
+      put('delta', d.delta);
     } else if (name === 'select_offer') {
       evt = 'select_item';
       put('currency', d.currency || 'CHF');
@@ -82,6 +109,7 @@ function ga4Event(name, data) {
       put('transaction_id', d.booking_id || '');
       put('value', d.total_price);
       put('currency', d.currency || 'CHF');
+      put('booking_source', d.source);
     } else if (name === 'payment_initiated' || name === 'payment_completed' ||
                name === 'booking_cancelled_no_payment') {
       put('transaction_id', d.booking_id || '');
@@ -113,12 +141,17 @@ function adsEvent(name, data) {
       send_to: ADS_CONVERSION_ID + '/' + ADS_CONVERSION_LABEL,
       value: d.total_price || 0,
       currency: d.currency || 'CHF',
-      transaction_id: d.booking_id || ''
+      transaction_id: d.booking_id || '',
+      // Googles optionaler Hotel-Parameter: der Apaleo-Property-Code, zugleich
+      // die Hotel-ID des Feeds. Reisedaten bleiben bewusst draussen.
+      id: searchParams.propertyId || ''
     });
   } catch (e) { /* Analytics darf die Buchungsstrecke nie brechen */ }
 }
 
 function gtmPush(event, data) {
+  // plausibleEvent bleibt unveraendert: seine Whitelist kennt source nicht.
+  data = withBookingSource(event, data);
   try { plausibleEvent(event, data); } catch (e) { /* nie die Buchung brechen */ }
   try { ga4Event(event, data); } catch (e) { /* nie die Buchung brechen */ }
   try { adsEvent(event, data); } catch (e) { /* nie die Buchung brechen */ }
@@ -879,7 +912,13 @@ function fetchOffers(retryCount) {
       offer_count: currentOffers.length
     });
     if (currentOffers.length === 0) {
-      offersGrid.innerHTML = '<div class="no-offers"><p>' + (window.t ? window.t('booking.no_offers') : 'No availability found for the selected dates. Please try different dates or another location.') + '</p></div>';
+      // Keine Verfuegbarkeit: ein einziger Offer-Knoten mit SoldOut und ohne
+      // priceSpecification, damit Google die Anfrage nicht als Fehler liest.
+      var soldOutCode = data.property || searchParams.propertyId;
+      var soldOutName = PROPERTIES[soldOutCode] ? PROPERTIES[soldOutCode].name : data.propertyName;
+      offersGrid.innerHTML = microdataHotelOpen(soldOutCode, soldOutName) +
+        '<div class="offer-soldout" itemprop="makesOffer" itemscope itemtype="https://schema.org/Offer https://schema.org/LodgingReservation">' + metaTag('availability', 'https://schema.org/SoldOut') + offerStayMeta() + '</div>' +
+        '<div class="no-offers"><p>' + (window.t ? window.t('booking.no_offers') : 'No availability found for the selected dates. Please try different dates or another location.') + '</p></div></div>';
       return;
     }
     renderOffers(data);
@@ -955,6 +994,9 @@ function renderOffers(data) {
     guestSummary += ', ' + childrenCount + ' ' + childLabel;
   }
 
+  // Microdata-Wurzel (K2): alles Weitere liegt innerhalb dieses Hotel-Knotens.
+  html += microdataHotelOpen(data.property, propName);
+
   html += '<div class="offers-summary">';
   html += '<h3>' + escapeHtml(propName) + '</h3>';
   html += '<div class="offers-summary-dates">' + escapeHtml(data.arrival) + ' &mdash; ' + escapeHtml(data.departure) + '</div>';
@@ -984,6 +1026,8 @@ function renderOffers(data) {
     html += '</div>';
   }
 
+  html += '</div>';
+
   offersGrid.innerHTML = html;
   offersGrid.querySelectorAll('.offer-card').forEach(function (card) {
     card.addEventListener('click', function () {
@@ -998,6 +1042,48 @@ function renderOffers(data) {
       }
     });
   });
+
+  applyDeepLinkPreselect();
+  checkDeepLinkPrice();
+}
+
+// Vorauswahl aus dem Deep Link. Verglichen wird case-insensitiv, mit oder ohne
+// Property-Praefix, gegen UnitGroup und Ratenplan.
+function stripPropertyPrefix(code) {
+  var value = String(code === null || code === undefined ? '' : code).toUpperCase();
+  return value.indexOf('-') === -1 ? value : value.slice(value.indexOf('-') + 1);
+}
+function codeMatches(candidate, wanted) {
+  if (!candidate || !wanted) return false;
+  var c = String(candidate).toUpperCase();
+  var w = String(wanted).toUpperCase();
+  return c === w || stripPropertyPrefix(c) === w || c === stripPropertyPrefix(w) || stripPropertyPrefix(c) === stripPropertyPrefix(w);
+}
+function applyDeepLinkPreselect() {
+  if (!deepLink || !deepLink.preselect || deepLinkPreselectIndex !== -1) return;
+  var want = deepLink.preselect;
+  for (var i = 0; i < currentOffers.length; i++) {
+    var offer = currentOffers[i];
+    var roomOk = !want.room || codeMatches(offer.unitGroupId, want.room);
+    var rateOk = !want.rate || codeMatches(offer.ratePlanId, want.rate) || codeMatches(offer.ratePlanCode, want.rate);
+    if (roomOk && rateOk) { deepLinkPreselectIndex = i; selectOffer(i); return; }
+  }
+}
+// Weicht der sichtbare Bruttopreis vom Preis ab, den Google angezeigt hat, wird
+// das einmal je Seitenaufruf gemeldet. delta ist IBE minus Google, auf 0.05
+// gerundet. Massgeblich ist das vorausgewaehlte, sonst das guenstigste Angebot.
+function checkDeepLinkPrice() {
+  if (deepLinkMismatchDone || !deepLink || !deepLink.google || !deepLink.google.gtotal || !currentOffers.length) return;
+  var offer = currentOffers[deepLinkPreselectIndex] || currentOffers[0];
+  if (deepLinkPreselectIndex === -1) {
+    for (var i = 1; i < currentOffers.length; i++) {
+      if (offerGrossAmount(currentOffers[i]) < offerGrossAmount(offer)) offer = currentOffers[i];
+    }
+  }
+  var delta = offerGrossAmount(offer) - parseFloat(deepLink.google.gtotal);
+  if (Math.abs(delta) <= 0.05) return;
+  deepLinkMismatchDone = true;
+  gtmPush('deeplink_price_mismatch', { step: 'deeplink', delta: Math.round(Math.round(delta / 0.05) * 0.05 * 100) / 100 });
 }
 
 // Translation with a guaranteed fallback (window.t may be absent, or return the raw
@@ -1035,6 +1121,61 @@ function getCancellationPolicy(offer) {
   return { free: true, text: _polT('booking.policy_free', 'Free cancellation') };
 }
 
+// ========== KURTAXE UND MICRODATA (Kontrakt K2) ==========
+// Hausregeln Living: Anreise ab 15:00, Abreise bis 11:00. Google verlangt fuer
+// checkinTime/checkoutTime ein DateTime, nicht das blosse Datum.
+var CHECKIN_TIME = 'T15:00:00';
+var CHECKOUT_TIME = 'T11:00:00';
+
+// Separat belastete Kurtaxe des Angebots. Ist sie im Preis enthalten oder null,
+// gibt es weder eine Zeile auf der Karte noch eine priceComponent.
+function offerCityTax(offer) {
+  var tax = offer && offer.cityTax;
+  if (!tax || tax.included || !(tax.amount > 0)) return 0;
+  return tax.amount;
+}
+function offerRoomAmount(offer) {
+  return offer && offer.totalGrossAmount && offer.totalGrossAmount.amount ? offer.totalGrossAmount.amount : 0;
+}
+// Genau der Betrag, den die Karte sichtbar zeigt. Hotel Center verlangt, dass
+// die strukturierten Daten den sichtbaren Elementen entsprechen.
+function offerGrossAmount(offer) {
+  return Math.round((offerRoomAmount(offer) + offerCityTax(offer)) * 100) / 100;
+}
+function offerCurrency(offer) {
+  return (offer && offer.totalGrossAmount && offer.totalGrossAmount.currency) || 'CHF';
+}
+function metaTag(prop, content) {
+  var text = escapeHtml(String(content === null || content === undefined ? '' : content)).replace(/"/g, '&quot;');
+  return '<meta itemprop="' + prop + '" content="' + text + '">';
+}
+function microdataHotelOpen(propertyCode, propertyName) {
+  return '<div itemscope itemtype="https://schema.org/Hotel" data-am-microdata="1">' + metaTag('name', propertyName) + metaTag('identifier', propertyCode);
+}
+function offerStayMeta() {
+  var html = '';
+  if (searchParams.arrival) html += metaTag('checkinTime', searchParams.arrival + CHECKIN_TIME);
+  if (searchParams.departure) html += metaTag('checkoutTime', searchParams.departure + CHECKOUT_TIME);
+  html += metaTag('numAdults', parseInt(searchParams.adults, 10) || 1);
+  html += metaTag('numChildren', parseInt(searchParams.children, 10) || 0);
+  return html;
+}
+// Genau eine typisierte Komponente, und nur fuer die separat belastete Kurtaxe.
+// Fuer den Zimmerpreis kennt Google keinen Komponententyp.
+function offerPriceSpecification(offer) {
+  var currency = offerCurrency(offer);
+  var tax = offerCityTax(offer);
+  var html = '<div itemprop="priceSpecification" itemscope itemtype="https://schema.org/CompoundPriceSpecification">';
+  html += metaTag('price', offerGrossAmount(offer).toFixed(2));
+  html += metaTag('priceCurrency', currency);
+  if (tax > 0) {
+    html += '<div itemprop="priceComponent" itemscope itemtype="https://schema.org/UnitPriceSpecification">';
+    html += metaTag('name', 'City tax') + metaTag('priceComponentType', 'GenericTax');
+    html += metaTag('price', tax.toFixed(2)) + metaTag('priceCurrency', currency) + '</div>';
+  }
+  return html + '</div>';
+}
+
 function renderOfferCard(offer, categoryClass, index, isBestPrice) {
   var total = offer.totalGrossAmount || {};
   var perNight = offer.averagePerNight || {};
@@ -1042,7 +1183,11 @@ function renderOfferCard(offer, categoryClass, index, isBestPrice) {
   var totalAmount = total.amount ? total.amount.toFixed(0) : '\u2014';
   var perNightAmount = perNight.amount ? perNight.amount.toFixed(0) : '\u2014';
 
-  var html = '<div class="offer-card' + (isBestPrice ? ' best-price' : '') + '" data-index="' + index + '" tabindex="0" role="button" aria-label="Select ' + escapeHtml(offer.unitGroupName || '') + ' ' + escapeHtml(offer.category) + '">';
+  var html = '<div class="offer-card' + (isBestPrice ? ' best-price' : '') + '" data-index="' + index + '" tabindex="0" role="button" aria-label="Select ' + escapeHtml(offer.unitGroupName || '') + ' ' + escapeHtml(offer.category) + '"' +
+    ' itemprop="makesOffer" itemscope itemtype="https://schema.org/Offer https://schema.org/LodgingReservation">';
+  html += metaTag('availability', 'https://schema.org/InStock');
+  html += offerStayMeta();
+  html += offerPriceSpecification(offer);
   html += '<div class="offer-card-top">';
   html += '<div class="offer-unit">' + escapeHtml(offer.unitGroupName || (window.t ? window.t('booking.apartment') : 'Apartment')) + '</div>';
   html += '<span class="offer-category ' + categoryClass + '">' + (categoryClass === 'refundable' ? (window.t ? window.t('booking.flexible') : 'Flexible') : (window.t ? window.t('booking.best_price_tag') : 'Best Price')) + '</span>';
@@ -1053,6 +1198,13 @@ function renderOfferCard(offer, categoryClass, index, isBestPrice) {
   html += '<div class="offer-pricing">';
   html += '<div class="offer-price">CHF ' + perNightAmount + ' <small>' + (window.t ? window.t('booking.per_night') : '/ night') + '</small></div>';
   html += '<div class="offer-total">CHF ' + totalAmount + ' ' + (window.t ? window.t('booking.total') : 'total') + '</div>';
+  // Separat belastete Kurtaxe sichtbar machen, sonst weichen Karte und
+  // Microdata voneinander ab (NYAL).
+  var cityTax = offerCityTax(offer);
+  if (cityTax > 0) {
+    html += '<div class="offer-citytax" style="font-size:.78rem;color:var(--color-text-muted);margin-top:.2rem;">+ ' + currency + ' ' + cityTax.toFixed(2) + ' ' + escapeHtml(_polT('booking.citytax', 'City tax')) + ' (' + escapeHtml(_polT('booking.citytax_separate_note', 'charged separately')) + ')</div>';
+    html += '<div class="offer-gross" style="font-size:.9rem;font-weight:700;color:var(--color-text);margin-top:.1rem;">' + currency + ' ' + offerGrossAmount(offer).toFixed(2) + ' ' + escapeHtml(_polT('booking.summary_total', 'Total')) + '</div>';
+  }
   html += '</div>';
   if (offer.availableUnits > 0 && offer.availableUnits <= 3) {
     html += '<div class="offer-scarcity">' + (window.t ? window.t('booking.only_left', { n: offer.availableUnits }) : 'Only ' + offer.availableUnits + ' left!') + '</div>';
@@ -1097,6 +1249,7 @@ function selectOffer(index) {
   var promoInp = document.getElementById('promoCodeInput');
   if (promoInp) promoInp.value = '';
   updatePriceDisplay();
+  updatePriceSummary();
 
   gtmPush('select_offer', {
     rate_name: selectedOffer.ratePlanName || '',
@@ -1227,10 +1380,39 @@ function getExtrasTotal() {
   return total;
 }
 
+// Preiszusammenfassung vor den Gaesteangaben: Zimmer, Extras, separat belastete
+// Kurtaxe und Gesamt (Referral-Policy: Gesamtpreis vor der ersten Eingabe). Der
+// Zahlbetrag aendert sich dadurch nicht, die Kurtaxe wird im Haus belastet.
+function priceSummaryRow(label, value, extraStyle) {
+  return '<div style="display:flex;justify-content:space-between;gap:1rem;padding:.15rem 0;' + (extraStyle || '') + '"><span>' + label + '</span><span>' + value + '</span></div>';
+}
+function updatePriceSummary() {
+  if (!guestForm || !selectedOffer) return;
+  var box = document.getElementById('priceSummary');
+  if (!box) {
+    box = document.createElement('div');
+    box.id = 'priceSummary';
+    box.className = 'price-summary';
+    box.style.cssText = 'border:1px solid var(--color-border);border-radius:var(--radius-sm);padding:.75rem 1rem;margin-bottom:1rem;font-size:.9rem;';
+    var anchor = guestForm.querySelector('.form-grid');
+    if (anchor) guestForm.insertBefore(box, anchor); else guestForm.appendChild(box);
+  }
+  var currency = offerCurrency(selectedOffer);
+  var room = offerRoomAmount(selectedOffer);
+  var tax = offerCityTax(selectedOffer);
+  var extras = getExtrasTotal();
+  var html = priceSummaryRow(escapeHtml(selectedOffer.unitGroupName || _polT('booking.apartment', 'Apartment')), currency + ' ' + room.toFixed(2));
+  if (extras > 0) html += priceSummaryRow(escapeHtml(_polT('booking.extras', 'Extras')), currency + ' ' + extras.toFixed(2));
+  if (tax > 0) html += priceSummaryRow(escapeHtml(_polT('booking.citytax', 'City tax')) + ' (' + escapeHtml(_polT('booking.citytax_separate_note', 'charged separately')) + ')', currency + ' ' + tax.toFixed(2));
+  html += priceSummaryRow(escapeHtml(_polT('booking.summary_total', 'Total')), currency + ' ' + (Math.round((room + extras + tax) * 100) / 100).toFixed(2), 'font-weight:700;border-top:1px solid var(--color-border);margin-top:.35rem;padding-top:.35rem;');
+  box.innerHTML = html;
+}
+
 function showGuestForm() {
   if (!guestForm) return;
   guestForm.style.display = 'block';
   if (bookingStatus) bookingStatus.style.display = 'none';
+  updatePriceSummary();
 
   gtmPush('begin_checkout', {
     rate_name: selectedOffer ? selectedOffer.ratePlanName || '' : '',
@@ -1401,6 +1583,12 @@ if (confirmBtn) {
       if (klickIds) { payload.tracking = klickIds; }
 
     } catch (e) { /* nie die Buchung brechen */ }
+
+    // Buchungsquelle und Kampagnenkennung des Deep Links. Beides sind
+    // Kanalbezeichner ohne Personenbezug, deshalb ohne Consent und nur im
+    // Speicher der laufenden Seite.
+    if (deepLink && deepLink.source) payload.bookingSource = deepLink.source;
+    if (deepLink && deepLink.campaign) payload.campaign = deepLink.campaign;
 
 
     fetch(API_BASE + '/api/bookings', {
@@ -1977,6 +2165,47 @@ function showPaymentRetry(confirmationId, email, bookingData) {
     });
   }
 }
+
+// ========== DEEP LINK (Kontrakt K1b) ==========
+// js/deeplink.js kommt erst mit der Verdrahtung in die Seite. Fehlt es, bleibt
+// dieser Block wirkungslos und die Seite verhaelt sich wie heute live.
+// Mittags, damit ein Sommerzeitwechsel den Tag nicht verschiebt (wie im Kalender).
+function deepLinkDate(iso) {
+  var p = iso.split('-');
+  return new Date(parseInt(p[0], 10), parseInt(p[1], 10) - 1, parseInt(p[2], 10), 12, 0, 0);
+}
+
+function applyDeepLink() {
+  if (deepLinkDone) return;
+  deepLinkDone = true;
+  try {
+    if (!window.amDeepLink) return;
+    // Belegungsgrenzen und Sprachen kommen aus dem Bestand, nicht aus dem Parser.
+    deepLink = window.amDeepLink.parse(window.location.search, {
+      today: new Date(), properties: MAX_GUESTS, langs: window.amLangs || [], defaultProperty: null
+    });
+  } catch (e) {
+    deepLink = null;
+    return;
+  }
+  if (!deepLink.search) return;
+  var s = deepLink.search;
+  selectLocation(s.property);
+  cal.checkin = deepLinkDate(s.arrival);
+  cal.checkout = deepLinkDate(s.departure);
+  syncInputs();
+  if (guestInput && childInput) {
+    guestInput.value = s.adults;
+    childInput.value = s.children;
+    clampGuestsToMax();
+  }
+  // Die Sprache setzt i18n.js ueber den bestehenden ?lang=-Pfad.
+  if (searchBtn) searchBtn.click();
+  gtmPush('deeplink_applied', { step: 'deeplink', source: deepLink.source });
+}
+
+if (window.amDeepLink) applyDeepLink();
+else document.addEventListener('am:deeplink-ready', applyDeepLink, { once: true });
 
 // Public API for external use (e.g. location card buttons)
 window.amanthosBooking = {
