@@ -103,7 +103,11 @@
     "search_again": "Cerca di nuovo",
     "waiting_for_payment": "In attesa del pagamento...",
     "payment_success": "Pagamento riuscito — Prenotazione confermata!",
-    "confirmation_email_sent": "Un'e-mail di conferma ti è stata inviata."
+    "confirmation_email_sent": "Un'e-mail di conferma ti è stata inviata.",
+    "citytax": "Tassa di soggiorno",
+    "citytax_separate_note": "addebitata separatamente",
+    "summary_total": "Totale",
+    "extras": "Extra"
   },
   "social_proof": {
     "happy_guests": "Ospiti soddisfatti",

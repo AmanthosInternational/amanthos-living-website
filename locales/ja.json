@@ -103,7 +103,11 @@
     "search_again": "再検索",
     "waiting_for_payment": "お支払いを待っています...",
     "payment_success": "お支払い完了 — ご予約が確定しました！",
-    "confirmation_email_sent": "確認メールが送信されました。"
+    "confirmation_email_sent": "確認メールが送信されました。",
+    "citytax": "宿泊税",
+    "citytax_separate_note": "別途請求",
+    "summary_total": "合計",
+    "extras": "オプション"
   },
   "social_proof": {
     "happy_guests": "満足のゲスト",
