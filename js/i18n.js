@@ -33,12 +33,17 @@
 
   // Detect user language: (0) URL param, (1) localStorage, (2) navigator.language, (3) default EN
   function detectLanguage() {
-    // 0. URL parameter ?lang=xx (highest priority, also saves to localStorage)
+    // 0. URL parameter ?lang=xx (highest priority, also saves to localStorage).
+    // Ein vorhandenes, aber unbekanntes ?lang= faellt auf EN und nicht mehr auf
+    // Storage oder Browsersprache zurueck (Kontrakt K1): wer aus einem Deep Link
+    // kommt, soll die Sprache sehen, die im Link steht, sonst gar keine Wahl.
+    // Gewertet werden die ersten zwei Zeichen, damit auch de-CH greift.
     try {
       var urlParams = new URLSearchParams(window.location.search);
       var urlLang = urlParams.get('lang');
-      if (urlLang && SUPPORTED_LANGS[urlLang.toLowerCase()]) {
-        var lang = urlLang.toLowerCase();
+      if (urlLang) {
+        var lang = urlLang.trim().slice(0, 2).toLowerCase();
+        if (!SUPPORTED_LANGS[lang]) return DEFAULT_LANG;
         try { localStorage.setItem(STORAGE_KEY, lang); } catch (e2) { /* Storage gesperrt */ }
         return lang;
       }
@@ -283,6 +288,10 @@
   window.getLang = function () {
     return currentLang;
   };
+
+  // Welche Sprachen die Site kennt. booking.js gibt die Liste an den
+  // Deep-Link-Parser weiter, damit sie nur an einer Stelle gepflegt wird.
+  window.amLangs = Object.keys(SUPPORTED_LANGS);
 
   // Initialize
   function init() {
