@@ -103,7 +103,11 @@
     "search_again": "Erneut suchen",
     "waiting_for_payment": "Warte auf Zahlung...",
     "payment_success": "Zahlung erfolgreich — Reservierung bestätigt!",
-    "confirmation_email_sent": "Eine Bestätigungsmail wurde an Sie gesendet."
+    "confirmation_email_sent": "Eine Bestätigungsmail wurde an Sie gesendet.",
+    "citytax": "Kurtaxe",
+    "citytax_separate_note": "wird separat belastet",
+    "summary_total": "Gesamt",
+    "extras": "Extras"
   },
   "social_proof": {
     "happy_guests": "Zufriedene G\u00e4ste",

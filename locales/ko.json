@@ -103,7 +103,11 @@
     "search_again": "다시 검색",
     "waiting_for_payment": "결제 대기 중...",
     "payment_success": "결제 완료 — 예약이 확정되었습니다!",
-    "confirmation_email_sent": "확인 이메일이 발송되었습니다."
+    "confirmation_email_sent": "확인 이메일이 발송되었습니다.",
+    "citytax": "숙박세",
+    "citytax_separate_note": "별도 청구",
+    "summary_total": "합계",
+    "extras": "추가 옵션"
   },
   "social_proof": {
     "happy_guests": "만족 고객",

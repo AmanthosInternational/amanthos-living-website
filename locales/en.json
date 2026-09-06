@@ -103,7 +103,11 @@
     "search_again": "Search Again",
     "waiting_for_payment": "Waiting for payment...",
     "payment_success": "Payment Successful — Reservation Confirmed!",
-    "confirmation_email_sent": "A confirmation email has been sent to you."
+    "confirmation_email_sent": "A confirmation email has been sent to you.",
+    "citytax": "City tax",
+    "citytax_separate_note": "charged separately",
+    "summary_total": "Total",
+    "extras": "Extras"
   },
   "social_proof": {
     "happy_guests": "Happy Guests",

@@ -103,7 +103,11 @@
     "search_again": "重新搜索",
     "waiting_for_payment": "等待付款中...",
     "payment_success": "付款成功 — 预订已确认！",
-    "confirmation_email_sent": "确认邮件已发送给您。"
+    "confirmation_email_sent": "确认邮件已发送给您。",
+    "citytax": "城市税",
+    "citytax_separate_note": "另行收取",
+    "summary_total": "总计",
+    "extras": "附加服务"
   },
   "social_proof": {
     "happy_guests": "满意住客",
