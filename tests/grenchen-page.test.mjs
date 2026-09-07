@@ -10,14 +10,17 @@
  */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { createRequire } from 'node:module';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const require = createRequire(import.meta.url);
-const page = require(join(here, '..', 'js', 'grenchen-page.js'));
+const scriptFile = join(here, '..', 'js', 'grenchen-page.js');
+const page = require(scriptFile);
 const config = require(join(here, '..', 'js', 'grenchen-config.js'));
+const src = readFileSync(scriptFile, 'utf8');
 
 const K3_KEYS = [
   'form', 'name', 'email', 'phone', 'unit', 'rooms', 'budget', 'move_in', 'wish_slot',
@@ -217,6 +220,33 @@ test('K3: 502, 503 und der Netzfehler nennen Telefon und E-Mail', () => {
     assert.equal(page.statusText(status), erwartet);
     assert.equal(page.needsContact(status), true);
   }
+});
+
+// ---- Quelltext-Wache ------------------------------------------------------
+//
+// Die beiden folgenden Tests haengen an der Verdrahtung, nicht an einer reinen
+// Funktion: Wer die Einwilligungspruefung vor fbq oder vor der Ads-Conversion
+// entfernt, macht sie rot. Ohne sie waere unbewiesen, dass die Pruefung im
+// Auslieferungszustand ueberhaupt an der richtigen Stelle steht.
+
+test('das Seitenskript speichert nichts und protokolliert nichts', () => {
+  // Gesucht ist der Zugriff, nicht das Wort: im Kopfkommentar steht, dass es
+  // keinen gibt, und genau das soll der Test nicht als Verstoss lesen.
+  for (const zugriff of [/\blocalStorage\s*[.[]/, /\bsessionStorage\s*[.[]/,
+    /document\s*\.\s*cookie/, /\bconsole\s*\./]) {
+    assert.doesNotMatch(src, zugriff);
+  }
+});
+
+test('K4: Ads-Conversion und Meta-Lead haengen an der Einwilligungspruefung', () => {
+  assert.ok(!/AW-\d/.test(src), 'die Ads-Kennung gehoert nach js/grenchen-config.js');
+  const block = src.slice(src.indexOf('function leadEvents'), src.indexOf('function clickIds'));
+  assert.ok(block.includes("granted() && typeof window.gtag === 'function'"));
+  assert.ok(block.includes("granted() && typeof window.fbq === 'function'"));
+  // Ausserhalb dieses Blocks kommen weder fbq noch die Conversion vor.
+  assert.equal((src.match(/window\.fbq/g) || []).length, (block.match(/window\.fbq/g) || []).length);
+  assert.equal((src.match(/'conversion'/g) || []).length, 1);
+  assert.equal((src.match(/ADS_SEND_TO/g) || []).length, 1);
 });
 
 test('K3: kein Statustext gibt eine Servermeldung oder einen Code weiter', () => {
