@@ -1,7 +1,7 @@
 ---
 thema: grenchen-mieten
 datum: 2026-09-07
-status: aktiv
+status: verdrahtet
 repo: ~/Projects/amanthos-living-website
 plankey: grenchen-mieten
 weitere_repos:
