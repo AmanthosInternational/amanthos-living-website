@@ -72,19 +72,18 @@
 .hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
 
 /* Lage, Galerie, Kontakt. */
-.g-lage{display:grid;grid-template-columns:repeat(auto-fit,minmax(16rem,1fr));gap:0 2.5rem;list-style:none;margin-top:1.5rem}
+/* min(20rem,100%) statt 20rem: sonst erzwingt die Spalte auf einem 320-px-Geraet
+   eine breitere Zeile als das Fenster, und die Seite scrollt waagrecht. */
+.g-lage{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(20rem,100%),1fr));gap:0 2.5rem;list-style:none;margin-top:1.5rem}
 .g-lage li{display:flex;justify-content:space-between;gap:1rem;padding:.65rem 0;border-bottom:1px solid var(--color-border);font-size:.95rem;color:var(--color-text)}
 .g-lage strong{color:var(--color-primary)}
 .g-gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:1rem;margin-top:1.5rem}
 .g-gallery img{width:100%;height:220px;object-fit:cover;border-radius:var(--radius-lg)}
-.g-kontakt a{font-weight:600}
+/* Unterstrichen, nicht nur farbig: axe meldet sonst link-in-text-block (serious),
+   weil Goldton und Fliesstext nur 1.65:1 auseinanderliegen. */
+.g-kontakt a,.g-note a{font-weight:600;text-decoration:underline}
 .g-kontakt p{margin-bottom:.35rem;color:var(--color-text)}
 #a-consent{min-height:44px;padding:.5rem;background:none;border:0;font:inherit;font-size:.8rem;color:rgba(255,255,255,.8);text-decoration:underline;cursor:pointer}
 #a-consent:hover{color:#fff}
 
-@media (max-width:768px){
-  .g-hero{padding:6rem 1rem 2.5rem}
-  .g-finder{padding:1rem}
-  .g-gallery img{height:180px}
-  .g-lage{gap:0}
-}
+@media (max-width:768px){.g-hero{padding:6rem 1rem 2.5rem}.g-finder{padding:1rem}.g-gallery img{height:180px}}
