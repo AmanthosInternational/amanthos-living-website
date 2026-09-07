@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
+  <title>Skelett grenchen-mieten (Testfixture)</title>
+  <!--
+    Kleinste Seite, die jede ID aus tests/fixtures/grenchen-dom-contract.json
+    genau einmal traegt (Kontrakt K5). Segment 3 prueft dagegen im Browser,
+    solange grenchen-mieten/index.html noch nicht gemergt ist. Kein Produktivcode,
+    keine Gestaltung, nicht ausliefern: noindex steht oben.
+
+    Geladen wird, was das Seitenskript braucht: consent.js synchron, meta.js mit
+    defer, danach Konfiguration, Daten, Finder und Seitenskript. Sentry und
+    Plausible fehlen bewusst, sie wuerden bei jedem lokalen Testlauf Netzverkehr
+    ausloesen und tragen zum DOM-Kontrakt nichts bei; das Seitenskript prueft
+    window.plausible ohnehin vor dem Aufruf. gtag ist wie auf der echten Seite
+    ueber dataLayer definiert, der Harness haengt sich davor und sammelt die
+    Aufrufe in window.__gtagCalls.
+  -->
+  <script src="../../js/consent.js"></script>
+  <script defer src="../../js/meta.js"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-8LPLG0BPJ6');
+    gtag('config', 'AW-702540316');
+  </script>
+  <style>
+    .hp { position: absolute; left: -9999px; }
+    [hidden] { display: none; }
+  </style>
+</head>
+<body>
+  <nav>
+    <button type="button" id="hamburger" aria-label="Menü">Menü</button>
+    <ul id="navLinks">
+      <li><a href="#finder">Wohnungen</a></li>
+      <li><a href="#anfrage">Besichtigung anfragen</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <section id="finder">
+      <h2>Wohnungsfinder</h2>
+      <div id="f-form">
+        <fieldset id="f-rooms">
+          <legend>Zimmer</legend>
+          <input type="radio" name="rooms" id="f-rooms-all" value="" checked>
+          <label for="f-rooms-all">Alle</label>
+          <input type="radio" name="rooms" id="f-rooms-15" value="1.5">
+          <label for="f-rooms-15">1.5 Zimmer</label>
+          <input type="radio" name="rooms" id="f-rooms-2" value="2">
+          <label for="f-rooms-2">2 Zimmer</label>
+          <input type="radio" name="rooms" id="f-rooms-3" value="3+">
+          <label for="f-rooms-3">3 Zimmer und mehr</label>
+        </fieldset>
+
+        <label for="f-budget">Budget brutto</label>
+        <input type="range" id="f-budget" min="800" max="1700" step="50" value="1700" aria-describedby="f-budget-out">
+        <output id="f-budget-out" for="f-budget">alle Preise</output>
+
+        <label for="f-movein">Einzug ab</label>
+        <input type="month" id="f-movein" min="2026-10" max="2027-12" pattern="\d{4}-\d{2}" placeholder="2026-11">
+
+        <input type="checkbox" id="f-parking">
+        <label for="f-parking">Aussenparkplatz gewünscht</label>
+      </div>
+
+      <p id="f-count" role="status"></p>
+      <div id="f-results" aria-live="polite"></div>
+      <p id="f-empty" hidden>Keine Wohnung im Budget. Die günstigsten Wohnungen in Ihrer Zimmerwahl:</p>
+    </section>
+
+    <section id="anfrage">
+      <h2>Besichtigung anfragen</h2>
+      <form id="a-form" novalidate>
+        <label for="a-name">Name</label>
+        <input type="text" id="a-name" name="name" autocomplete="name" required>
+
+        <label for="a-email">E-Mail</label>
+        <input type="email" id="a-email" name="email" required>
+
+        <label for="a-phone">Telefon</label>
+        <input type="tel" id="a-phone" name="phone">
+
+        <label for="a-unit">Wohnung</label>
+        <select id="a-unit" name="unit">
+          <option value="">Noch offen</option>
+        </select>
+
+        <input type="hidden" id="a-rooms" name="rooms" value="">
+        <input type="hidden" id="a-budget" name="budget" value="">
+        <input type="hidden" id="a-parking" name="parking" value="">
+
+        <label for="a-movein">Einzug ab</label>
+        <input type="month" id="a-movein" name="move_in">
+
+        <label for="a-slot-day">Wunschtag</label>
+        <input type="date" id="a-slot-day">
+
+        <label for="a-slot-time">Wunschzeit</label>
+        <select id="a-slot-time">
+          <option value="09 bis 12 Uhr">09 bis 12 Uhr</option>
+          <option value="12 bis 15 Uhr">12 bis 15 Uhr</option>
+          <option value="15 bis 18 Uhr">15 bis 18 Uhr</option>
+        </select>
+
+        <label for="a-message">Nachricht</label>
+        <textarea id="a-message" name="message"></textarea>
+
+        <label class="hp" for="a-company-website">Firmenwebsite, bitte leer lassen</label>
+        <input type="text" class="hp" id="a-company-website" name="company_website" tabindex="-1" autocomplete="off" aria-hidden="true">
+
+        <button type="submit" id="a-submit">Anfrage senden</button>
+      </form>
+      <p id="a-status" role="status"></p>
+      <div id="a-success" hidden>
+        <p>Vielen Dank. Wir melden uns bei Ihnen, um den Besichtigungstermin zu bestätigen.</p>
+        <a id="a-termin" href="#" hidden>Termin jetzt online wählen</a>
+      </div>
+    </section>
+
+    <section id="lage"><h2>Lage</h2></section>
+    <section id="fotos"><h2>Fotos</h2></section>
+    <section id="faq"><h2>Fragen und Antworten</h2></section>
+    <section id="kontakt"><h2>Kontakt</h2></section>
+  </main>
+
+  <footer>
+    <button type="button" id="a-consent">Cookie-Einstellungen</button>
+  </footer>
+
+  <script defer src="../../js/grenchen-config.js"></script>
+  <script defer src="../../js/grenchen-units.js"></script>
+  <script defer src="../../js/grenchen-finder.js"></script>
+  <script defer src="../../js/grenchen-page.js"></script>
+</body>
+</html>
