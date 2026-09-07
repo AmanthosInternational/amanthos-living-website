@@ -17,6 +17,10 @@
   var MONTH_RE = /^\d{4}-(0[1-9]|1[0-2])$/;
   var DATE_RE = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/;
   var DEFAULT_FALLBACK = 3;
+  var MONTHS = [
+    'Januar', 'Februar', 'März', 'April', 'Mai', 'Juni',
+    'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'
+  ];
 
   // Zahl aus Zahl oder Zeichenkette; alles andere ist null. Number('') ist 0,
   // deshalb faellt der leere String vorher heraus.
@@ -138,10 +142,69 @@
     return filter(units, { rooms: wish.rooms }).slice(0, count);
   }
 
+  // ---- Beschriftungen ----------------------------------------------------
+  //
+  // Alles, was auf einer Karte steht, wird hier gebaut und nicht im
+  // Seitenskript, damit die Schreibweise an einer Stelle liegt und pruefbar
+  // ist. Ein unlesbarer Wert liefert den leeren String, nie "NaN" oder
+  // "undefined" auf der Seite.
+
+  // Schweizer Tausendertrennung mit dem geraden Apostroph: 1090 wird 1'090.
+  function groupThousands(digits) {
+    return digits.replace(/\B(?=(\d{3})+(?!\d))/g, '\'');
+  }
+
+  function formatChf(value) {
+    var n = toNumber(value);
+    if (n === null) return '';
+    var rounded = Math.round(n);
+    var sign = rounded < 0 ? '-' : '';
+    return 'CHF ' + sign + groupThousands(String(Math.abs(rounded)));
+  }
+
+  // Eine Nachkommastelle, ohne angehaengte Null: 43.1 wird "43.1 m²", 42 wird
+  // "42 m²". Der Dezimalpunkt ist der aus den Daten und dem Expose.
+  function formatSqm(value) {
+    var n = toNumber(value);
+    if (n === null) return '';
+    return String(Math.round(n * 10) / 10) + ' m²';
+  }
+
+  function roomsLabel(value) {
+    var n = toNumber(value);
+    if (n === null) return '';
+    return String(n) + ' Zimmer';
+  }
+
+  function floorLabel(value) {
+    var n = toNumber(value);
+    if (n === null) return '';
+    return String(n) + '. OG';
+  }
+
+  /**
+   * "ab 1. November 2026, früher nach Vereinbarung" bei flexiblem Datum, sonst
+   * "ab 1. Oktober 2026". Ohne lesbares Datum "nach Vereinbarung", denn dann
+   * ist der Bezug Verhandlungssache und kein Versprechen.
+   */
+  function availabilityLabel(unit) {
+    var from = unit && typeof unit.availableFrom === 'string' ? unit.availableFrom : '';
+    if (!DATE_RE.test(from)) return 'nach Vereinbarung';
+    var day = parseInt(from.slice(8, 10), 10);
+    var month = MONTHS[parseInt(from.slice(5, 7), 10) - 1];
+    var label = 'ab ' + day + '. ' + month + ' ' + from.slice(0, 4);
+    return unit.flexible === true ? label + ', früher nach Vereinbarung' : label;
+  }
+
   var api = {
     VERSION: '1',
     filter: filter,
-    fallback: fallback
+    fallback: fallback,
+    formatChf: formatChf,
+    formatSqm: formatSqm,
+    roomsLabel: roomsLabel,
+    floorLabel: floorLabel,
+    availabilityLabel: availabilityLabel
   };
 
   if (typeof module === 'object' && module.exports) module.exports = api;

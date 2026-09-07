@@ -7,13 +7,16 @@
  */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import vm from 'node:vm';
+import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { createRequire } from 'node:module';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const require = createRequire(import.meta.url);
-const finder = require(join(here, '..', 'js', 'grenchen-finder.js'));
+const finderFile = join(here, '..', 'js', 'grenchen-finder.js');
+const finder = require(finderFile);
 const units = require(join(here, '..', 'js', 'grenchen-units.js'));
 
 const UNITS = units.UNITS;
@@ -157,4 +160,104 @@ test('K6: ein unlesbares n im Fallback liefert drei Karten', () => {
   assert.equal(finder.fallback(UNITS, { rooms: '' }).length, 3);
   assert.equal(finder.fallback(UNITS, { rooms: '' }, 'drei').length, 3);
   assert.equal(finder.fallback(UNITS, { rooms: '' }, -2).length, 3);
+});
+
+// ---- Beschriftungen -------------------------------------------------------
+
+test('K6: formatChf setzt den Schweizer Apostroph', () => {
+  assert.equal(finder.formatChf(1090), 'CHF 1\'090');
+  assert.equal(finder.formatChf(950), 'CHF 950');
+  assert.equal(finder.formatChf(1150), 'CHF 1\'150');
+  assert.equal(finder.formatChf(170), 'CHF 170');
+  assert.equal(finder.formatChf('1120'), 'CHF 1\'120');
+  assert.equal(finder.formatChf(null), '');
+  assert.equal(finder.formatChf('abc'), '');
+});
+
+test('K6: jede gelistete Wohnung bekommt einen lesbaren Bruttopreis', () => {
+  for (const u of listed) {
+    const label = finder.formatChf(u.gross);
+    assert.match(label, /^CHF \d(\d{0,2})?('\d{3})*$/, `${u.nr}: ${label}`);
+    assert.equal(label.includes('\''), u.gross >= 1000);
+  }
+});
+
+test('K6: formatSqm haengt keine Null an und nutzt den Dezimalpunkt', () => {
+  assert.equal(finder.formatSqm(43.1), '43.1 m²');
+  assert.equal(finder.formatSqm(42.0), '42 m²');
+  assert.equal(finder.formatSqm(101.6), '101.6 m²');
+  assert.equal(finder.formatSqm(undefined), '');
+});
+
+test('K6: roomsLabel fuer 1.5, 2, 3 und 3.5', () => {
+  assert.equal(finder.roomsLabel(1.5), '1.5 Zimmer');
+  assert.equal(finder.roomsLabel(2), '2 Zimmer');
+  assert.equal(finder.roomsLabel(3), '3 Zimmer');
+  assert.equal(finder.roomsLabel(3.5), '3.5 Zimmer');
+  assert.equal(finder.roomsLabel('2'), '2 Zimmer');
+  assert.equal(finder.roomsLabel(''), '');
+});
+
+test('K6: floorLabel schreibt die Etage als OG', () => {
+  assert.equal(finder.floorLabel(4), '4. OG');
+  assert.equal(finder.floorLabel(6), '6. OG');
+  assert.equal(finder.floorLabel(null), '');
+});
+
+test('K6: availabilityLabel bei flexiblem Datum, hartem Datum und ohne Datum', () => {
+  const byNr = (nr) => UNITS.find((u) => u.nr === nr);
+  assert.equal(finder.availabilityLabel(byNr('31')), 'ab 1. November 2026, früher nach Vereinbarung');
+  assert.equal(finder.availabilityLabel(byNr('56')), 'ab 1. Oktober 2026');
+  assert.equal(finder.availabilityLabel(byNr('34')), 'ab 1. Januar 2027');
+  assert.equal(finder.availabilityLabel({ availableFrom: null, flexible: true }), 'nach Vereinbarung');
+  assert.equal(finder.availabilityLabel({ availableFrom: '2026-13-01', flexible: false }), 'nach Vereinbarung');
+  assert.equal(finder.availabilityLabel(undefined), 'nach Vereinbarung');
+});
+
+test('K6: der Tag steht ohne fuehrende Null', () => {
+  assert.equal(
+    finder.availabilityLabel({ availableFrom: '2027-03-09', flexible: false }),
+    'ab 9. März 2027'
+  );
+});
+
+test('K5: die Kopfzeile einer Karte entsteht aus drei Beschriftungen', () => {
+  const u = UNITS.find((x) => x.nr === '43');
+  const meta = [finder.floorLabel(u.floor), finder.roomsLabel(u.rooms), finder.formatSqm(u.sqm)].join(', ');
+  assert.equal(meta, '4. OG, 2 Zimmer, 58.2 m²');
+  assert.equal(finder.formatChf(u.gross), 'CHF 1\'120');
+});
+
+// ---- Laden in Node und im Browser ----------------------------------------
+
+test('K6: in Node laeuft die Datei ohne window', () => {
+  assert.equal(typeof globalThis.window, 'undefined');
+  assert.equal(typeof finder.filter, 'function');
+});
+
+test('K6: im Browser laeuft die Datei ohne module und haengt sich an window', () => {
+  const sandbox = { window: {} };
+  vm.createContext(sandbox);
+  vm.runInContext(readFileSync(finderFile, 'utf8'), sandbox, { filename: 'grenchen-finder.js' });
+  const browser = sandbox.window.amGrenchenFinder;
+  assert.equal(typeof browser, 'object');
+  assert.equal(browser.VERSION, '1');
+  for (const name of ['filter', 'fallback', 'formatChf', 'formatSqm', 'roomsLabel', 'floorLabel', 'availabilityLabel']) {
+    assert.equal(typeof browser[name], 'function', name);
+  }
+  // Die Liste stammt aus dem Sandbox-Realm; erst die Kopie ist mit einem
+  // hiesigen Array vergleichbar.
+  assert.deepEqual([...nrs(browser.filter(UNITS, { rooms: '1.5', budget: 900 }))], ['33', '31', '32']);
+});
+
+test('K6: die Datei fasst kein DOM an und nennt window nur im Export', () => {
+  const src = readFileSync(finderFile, 'utf8');
+  assert.equal(/\bdocument\b/.test(src), false, 'kein document');
+  const code = src
+    .split('\n')
+    .filter((line) => !/^\s*(\/\/|\*|\/\*)/.test(line))
+    .filter((line) => /\bwindow\b/.test(line));
+  assert.deepEqual(code, [
+    "  if (typeof window !== 'undefined' && window) window.amGrenchenFinder = api;"
+  ]);
 });
