@@ -8,14 +8,44 @@
  */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { existsSync, readFileSync, statSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { createRequire } from 'node:module';
 
 const here = dirname(fileURLToPath(import.meta.url));
+const root = join(here, '..');
 const require = createRequire(import.meta.url);
 const units = require(join(here, '..', 'js', 'grenchen-units.js'));
 const config = require(join(here, '..', 'js', 'grenchen-config.js'));
+const dom = JSON.parse(readFileSync(join(here, 'fixtures', 'grenchen-dom-contract.json'), 'utf8'));
+
+const pageFile = join(root, 'grenchen-mieten', 'index.html');
+const scriptFile = join(root, 'js', 'grenchen-page.js');
+const skeletonFile = join(here, 'fixtures', 'grenchen-skeleton.html');
+
+// Masse direkt aus dem RIFF-Kopf der webp-Datei, damit die Werte im Fixture
+// nicht von Hand gepflegt werden muessen und ein neu konvertiertes Bild sofort
+// auffaellt (Segment 2 setzt width und height daraus, sonst springt das Layout).
+function webpSize(buf) {
+  assert.equal(buf.toString('ascii', 0, 4), 'RIFF');
+  assert.equal(buf.toString('ascii', 8, 12), 'WEBP');
+  const kind = buf.toString('ascii', 12, 16);
+  if (kind === 'VP8 ') {
+    return { width: buf.readUInt16LE(26) & 0x3fff, height: buf.readUInt16LE(28) & 0x3fff };
+  }
+  if (kind === 'VP8L') {
+    const bits = buf.readUInt32LE(21);
+    return { width: (bits & 0x3fff) + 1, height: ((bits >> 14) & 0x3fff) + 1 };
+  }
+  if (kind === 'VP8X') {
+    return {
+      width: buf.readUIntLE(24, 3) + 1,
+      height: buf.readUIntLE(27, 3) + 1
+    };
+  }
+  throw new Error('unbekannter webp-Chunk ' + kind);
+}
 
 // ---- K1: Wohnungsdaten ----------------------------------------------------
 
@@ -103,3 +133,83 @@ test('K2: API_BASE, Pfade und Kontaktdaten stehen fest', () => {
   assert.equal(config.PHONE_HREF, 'tel:' + config.PHONE.replace(/\s/g, ''));
   assert.equal(config.EMAIL, 'info@amanthosliving.com');
 });
+
+// ---- K5: DOM-Kontrakt -----------------------------------------------------
+
+test('K5: das Fixture traegt alle IDs aus dem Kontrakt, jede genau einmal', () => {
+  assert.equal(dom.version, '1');
+  assert.equal(dom.ids.length, 39);
+  assert.equal(new Set(dom.ids).size, dom.ids.length);
+  for (const id of ['f-form', 'f-rooms', 'f-budget', 'f-budget-out', 'f-movein', 'f-parking',
+    'f-results', 'f-count', 'f-empty', 'a-form', 'a-name', 'a-email', 'a-phone', 'a-unit',
+    'a-rooms', 'a-budget', 'a-parking', 'a-movein', 'a-slot-day', 'a-slot-time', 'a-message',
+    'a-company-website', 'a-submit', 'a-status', 'a-success', 'a-termin', 'hamburger',
+    'navLinks', 'a-consent']) {
+    assert.ok(dom.ids.includes(id), `ID ${id} fehlt im Fixture`);
+  }
+});
+
+test('K5: Abschnitte und Radio-IDs sind Teil der ID-Liste', () => {
+  assert.deepEqual(dom.sections, ['finder', 'anfrage', 'lage', 'fotos', 'faq', 'kontakt']);
+  for (const id of dom.sections) assert.ok(dom.ids.includes(id), `Abschnitt ${id} fehlt in ids`);
+  assert.deepEqual(dom.radios, { 'f-rooms-all': '', 'f-rooms-15': '1.5', 'f-rooms-2': '2', 'f-rooms-3': '3+' });
+  for (const id of Object.keys(dom.radios)) assert.ok(dom.ids.includes(id), `Radio ${id} fehlt in ids`);
+});
+
+test('K5: die Klassen der Karte stehen im Fixture', () => {
+  assert.deepEqual(dom.classes, [
+    'unit-card', 'unit-card-title', 'unit-card-meta', 'unit-card-price',
+    'unit-card-gross', 'unit-card-avail', 'unit-card-cta', 'over-budget', 'hp'
+  ]);
+});
+
+// ---- K9: Bilder -----------------------------------------------------------
+
+test('K9: sieben webp-Dateien, gemessene Masse, je unter 200 KB', () => {
+  assert.equal(dom.images.length, 7);
+  assert.equal(dom.images.filter((i) => i.use === 'hero').length, 1);
+  assert.equal(dom.images.filter((i) => i.use === 'hero-960').length, 1);
+  assert.equal(dom.images.filter((i) => i.use === 'galerie').length, 5);
+  for (const img of dom.images) {
+    assert.match(img.file, /^images\/solothurn\/grenchen-[a-z0-9-]+\.webp$/);
+    const abs = join(root, img.file);
+    assert.ok(existsSync(abs), `${img.file} fehlt`);
+    const bytes = statSync(abs).size;
+    assert.ok(bytes < 200 * 1024, `${img.file} ist ${bytes} Bytes gross`);
+    assert.deepEqual(webpSize(readFileSync(abs)), { width: img.width, height: img.height },
+      `${img.file}: Masse im Fixture stimmen nicht mit der Datei ueberein`);
+    assert.equal(img.width, img.use === 'hero-960' ? 960 : 1600);
+    assert.ok(img.alt.length >= 20, `${img.file} hat keinen brauchbaren Alt-Text`);
+  }
+});
+
+// ---- K5: Gegenprobe an Seite und Skript, sobald sie existieren -------------
+
+test('K5: jede ID kommt in grenchen-mieten/index.html genau einmal vor',
+  { skip: existsSync(pageFile) ? false : 'grenchen-mieten/index.html fehlt noch (Segment 2)' }, () => {
+    const html = readFileSync(pageFile, 'utf8');
+    for (const id of dom.ids) {
+      const treffer = html.match(new RegExp('id="' + id + '"', 'g')) || [];
+      assert.equal(treffer.length, 1, `ID ${id} kommt ${treffer.length} mal vor`);
+    }
+  });
+
+test('K5: das Skelett traegt jede ID genau einmal',
+  { skip: existsSync(skeletonFile) ? false : 'grenchen-skeleton.html fehlt noch' }, () => {
+    const html = readFileSync(skeletonFile, 'utf8');
+    for (const id of dom.ids) {
+      const treffer = html.match(new RegExp('id="' + id + '"', 'g')) || [];
+      assert.equal(treffer.length, 1, `ID ${id} kommt im Skelett ${treffer.length} mal vor`);
+    }
+    assert.match(html, /<meta name="robots" content="noindex">/);
+  });
+
+test('K5: jedes getElementById-Literal in js/grenchen-page.js steht im Fixture',
+  { skip: existsSync(scriptFile) ? false : 'js/grenchen-page.js fehlt noch (Segment 3)' }, () => {
+    const src = readFileSync(scriptFile, 'utf8');
+    const gefunden = [...src.matchAll(/getElementById\(\s*['"]([^'"]+)['"]\s*\)/g)].map((m) => m[1]);
+    assert.ok(gefunden.length > 0, 'keine getElementById-Aufrufe gefunden');
+    for (const id of new Set(gefunden)) {
+      assert.ok(dom.ids.includes(id), `js/grenchen-page.js greift auf unbekannte ID ${id} zu`);
+    }
+  });
