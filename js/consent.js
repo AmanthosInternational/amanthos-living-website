@@ -175,10 +175,15 @@
     try {
       if (LANG_KEY) lang = window.localStorage.getItem(LANG_KEY);
     } catch (e) { lang = null; }
-    if (!lang) {
-      var nav = (window.navigator && (navigator.language || navigator.userLanguage)) || '';
-      lang = nav.slice(0, 2).toLowerCase();
-    }
+    if (lang && TEXTS[lang]) return lang;
+    // Die Seitensprache schlaegt die Browsersprache. Auf einsprachigen Seiten ohne Umschalter
+    // (die Vermietungsseite Grenchen ist die erste davon) stand das Banner sonst englisch unter
+    // deutschem Text, gemessen am 07.09.2026. Die gespeicherte Wahl bleibt vorrangig, weil sie
+    // auf den mehrsprachigen Seiten die ausdrueckliche Entscheidung des Besuchers ist.
+    var seite = (document.documentElement.getAttribute('lang') || '').slice(0, 2).toLowerCase();
+    if (TEXTS[seite]) return seite;
+    var nav = (window.navigator && (navigator.language || navigator.userLanguage)) || '';
+    lang = nav.slice(0, 2).toLowerCase();
     return TEXTS[lang] ? lang : FALLBACK_LANG;
   }
 
