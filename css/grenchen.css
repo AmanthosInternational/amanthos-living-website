@@ -6,12 +6,9 @@
  * sie, die Klassennamen stehen im DOM-Kontrakt K5), Galerie, Lageliste und der
  * Honigtopf. Alles andere kommt aus style.css (section, container, section-label,
  * section-title, btn, form-grid, form-field, faq-list, faq-item, footer, nav).
- *
- * Diese Datei wird im head NACH style.css eingebunden. Bei gleicher Spezifitaet
- * gewinnt sie deshalb, ohne dass irgendwo !important noetig waere.
- *
- * Tippziele sind ueberall mindestens 44 px hoch; die Farben stammen aus den
- * Variablen von style.css und erreichen damit die dort gemessenen Kontraste.
+ * Eingebunden NACH style.css, deshalb gewinnt sie bei gleicher Spezifitaet, ohne
+ * dass irgendwo !important noetig waere. Tippziele mindestens 44 px, Farben aus
+ * den Variablen von style.css und damit mit den dort gemessenen Kontrasten.
  */
 
 /* Hero. Das Bild liegt als eigenes img darunter, der Verlauf darueber. Die dunkle
