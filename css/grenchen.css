@@ -1,0 +1,93 @@
+/**
+ * Amanthos Living: Seite grenchen-mieten (Segment 2, Bauplan vom 07.09.2026).
+ *
+ * Hier steht nur, was css/style.css nicht schon hat: der Hero mit Bild darunter,
+ * die Steuerelemente des Wohnungsfinders, die Wohnungskarten (Segment 3 rendert
+ * sie, die Klassennamen stehen im DOM-Kontrakt K5), Galerie, Lageliste und der
+ * Honigtopf. Alles andere kommt aus style.css (section, container, section-label,
+ * section-title, btn, form-grid, form-field, faq-list, faq-item, footer, nav).
+ *
+ * Diese Datei wird im head NACH style.css eingebunden. Bei gleicher Spezifitaet
+ * gewinnt sie deshalb, ohne dass irgendwo !important noetig waere.
+ *
+ * Tippziele sind ueberall mindestens 44 px hoch; die Farben stammen aus den
+ * Variablen von style.css und erreichen damit die dort gemessenen Kontraste.
+ */
+
+/* Hero. Das Bild liegt als eigenes img darunter, der Verlauf darueber. Die dunkle
+   Grundfarbe steht am Abschnitt selbst: so bleibt weisse Schrift auch dann lesbar,
+   wenn das Bild noch nicht geladen ist, und der Kontrast ist an einer echten
+   Hintergrundfarbe messbar statt an einem Foto. */
+.g-hero{position:relative;background:var(--color-primary);padding:7.5rem 1.25rem 3.5rem;text-align:center;overflow:hidden}
+.g-hero-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.g-hero-veil{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(26,43,74,.74),rgba(26,43,74,.88))}
+.g-hero-inner{position:relative;z-index:1;max-width:46rem;margin:0 auto}
+.g-hero h1{font-family:var(--font-heading);font-size:clamp(1.9rem,5vw,3rem);color:#fff;line-height:1.15;margin-bottom:.75rem}
+.g-hero p{color:#fff;font-size:1.05rem;line-height:1.6;margin-bottom:1.5rem}
+.g-cta-row{display:flex;gap:.75rem;flex-wrap:wrap;justify-content:center}
+.g-cta-row .btn{min-height:44px}
+.g-hero .btn-outline{color:#fff;border-color:rgba(255,255,255,.65)}
+
+/* Vertrauensleiste unter dem Hero. */
+.g-trust{background:var(--color-bg-alt);padding:1rem 0}
+.g-trust ul{display:flex;flex-wrap:wrap;justify-content:center;gap:.5rem 2rem;list-style:none;font-size:.88rem;color:var(--color-text)}
+
+/* Wohnungsfinder. */
+.g-finder{display:grid;gap:1.25rem;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:1.25rem;margin-top:1.5rem;text-align:left}
+.g-fieldset{border:0;padding:0;min-width:0}
+.g-field{display:flex;flex-direction:column}
+.g-fieldset legend,.g-field label{font-size:.78rem;font-weight:600;color:var(--color-text-muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:.45rem;padding:0}
+.g-choices{display:flex;flex-wrap:wrap;gap:.5rem}
+.g-choices input{position:absolute;width:1px;height:1px;opacity:0}
+.g-choices label{display:inline-flex;align-items:center;min-height:44px;padding:.5rem 1rem;border:1.5px solid var(--color-border);border-radius:var(--radius-full);font-size:.9rem;font-weight:500;text-transform:none;letter-spacing:normal;color:var(--color-text);cursor:pointer;margin:0}
+.g-choices input:checked+label{background:var(--color-accent);border-color:var(--color-accent);color:#fff}
+.g-choices input:focus-visible+label{outline:2px solid var(--color-accent);outline-offset:2px}
+.g-field input[type=range]{width:100%;min-height:44px;accent-color:var(--color-accent)}
+.g-field input[type=month],.g-field input[type=text]{width:100%;min-height:44px;padding:.6rem .9rem;border:1.5px solid var(--color-border);border-radius:var(--radius-sm);font-family:var(--font-body);font-size:.95rem;color:var(--color-text);background:#fff}
+#f-budget-out{font-size:.95rem;font-weight:600;color:var(--color-primary)}
+.g-check{flex-direction:row;align-items:center;gap:.6rem}
+.g-check input{width:22px;height:22px;accent-color:var(--color-accent)}
+.g-check label{margin:0;min-height:44px;display:flex;align-items:center;text-transform:none;letter-spacing:normal;font-size:.9rem;color:var(--color-text);cursor:pointer}
+.g-count{margin-top:1.25rem;font-weight:600;color:var(--color-primary)}
+.g-empty{margin-top:.75rem;color:var(--color-text)}
+.g-results{display:grid;gap:1rem;grid-template-columns:repeat(auto-fill,minmax(16rem,1fr));margin-top:1rem;text-align:left}
+
+/* Wohnungskarte. Segment 3 baut sie, die Klassen kommen aus K5. */
+.unit-card{display:flex;flex-direction:column;gap:.5rem;background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:1.25rem;box-shadow:var(--shadow-sm)}
+.unit-card-title{font-family:var(--font-heading);font-size:1.25rem;color:var(--color-primary)}
+.unit-card-meta{font-size:.9rem;color:var(--color-text-muted)}
+.unit-card-price{display:grid;grid-template-columns:1fr auto;gap:.2rem .75rem;font-size:.9rem}
+.unit-card-price dt{color:var(--color-text-muted)}
+.unit-card-price dd{text-align:right;color:var(--color-text)}
+.unit-card-gross{font-weight:700;color:var(--color-primary)}
+.unit-card-avail{font-size:.85rem;color:var(--color-text)}
+.unit-card-cta{margin-top:auto;min-height:44px}
+.over-budget{border-style:dashed;border-color:var(--color-accent)}
+
+/* Anfrageformular. style.css gestaltet nur input, Auswahl und Textfeld fehlen dort. */
+.g-form select,.g-form textarea,.g-form input[type=month],.g-form input[type=date]{width:100%;min-height:44px;padding:.7rem .9rem;border:1.5px solid var(--color-border);border-radius:var(--radius-sm);font-family:var(--font-body);font-size:.9rem;color:var(--color-text);background:#fff}
+.g-form textarea{min-height:7rem;resize:vertical}
+.g-form .btn{min-height:48px}
+.g-note{margin-top:.75rem;font-size:.8rem;color:var(--color-text-muted)}
+.g-status{margin-top:1rem;font-weight:600;color:var(--color-text)}
+.g-success{margin-top:1rem;padding:1.25rem;border-radius:var(--radius);background:var(--color-success-bg);border:1px solid var(--color-success);color:var(--color-text)}
+.g-success .btn{margin-top:.75rem}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+
+/* Lage, Galerie, Kontakt. */
+.g-lage{display:grid;grid-template-columns:repeat(auto-fit,minmax(16rem,1fr));gap:0 2.5rem;list-style:none;margin-top:1.5rem}
+.g-lage li{display:flex;justify-content:space-between;gap:1rem;padding:.65rem 0;border-bottom:1px solid var(--color-border);font-size:.95rem;color:var(--color-text)}
+.g-lage strong{color:var(--color-primary)}
+.g-gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:1rem;margin-top:1.5rem}
+.g-gallery img{width:100%;height:220px;object-fit:cover;border-radius:var(--radius-lg)}
+.g-kontakt a{font-weight:600}
+.g-kontakt p{margin-bottom:.35rem;color:var(--color-text)}
+#a-consent{min-height:44px;padding:.5rem;background:none;border:0;font:inherit;font-size:.8rem;color:rgba(255,255,255,.8);text-decoration:underline;cursor:pointer}
+#a-consent:hover{color:#fff}
+
+@media (max-width:768px){
+  .g-hero{padding:6rem 1rem 2.5rem}
+  .g-finder{padding:1rem}
+  .g-gallery img{height:180px}
+  .g-lage{gap:0}
+}
