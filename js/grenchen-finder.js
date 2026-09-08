@@ -26,14 +26,14 @@
       months: ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni',
         'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'],
       rooms: function (n) { return String(n) + ' Zimmer'; }, floor: '. OG', from: 'ab ', first: '1.',
-      flexible: ', früher nach Vereinbarung', onRequest: 'nach Vereinbarung'
+      flexible: ', früher nach Vereinbarung', onRequest: 'sofort frei, Bezug nach Vereinbarung'
     },
     fr: {
       months: ['janvier', 'février', 'mars', 'avril', 'mai', 'juin',
         'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'],
       rooms: function (n) { return String(n).replace('.', ',') + (n < 2 ? ' pièce' : ' pièces'); },
       floor: 'e étage', from: 'dès le ', first: '1er',
-      flexible: ', plus tôt sur demande', onRequest: 'sur demande'
+      flexible: ', plus tôt sur demande', onRequest: 'libre immédiatement, entrée selon entente'
     }
   };
   var locale = 'de';
