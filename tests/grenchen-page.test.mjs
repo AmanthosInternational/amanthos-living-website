@@ -204,6 +204,25 @@ test('K3: isWeekday wirft bei unbrauchbarer Eingabe nicht, sondern sagt nein', (
 
 // ---- K3: Statustexte ------------------------------------------------------
 
+test('FR: setLocale(fr) liefert franzoesische Statustexte, danach wieder deutsch', () => {
+  try {
+    assert.equal(page.setLocale('fr'), 'fr');
+    assert.equal(page.locale(), 'fr');
+    assert.match(page.statusText(200), /^Merci\./);
+    assert.equal(page.statusText(400), "Veuillez vérifier le nom et l'adresse e-mail.");
+    assert.match(page.statusText(429), /^Trop de demandes/);
+    assert.equal(page.needsContact(429), false);
+    const text = page.statusText(500);
+    assert.match(text, /^La demande n'a pas pu être envoyée\. Appelez-nous au /);
+    assert.ok(text.includes(config.PHONE) && text.includes(config.EMAIL));
+    assert.equal(page.needsContact(500), true);
+    assert.equal(page.setLocale('it'), 'de', 'unbekannte Sprache faellt auf Deutsch zurueck');
+  } finally {
+    page.setLocale('de');
+  }
+  assert.match(page.statusText(200), /^Vielen Dank\./);
+});
+
 test('K3: statusText kennt 200, 400 und 429 mit eigenen deutschen Texten', () => {
   assert.match(page.statusText(200), /^Vielen Dank\./);
   assert.equal(page.statusText(400), 'Bitte prüfen Sie Name und E-Mail-Adresse.');

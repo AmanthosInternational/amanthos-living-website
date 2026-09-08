@@ -17,10 +17,33 @@
   var MONTH_RE = /^\d{4}-(0[1-9]|1[0-2])$/;
   var DATE_RE = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/;
   var DEFAULT_FALLBACK = 3;
-  var MONTHS = [
-    'Januar', 'Februar', 'März', 'April', 'Mai', 'Juni',
-    'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'
-  ];
+  // Zwei Sprachen, gleiche Daten. Der Finder fasst kein DOM an (K6), also
+  // entscheidet er nicht selbst: das Seitenskript liest die Seitensprache und
+  // ruft setLocale('fr') fuer grenchen-louer/. Ohne Aufruf bleibt es deutsch.
+  // Zahlen und Waehrung sind in beiden Sprachen gleich.
+  var LOCALES = {
+    de: {
+      months: ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni',
+        'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'],
+      rooms: function (n) { return String(n) + ' Zimmer'; }, floor: '. OG', from: 'ab ', first: '1.',
+      flexible: ', früher nach Vereinbarung', onRequest: 'nach Vereinbarung'
+    },
+    fr: {
+      months: ['janvier', 'février', 'mars', 'avril', 'mai', 'juin',
+        'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'],
+      rooms: function (n) { return String(n).replace('.', ',') + (n < 2 ? ' pièce' : ' pièces'); },
+      floor: 'e étage', from: 'dès le ', first: '1er',
+      flexible: ', plus tôt sur demande', onRequest: 'sur demande'
+    }
+  };
+  var locale = 'de';
+
+  function setLocale(lang) {
+    locale = LOCALES[lang] ? lang : 'de';
+    return locale;
+  }
+
+  function L() { return LOCALES[locale]; }
 
   // Zahl aus Zahl oder Zeichenkette; alles andere ist null. Number('') ist 0,
   // deshalb faellt der leere String vorher heraus.
@@ -173,13 +196,13 @@
   function roomsLabel(value) {
     var n = toNumber(value);
     if (n === null) return '';
-    return String(n) + ' Zimmer';
+    return L().rooms(n);
   }
 
   function floorLabel(value) {
     var n = toNumber(value);
     if (n === null) return '';
-    return String(n) + '. OG';
+    return String(n) + L().floor;
   }
 
   /**
@@ -189,11 +212,14 @@
    */
   function availabilityLabel(unit) {
     var from = unit && typeof unit.availableFrom === 'string' ? unit.availableFrom : '';
-    if (!DATE_RE.test(from)) return 'nach Vereinbarung';
+    var l = L();
+    if (!DATE_RE.test(from)) return l.onRequest;
     var day = parseInt(from.slice(8, 10), 10);
-    var month = MONTHS[parseInt(from.slice(5, 7), 10) - 1];
-    var label = 'ab ' + day + '. ' + month + ' ' + from.slice(0, 4);
-    return unit.flexible === true ? label + ', früher nach Vereinbarung' : label;
+    var month = l.months[parseInt(from.slice(5, 7), 10) - 1];
+    // Deutsch "1. November", Franzoesisch "1er novembre", sonst "2 novembre".
+    var dayLabel = locale === 'fr' ? (day === 1 ? l.first : String(day)) : day + '.';
+    var label = l.from + dayLabel + ' ' + month + ' ' + from.slice(0, 4);
+    return unit.flexible === true ? label + l.flexible : label;
   }
 
   var api = {
@@ -204,7 +230,8 @@
     formatSqm: formatSqm,
     roomsLabel: roomsLabel,
     floorLabel: floorLabel,
-    availabilityLabel: availabilityLabel
+    availabilityLabel: availabilityLabel,
+    setLocale: setLocale
   };
 
   if (typeof module === 'object' && module.exports) module.exports = api;

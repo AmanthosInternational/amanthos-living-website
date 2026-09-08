@@ -21,6 +21,7 @@ const config = require(join(here, '..', 'js', 'grenchen-config.js'));
 const dom = JSON.parse(readFileSync(join(here, 'fixtures', 'grenchen-dom-contract.json'), 'utf8'));
 
 const pageFile = join(root, 'grenchen-mieten', 'index.html');
+const pageFrFile = join(root, 'grenchen-louer', 'index.html');
 const scriptFile = join(root, 'js', 'grenchen-page.js');
 const skeletonFile = join(here, 'fixtures', 'grenchen-skeleton.html');
 
@@ -129,7 +130,7 @@ test('K2: API_BASE, Pfade und Kontaktdaten stehen fest', () => {
   assert.equal(config.CONTACT_PATH, '/api/contact');
   assert.equal(config.GA4_ID, 'G-8LPLG0BPJ6');
   assert.equal(config.PAGE_URL, 'https://www.amanthosliving.com/grenchen-mieten/');
-  assert.equal(config.PHONE, '+41 41 562 97 00');
+  assert.equal(config.PHONE, '+41 41 563 99 00');
   assert.equal(config.PHONE_HREF, 'tel:' + config.PHONE.replace(/\s/g, ''));
   assert.equal(config.EMAIL, 'info@amanthosliving.com');
 });
@@ -192,6 +193,43 @@ test('K5: jede ID kommt in grenchen-mieten/index.html genau einmal vor',
       const treffer = html.match(new RegExp('id="' + id + '"', 'g')) || [];
       assert.equal(treffer.length, 1, `ID ${id} kommt ${treffer.length} mal vor`);
     }
+  });
+
+// Die franzoesische Fassung ist dieselbe Seite mit anderen Texten: gleiche IDs,
+// gleiche Skripte, gegenseitige hreflang-Verweise. Sonst spricht das Seitenskript
+// ins Leere oder Google haelt die Seiten fuer Dubletten.
+test('FR: jede ID kommt in grenchen-louer/index.html genau einmal vor',
+  { skip: existsSync(pageFrFile) ? false : 'grenchen-louer/index.html fehlt noch' }, () => {
+    const html = readFileSync(pageFrFile, 'utf8');
+    for (const id of dom.ids) {
+      const treffer = html.match(new RegExp('id="' + id + '"', 'g')) || [];
+      assert.equal(treffer.length, 1, `ID ${id} kommt ${treffer.length} mal vor`);
+    }
+  });
+
+test('FR: Sprache, Canonical, hreflang beidseitig und dieselben vier Skripte',
+  { skip: existsSync(pageFrFile) && existsSync(pageFile) ? false : 'eine der Seiten fehlt noch' }, () => {
+    const de = readFileSync(pageFile, 'utf8');
+    const fr = readFileSync(pageFrFile, 'utf8');
+    assert.match(de, /^<!DOCTYPE html>\s*<html lang="de">/);
+    assert.match(fr, /^<!DOCTYPE html>\s*<html lang="fr">/);
+    assert.match(fr, /<link rel="canonical" href="https:\/\/www\.amanthosliving\.com\/grenchen-louer\/">/);
+    for (const html of [de, fr]) {
+      assert.match(html, /hreflang="de" href="https:\/\/www\.amanthosliving\.com\/grenchen-mieten\/"/);
+      assert.match(html, /hreflang="fr" href="https:\/\/www\.amanthosliving\.com\/grenchen-louer\/"/);
+      assert.match(html, /hreflang="x-default" href="https:\/\/www\.amanthosliving\.com\/grenchen-mieten\/"/);
+      for (const js of ['grenchen-config', 'grenchen-units', 'grenchen-finder', 'grenchen-page']) {
+        assert.match(html, new RegExp('<script defer src="\\.\\./js/' + js + '\\.js"></script>'), js);
+      }
+    }
+    // Die Wunschzeit geht in die Mail an den Verkauf und bleibt deshalb deutsch.
+    for (const wert of ['09 bis 12 Uhr', '12 bis 15 Uhr', '15 bis 18 Uhr']) {
+      assert.match(fr, new RegExp('<option value="' + wert + '">'), wert);
+    }
+    assert.match(fr, /tel:\+41415639900/);
+    assert.equal((fr.match(/\u2014/g) || []).length, 0, 'kein Gedankenstrich');
+    const sitemap = readFileSync(join(root, 'sitemap.xml'), 'utf8');
+    assert.match(sitemap, /<loc>https:\/\/www\.amanthosliving\.com\/grenchen-louer\/<\/loc>/);
   });
 
 test('K5: das Skelett traegt jede ID genau einmal',
