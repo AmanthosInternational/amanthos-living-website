@@ -250,6 +250,24 @@ test('K6: im Browser laeuft die Datei ohne module und haengt sich an window', ()
   assert.deepEqual([...nrs(browser.filter(UNITS, { rooms: '1.5', budget: 900 }))], ['33', '31', '32']);
 });
 
+test('FR: setLocale(fr) beschriftet franzoesisch, setLocale(de) zurueck', () => {
+  try {
+    assert.equal(finder.setLocale('fr'), 'fr');
+    assert.equal(finder.roomsLabel(1.5), '1,5 pièce');
+    assert.equal(finder.roomsLabel(2), '2 pièces');
+    assert.equal(finder.roomsLabel(3.5), '3,5 pièces');
+    assert.equal(finder.floorLabel(4), '4e étage');
+    assert.equal(finder.availabilityLabel({ availableFrom: '2026-11-01', flexible: true }),
+      'dès le 1er novembre 2026, plus tôt sur demande');
+    assert.equal(finder.availabilityLabel({ availableFrom: '2026-12-15', flexible: false }), 'dès le 15 décembre 2026');
+    assert.equal(finder.availabilityLabel(undefined), 'sur demande');
+    assert.equal(finder.setLocale('xx'), 'de', 'unbekannte Sprache faellt auf Deutsch zurueck');
+  } finally {
+    finder.setLocale('de');
+  }
+  assert.equal(finder.roomsLabel(2), '2 Zimmer');
+});
+
 test('K6: die Datei fasst kein DOM an und nennt window nur im Export', () => {
   const src = readFileSync(finderFile, 'utf8');
   assert.equal(/\bdocument\b/.test(src), false, 'kein document');

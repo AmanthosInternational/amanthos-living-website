@@ -35,18 +35,49 @@
   var DAY_RE = /^\d{4}-\d{2}-\d{2}$/;
   var ROOMS_OK = ['1.5', '2', '3', '3.5', '3+'];
   var WEEKDAYS = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];
-  // Eigene deutsche Texte je Statuscode (K3); der Servertext wird nie gezeigt.
-  var TEXTE = {
-    200: 'Vielen Dank. Wir melden uns bei Ihnen, um den Besichtigungstermin zu bestätigen.',
-    400: 'Bitte prüfen Sie Name und E-Mail-Adresse.',
-    429: 'Zu viele Anfragen in kurzer Zeit. Bitte versuchen Sie es in einer Minute erneut.'
+  // Sichtbare Texte je Sprache (K3); der Servertext wird nie gezeigt. Die Seite
+  // grenchen-louer/ (lang="fr") liest franzoesisch, alles andere deutsch. Was an
+  // den Server geht (Wunschtermin, Parkplatz-Vermerk), bleibt deutsch, weil die
+  // Mail an den Verkauf deutsch ist.
+  var SPRACHEN = {
+    de: {
+      texte: {
+        200: 'Vielen Dank. Wir melden uns bei Ihnen, um den Besichtigungstermin zu bestätigen.',
+        400: 'Bitte prüfen Sie Name und E-Mail-Adresse.',
+        429: 'Zu viele Anfragen in kurzer Zeit. Bitte versuchen Sie es in einer Minute erneut.'
+      },
+      // Drei Teile, damit die Anzeige Telefon und E-Mail als echte Links setzen
+      // kann, ohne dass der Satz zweimal in der Datei steht.
+      kontakt: ['Die Anfrage konnte nicht gesendet werden. Rufen Sie uns an: ', ', oder schreiben Sie an ', '.'],
+      slotFehler: 'Besichtigungen finden von Montag bis Freitag statt. Bitte wählen Sie einen Wochentag.',
+      allePreise: 'alle Preise', bis: 'bis ', wohnung: 'Wohnung ', netto: 'Nettomiete', nebenkosten: 'Nebenkosten',
+      brutto: 'Bruttomiete', besichtigung: 'Besichtigung anfragen', senden: 'Anfrage wird gesendet ...',
+      fehlt: ['Die Wohnungsübersicht steht gerade nicht zur Verfügung. Bitte senden Sie uns die Anfrage unten oder rufen Sie uns an: ', '.'],
+      zaehler: function (n, total) { return n + ' von ' + total + ' Wohnungen ' + (n === 1 ? 'passt' : 'passen'); }
+    },
+    fr: {
+      texte: {
+        200: 'Merci. Nous vous recontactons pour confirmer le rendez-vous de visite.',
+        400: 'Veuillez vérifier le nom et l\'adresse e-mail.',
+        429: 'Trop de demandes en peu de temps. Veuillez réessayer dans une minute.'
+      },
+      kontakt: ['La demande n\'a pas pu être envoyée. Appelez-nous au ', ' ou écrivez à ', '.'],
+      slotFehler: 'Les visites ont lieu du lundi au vendredi. Veuillez choisir un jour de semaine.',
+      allePreise: 'tous les prix', bis: 'jusqu\'à ', wohnung: 'Appartement ', netto: 'Loyer net', nebenkosten: 'Charges',
+      brutto: 'Loyer brut', besichtigung: 'Demander une visite', senden: 'Envoi de la demande ...',
+      fehlt: ['La liste des appartements n\'est pas disponible pour le moment. Envoyez-nous la demande ci-dessous ou appelez-nous au ', '.'],
+      zaehler: function (n, total) { return n + (n === 1 ? ' logement sur ' : ' logements sur ') + total + (n === 1 ? ' correspond' : ' correspondent'); }
+    }
   };
-  // Drei Teile, damit die Anzeige Telefon und E-Mail als echte Links setzen
-  // kann, ohne dass der Satz zweimal in der Datei steht.
-  var KONTAKT = ['Die Anfrage konnte nicht gesendet werden. Rufen Sie uns an: ',
-    ', oder schreiben Sie an ', '.'];
-  var SLOT_FEHLER = 'Besichtigungen finden von Montag bis Freitag statt. '
-    + 'Bitte wählen Sie einen Wochentag.';
+  var sprache = (typeof document !== 'undefined' && document && document.documentElement
+    && /^fr/i.test(document.documentElement.lang || '')) ? 'fr' : 'de';
+  function T() { return SPRACHEN[sprache]; }
+  function setLocale(lang) {
+    sprache = SPRACHEN[lang] ? lang : 'de';
+    var f = finder();
+    if (f && typeof f.setLocale === 'function') { f.setLocale(sprache); }
+    return sprache;
+  }
 
   function str(v) { return (v === undefined || v === null) ? '' : String(v).trim(); }
 
@@ -95,11 +126,12 @@
   }
 
   function statusText(status) {
-    return TEXTE[Number(status)]
-      || (KONTAKT[0] + CFG.PHONE + KONTAKT[1] + CFG.EMAIL + KONTAKT[2]);
+    var t = T();
+    return t.texte[Number(status)]
+      || (t.kontakt[0] + CFG.PHONE + t.kontakt[1] + CFG.EMAIL + t.kontakt[2]);
   }
 
-  function needsContact(status) { return !TEXTE[Number(status)]; }
+  function needsContact(status) { return !T().texte[Number(status)]; }
 
   // Genau die 17 Schluessel aus K3, leere Werte als leerer String. Was das
   // Muster nicht trifft, faellt auf "" zurueck: ein Formatfehler kostet keinen
@@ -176,7 +208,11 @@
   function finder() {
     try {
       var f = (typeof window !== 'undefined') ? window.amGrenchenFinder : null;
-      if (f && typeof f.filter === 'function') { return f; }
+      if (f && typeof f.filter === 'function') {
+        // Der Finder kennt die Seitensprache nicht (K6), er bekommt sie von hier.
+        if (typeof f.setLocale === 'function') { f.setLocale(sprache); }
+        return f;
+      }
     } catch (e) { /* nie werfen */ }
     return null;
   }
@@ -241,18 +277,19 @@
     function card(unit, overBudget, f) {
       var art = node('article', overBudget ? 'unit-card over-budget' : 'unit-card');
       art.setAttribute('data-unit', unit.nr);
-      art.appendChild(node('h3', 'unit-card-title', 'Wohnung ' + unit.nr));
+      var t = T();
+      art.appendChild(node('h3', 'unit-card-title', t.wohnung + unit.nr));
       art.appendChild(node('p', 'unit-card-meta', f.floorLabel(unit.floor) + ', '
         + f.roomsLabel(unit.rooms) + ', ' + f.formatSqm(unit.sqm)));
       var dl = node('dl', 'unit-card-price');
-      [['Nettomiete', unit.net, ''], ['Nebenkosten', unit.extra, ''],
-        ['Bruttomiete', unit.gross, 'unit-card-gross']].forEach(function (r) {
+      [[t.netto, unit.net, ''], [t.nebenkosten, unit.extra, ''],
+        [t.brutto, unit.gross, 'unit-card-gross']].forEach(function (r) {
         dl.appendChild(node('dt', '', r[0]));
         dl.appendChild(node('dd', r[2], f.formatChf(r[1])));
       });
       art.appendChild(dl);
       art.appendChild(node('p', 'unit-card-avail', f.availabilityLabel(unit)));
-      var cta = node('button', 'btn btn-accent unit-card-cta', 'Besichtigung anfragen');
+      var cta = node('button', 'btn btn-accent unit-card-cta', t.besichtigung);
       cta.type = 'button';
       cta.setAttribute('data-unit', unit.nr);
       art.appendChild(cta);
@@ -263,9 +300,7 @@
     // sondern einen sichtbaren Weg zur Anfrage.
     function renderMissing() {
       D.results.textContent = '';
-      D.results.appendChild(node('p', '', 'Die Wohnungsübersicht steht gerade nicht zur '
-        + 'Verfügung. Bitte senden Sie uns die Anfrage unten oder rufen Sie uns an: '
-        + CFG.PHONE + '.'));
+      D.results.appendChild(node('p', '', T().fehlt[0] + CFG.PHONE + T().fehlt[1]));
       if (D.count) { D.count.textContent = ''; }
       if (D.empty) { D.empty.hidden = true; }
     }
@@ -276,8 +311,8 @@
       var f = finder();
       if (!f) { renderMissing(); return; }
       if (D.budgetOut) {
-        D.budgetOut.textContent = crit.budget === null ? 'alle Preise'
-          : 'bis ' + f.formatChf(crit.budget);
+        D.budgetOut.textContent = crit.budget === null ? T().allePreise
+          : T().bis + f.formatChf(crit.budget);
       }
       var treffer = f.filter(DATA.UNITS, crit);
       var over = treffer.length === 0;
@@ -286,8 +321,7 @@
       karten.forEach(function (unit) { D.results.appendChild(card(unit, over, f)); });
       if (D.empty) { D.empty.hidden = !over; }
       if (D.count) {
-        D.count.textContent = treffer.length + ' von ' + listed().length + ' Wohnungen '
-          + (treffer.length === 1 ? 'passt' : 'passen');
+        D.count.textContent = T().zaehler(treffer.length, listed().length);
       }
       // Entprellt, damit das Ziehen am Regler ein Ereignis erzeugt und nicht
       // zwanzig. Der erste Lauf beim Laden meldet nichts, er ist keine Wahl.
@@ -314,7 +348,7 @@
       var f = finder();
       if (!f || !D.unit) { return; }
       listed().forEach(function (unit) {
-        var opt = node('option', '', 'Wohnung ' + unit.nr + ', ' + f.roomsLabel(unit.rooms)
+        var opt = node('option', '', T().wohnung + unit.nr + ', ' + f.roomsLabel(unit.rooms)
           + ', ' + f.formatChf(unit.gross));
         opt.value = unit.nr;
         D.unit.appendChild(opt);
@@ -345,7 +379,8 @@
       tel.href = CFG.PHONE_HREF;
       var mail = node('a', '', CFG.EMAIL);
       mail.href = 'mailto:' + CFG.EMAIL;
-      [KONTAKT[0], tel, KONTAKT[1], mail, KONTAKT[2]].forEach(function (part) {
+      var k = T().kontakt;
+      [k[0], tel, k[1], mail, k[2]].forEach(function (part) {
         D.status.appendChild(typeof part === 'string' ? document.createTextNode(part) : part);
       });
     }
@@ -355,10 +390,10 @@
       mark(D.name, false);
       mark(D.email, false);
       mark(D.slotDay, false);
-      if (str(D.name.value).length < 2) { mark(D.name, true); probleme.push([D.name, TEXTE[400]]); }
-      if (!EMAIL_RE.test(str(D.email.value))) { mark(D.email, true); probleme.push([D.email, TEXTE[400]]); }
+      if (str(D.name.value).length < 2) { mark(D.name, true); probleme.push([D.name, T().texte[400]]); }
+      if (!EMAIL_RE.test(str(D.email.value))) { mark(D.email, true); probleme.push([D.email, T().texte[400]]); }
       var day = D.slotDay ? str(D.slotDay.value) : '';
-      if (day && !isWeekday(day)) { mark(D.slotDay, true); probleme.push([D.slotDay, SLOT_FEHLER]); }
+      if (day && !isWeekday(day)) { mark(D.slotDay, true); probleme.push([D.slotDay, T().slotFehler]); }
       return probleme.length ? probleme[0] : null;
     }
 
@@ -398,7 +433,7 @@
       }
       var payload = collect();
       if (D.submit) { D.submit.disabled = true; }
-      setStatus('Anfrage wird gesendet ...', false);
+      setStatus(T().senden, false);
       fetch(CFG.API_BASE + CFG.CONTACT_PATH, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -467,7 +502,9 @@
     composeWishSlot: composeWishSlot,
     isWeekday: isWeekday,
     statusText: statusText,
-    needsContact: needsContact
+    needsContact: needsContact,
+    setLocale: setLocale,
+    locale: function () { return sprache; }
   };
 
   if (typeof module === 'object' && module.exports) { module.exports = api; }

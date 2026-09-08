@@ -1,14 +1,12 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="fr">
 <head>
-  <!-- Content-Security-Policy, wortgleich aus solothurn/index.html uebernommen; dort steht
-       die Herleitung jeder einzelnen Domain aus echten Seitenaufrufen. Muss als ERSTES im
-       head stehen, sonst greift sie fuer bereits geparste Elemente nicht. Sie deckt bereits
-       alles ab, was diese Seite braucht: GA4 und Google Ads, Sentry, Plausible, Meta und
-       connect-src auf amanthos-website-api.onrender.com fuer das Anfrageformular. -->
+  <!-- Content-Security-Policy, wortgleich aus grenchen-mieten/index.html uebernommen (Herleitung
+       der Domains in solothurn/index.html). Muss als ERSTES im head stehen, sonst greift sie
+       fuer bereits geparste Elemente nicht. -->
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://browser.sentry-cdn.com https://www.googletagmanager.com https://plausible.io https://connect.facebook.net https://www.googleadservices.com https://googleads.g.doubleclick.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https://amanthos-website-api.onrender.com https://plausible.io https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com https://stats.g.doubleclick.net https://o4511372064915456.ingest.de.sentry.io https://www.facebook.com https://www.googleadservices.com https://googleads.g.doubleclick.net https://www.google.com https://pagead2.googlesyndication.com https://ad.doubleclick.net https://www.google.ch https://www.google.de https://www.google.at https://www.google.fr https://www.google.it https://www.google.co.uk; worker-src 'self' blob:; frame-src https://td.doubleclick.net; form-action 'self'; base-uri 'self'; object-src 'none'">
 
-  <!-- Consent Mode v2 vor gtag, danach Meta. Reihenfolge wie auf der Solothurn-Seite. -->
+  <!-- Consent Mode v2 vor gtag, danach Meta. Reihenfolge wie auf der deutschen Seite. -->
   <script src="../js/consent.js"></script>
   <script defer src="../js/meta.js"></script>
   <script>
@@ -17,9 +15,8 @@
     gtag('js', new Date());
     gtag('config', 'G-8LPLG0BPJ6');
     gtag('config', 'AW-702540316');
-    // gtag.js wiegt 183 KB uebertragen und kommt deshalb nur, wenn keine Ablehnung
-    // gespeichert ist; wer spaeter zustimmt, bekommt es ueber am:consent-change
-    // sofort nachgereicht. Gleiche Mechanik wie auf der Solothurn-Seite.
+    // gtag.js kommt nur, wenn keine Ablehnung gespeichert ist; wer spaeter zustimmt,
+    // bekommt es ueber am:consent-change nachgereicht. Gleiche Mechanik wie grenchen-mieten.
     (function () {
       var geholt = false;
       function laden() {
@@ -41,28 +38,27 @@
 
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Wohnung mieten in Grenchen: möbliert, ab 12 Monaten | Amanthos Living</title>
-  <meta name="description" content="23 möblierte Wohnungen an der Bettlachstrasse 20 in Grenchen. Nebenkosten in der Bruttomiete, voll ausgestattete Küche, Wohnsitz anmeldbar, Mindestmietdauer 12 Monate.">
+  <title>Appartement meublé à louer à Grenchen, dès 12 mois | Amanthos Living</title>
+  <meta name="description" content="23 appartements meublés à la Bettlachstrasse 20 à Grenchen. Charges comprises dans le loyer brut, cuisine entièrement équipée, domicile possible, durée minimale de location 12 mois.">
   <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://www.amanthosliving.com/grenchen-mieten/">
+  <link rel="canonical" href="https://www.amanthosliving.com/grenchen-louer/">
   <link rel="alternate" hreflang="de" href="https://www.amanthosliving.com/grenchen-mieten/">
   <link rel="alternate" hreflang="fr" href="https://www.amanthosliving.com/grenchen-louer/">
   <link rel="alternate" hreflang="x-default" href="https://www.amanthosliving.com/grenchen-mieten/">
 
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Möblierte Wohnung mieten in Grenchen | Amanthos Living">
-  <meta property="og:description" content="Möbliert einziehen an der Bettlachstrasse 20: Küche voll ausgestattet, Nebenkosten in der Bruttomiete, Wohnsitz anmeldbar, ab 12 Monaten.">
+  <meta property="og:locale" content="fr_CH">
+  <meta property="og:title" content="Louer un appartement meublé à Grenchen | Amanthos Living">
+  <meta property="og:description" content="Emménagez meublé à la Bettlachstrasse 20 : cuisine entièrement équipée, charges comprises dans le loyer brut, domicile possible, dès 12 mois.">
   <meta property="og:image" content="https://www.amanthosliving.com/images/solothurn/grenchen-wohnen.webp">
   <meta property="og:image:width" content="1600">
   <meta property="og:image:height" content="1044">
-  <meta property="og:url" content="https://www.amanthosliving.com/grenchen-mieten/">
+  <meta property="og:url" content="https://www.amanthosliving.com/grenchen-louer/">
 
   <link rel="icon" href="../images/logo.svg" type="image/svg+xml">
   <link rel="preload" href="/assets/fonts/PlayfairDisplay.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/Inter.woff2" as="font" type="font/woff2" crossorigin>
   <style>@font-face{font-family:'Playfair Display';font-style:normal;font-weight:400 700;font-display:swap;src:url(/assets/fonts/PlayfairDisplay.woff2) format('woff2')}@font-face{font-family:'Inter';font-style:normal;font-weight:300 700;font-display:swap;src:url(/assets/fonts/Inter.woff2) format('woff2')}</style>
-  <!-- Hero-Bild vorgeladen, mit demselben srcset wie das img weiter unten: sonst laedt
-       das Telefon erst die 960er und danach die 1600er Fassung. -->
   <link rel="preload" as="image" type="image/webp" href="../images/solothurn/grenchen-wohnen.webp" imagesrcset="../images/solothurn/grenchen-wohnen-960.webp 960w, ../images/solothurn/grenchen-wohnen.webp 1600w" imagesizes="100vw" fetchpriority="high">
   <link rel="preload" href="../css/style.css" as="style">
   <link rel="stylesheet" href="../css/style.css" media="print" onload="this.media='all'">
@@ -75,7 +71,8 @@
     "@context": "https://schema.org",
     "@type": "ApartmentComplex",
     "name": "Amanthos Living Grenchen",
-    "url": "https://www.amanthosliving.com/grenchen-mieten/",
+    "url": "https://www.amanthosliving.com/grenchen-louer/",
+    "inLanguage": "fr",
     "telephone": "+41 41 563 99 00",
     "email": "info@amanthosliving.com",
     "numberOfAccommodationUnits": 23,
@@ -101,21 +98,21 @@
   </script>
 </head>
 <body>
-<a href="#main" class="sr-only sr-only-focusable">Zum Inhalt springen</a>
+<a href="#main" class="sr-only sr-only-focusable">Aller au contenu</a>
 
-  <nav class="nav scrolled" role="navigation" aria-label="Hauptnavigation">
+  <nav class="nav scrolled" role="navigation" aria-label="Navigation principale">
     <a href="../" class="nav-logo">Amanthos Living</a>
-    <button class="hamburger" id="hamburger" type="button" aria-label="Menü öffnen" aria-expanded="false" aria-controls="navLinks">
+    <button class="hamburger" id="hamburger" type="button" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="navLinks">
       <span></span><span></span><span></span>
     </button>
     <ul class="nav-links" id="navLinks">
-      <li><a href="../">Startseite</a></li>
-      <li><a href="../solothurn/">Kurzaufenthalt Solothurn</a></li>
-      <li><a href="#finder">Wohnungen</a></li>
-      <li><a href="#lage">Lage</a></li>
-      <li><a href="#faq">Fragen</a></li>
-      <li><a href="../grenchen-louer/" lang="fr" hreflang="fr">Français</a></li>
-      <li><a href="#anfrage" class="nav-cta">Besichtigung anfragen</a></li>
+      <li><a href="../">Accueil</a></li>
+      <li><a href="../solothurn/">Séjour court à Soleure</a></li>
+      <li><a href="#finder">Appartements</a></li>
+      <li><a href="#lage">Situation</a></li>
+      <li><a href="#faq">Questions</a></li>
+      <li><a href="../grenchen-mieten/" lang="de" hreflang="de">Deutsch</a></li>
+      <li><a href="#anfrage" class="nav-cta">Demander une visite</a></li>
     </ul>
   </nav>
 
@@ -124,14 +121,14 @@
     <img class="g-hero-img" src="../images/solothurn/grenchen-wohnen.webp"
          srcset="../images/solothurn/grenchen-wohnen-960.webp 960w, ../images/solothurn/grenchen-wohnen.webp 1600w"
          sizes="100vw" width="1600" height="1044" fetchpriority="high"
-         alt="Möblierter Wohn- und Essbereich mit Ledersofa, Couchtisch und Esstisch am Fenster">
+         alt="Séjour et coin repas meublés avec canapé en cuir, table basse et table à manger près de la fenêtre">
     <div class="g-hero-veil"></div>
     <div class="g-hero-inner">
-      <h1>Möblierte Wohnung mieten in Grenchen</h1>
-      <p>Neue Stelle in der Region und noch keine Wohnung? An der Bettlachstrasse 20 ziehen Sie möbliert ein: voll ausgestattete Küche, Nebenkosten in der Bruttomiete, Wohnsitz anmeldbar. Ab 12 Monaten Mietdauer, Bezug nach Vereinbarung.</p>
+      <h1>Louer un appartement meublé à Grenchen</h1>
+      <p>Nouveau poste dans la région et pas encore de logement? À la Bettlachstrasse 20, vous emménagez meublé&nbsp;: cuisine entièrement équipée, charges comprises dans le loyer brut, domicile possible. Location dès 12 mois, entrée selon entente.</p>
       <div class="g-cta-row">
-        <a href="#finder" class="btn btn-accent btn-lg">Freie Wohnungen ansehen</a>
-        <a href="tel:+41415639900" class="btn btn-outline btn-lg">+41 41 563 99 00 anrufen</a>
+        <a href="#finder" class="btn btn-accent btn-lg">Voir les appartements libres</a>
+        <a href="tel:+41415639900" class="btn btn-outline btn-lg">Appeler le +41 41 563 99 00</a>
       </div>
     </div>
   </section>
@@ -139,151 +136,152 @@
   <div class="g-trust">
     <div class="container">
       <ul>
-        <li>Mindestmietdauer 12 Monate</li>
-        <li>Wohnsitz anmeldbar</li>
-        <li>Nebenkosten inklusive</li>
-        <li>Lift im Haus</li>
+        <li>Durée minimale 12 mois</li>
+        <li>Domicile possible</li>
+        <li>Charges comprises</li>
+        <li>Ascenseur dans l'immeuble</li>
       </ul>
     </div>
   </div>
 
   <section class="section" id="finder">
     <div class="container">
-      <p class="section-label">Wohnungsfinder</p>
-      <h2 class="section-title">23 möblierte Wohnungen, 3. bis 6. Obergeschoss</h2>
-      <p class="section-subtitle">Wählen Sie Zimmerzahl, Budget und Einzugsmonat. Die passenden Wohnungen erscheinen sofort, mit Nettomiete, Nebenkosten und Bruttomiete.</p>
+      <p class="section-label">Recherche d'appartement</p>
+      <h2 class="section-title">23 appartements meublés, du 3e au 6e étage</h2>
+      <p class="section-subtitle">Choisissez le nombre de pièces, votre budget et le mois d'entrée. Les appartements correspondants s'affichent aussitôt, avec loyer net, charges et loyer brut.</p>
 
       <div id="f-form" class="g-finder">
         <fieldset id="f-rooms" class="g-fieldset">
-          <legend>Zimmer</legend>
+          <legend>Pièces</legend>
           <div class="g-choices">
             <input type="radio" name="rooms" id="f-rooms-all" value="" checked>
-            <label for="f-rooms-all">Alle</label>
+            <label for="f-rooms-all">Toutes</label>
             <input type="radio" name="rooms" id="f-rooms-15" value="1.5">
-            <label for="f-rooms-15">1.5 Zimmer</label>
+            <label for="f-rooms-15">1,5 pièce</label>
             <input type="radio" name="rooms" id="f-rooms-2" value="2">
-            <label for="f-rooms-2">2 Zimmer</label>
+            <label for="f-rooms-2">2 pièces</label>
             <input type="radio" name="rooms" id="f-rooms-3" value="3+">
-            <label for="f-rooms-3">3 Zimmer und mehr</label>
+            <label for="f-rooms-3">3 pièces et plus</label>
           </div>
         </fieldset>
         <div class="g-field">
-          <label for="f-budget">Budget brutto</label>
+          <label for="f-budget">Budget brut</label>
           <input type="range" id="f-budget" min="800" max="1700" step="50" value="1700" aria-describedby="f-budget-out">
-          <output id="f-budget-out" for="f-budget">alle Preise</output>
+          <output id="f-budget-out" for="f-budget">tous les prix</output>
         </div>
         <div class="g-field">
-          <label for="f-movein">Einzug ab</label>
+          <label for="f-movein">Entrée dès</label>
           <input type="month" id="f-movein" min="2026-10" max="2027-12" pattern="\d{4}-\d{2}" placeholder="2026-11">
         </div>
         <div class="g-field g-check">
           <input type="checkbox" id="f-parking">
-          <label for="f-parking">Aussenparkplatz gewünscht</label>
+          <label for="f-parking">Place de parc extérieure souhaitée</label>
         </div>
       </div>
 
       <p id="f-count" class="g-count" role="status"></p>
-      <p id="f-empty" class="g-empty" hidden>Keine Wohnung im Budget. Die günstigsten Wohnungen in Ihrer Zimmerwahl:</p>
+      <p id="f-empty" class="g-empty" hidden>Aucun appartement dans ce budget. Les appartements les moins chers pour le nombre de pièces choisi&nbsp;:</p>
       <div id="f-results" class="g-results" aria-live="polite"></div>
     </div>
   </section>
 
   <section class="section section-alt" id="anfrage">
     <div class="container container-narrow">
-      <p class="section-label">Besichtigung</p>
-      <h2 class="section-title">Besichtigung anfragen</h2>
-      <p class="section-subtitle">Sagen Sie uns, welche Wohnung Sie sehen möchten und wann es Ihnen passt. Wir melden uns, um den Termin zu bestätigen.</p>
+      <p class="section-label">Visite</p>
+      <h2 class="section-title">Demander une visite</h2>
+      <p class="section-subtitle">Dites-nous quel appartement vous souhaitez voir et quand cela vous convient. Nous vous recontactons pour confirmer le rendez-vous.</p>
 
       <form id="a-form" class="g-form" novalidate>
         <div class="form-grid">
-          <div class="form-field"><label for="a-name">Name</label><input type="text" id="a-name" name="name" autocomplete="name" required></div>
-          <div class="form-field"><label for="a-email">E-Mail</label><input type="email" id="a-email" name="email" autocomplete="email" required></div>
-          <div class="form-field"><label for="a-phone">Telefon</label><input type="tel" id="a-phone" name="phone" autocomplete="tel"></div>
-          <div class="form-field"><label for="a-unit">Wohnung</label><select id="a-unit" name="unit"><option value="">Noch offen</option></select></div>
-          <div class="form-field"><label for="a-movein">Einzug ab</label><input type="month" id="a-movein" name="move_in" min="2026-10" max="2027-12" placeholder="2026-11"></div>
-          <div class="form-field"><label for="a-slot-day">Wunschtag</label><input type="date" id="a-slot-day"></div>
-          <div class="form-field"><label for="a-slot-time">Wunschzeit</label><select id="a-slot-time">
-            <option value="09 bis 12 Uhr">09 bis 12 Uhr</option>
-            <option value="12 bis 15 Uhr">12 bis 15 Uhr</option>
-            <option value="15 bis 18 Uhr">15 bis 18 Uhr</option>
+          <div class="form-field"><label for="a-name">Nom</label><input type="text" id="a-name" name="name" autocomplete="name" required></div>
+          <div class="form-field"><label for="a-email">E-mail</label><input type="email" id="a-email" name="email" autocomplete="email" required></div>
+          <div class="form-field"><label for="a-phone">Téléphone</label><input type="tel" id="a-phone" name="phone" autocomplete="tel"></div>
+          <div class="form-field"><label for="a-unit">Appartement</label><select id="a-unit" name="unit"><option value="">Pas encore choisi</option></select></div>
+          <div class="form-field"><label for="a-movein">Entrée dès</label><input type="month" id="a-movein" name="move_in" min="2026-10" max="2027-12" placeholder="2026-11"></div>
+          <div class="form-field"><label for="a-slot-day">Jour souhaité</label><input type="date" id="a-slot-day"></div>
+          <!-- Die values bleiben deutsch: sie gehen in die Mail an den Verkauf. -->
+          <div class="form-field"><label for="a-slot-time">Heure souhaitée</label><select id="a-slot-time">
+            <option value="09 bis 12 Uhr">9 h à 12 h</option>
+            <option value="12 bis 15 Uhr">12 h à 15 h</option>
+            <option value="15 bis 18 Uhr">15 h à 18 h</option>
           </select></div>
-          <div class="form-field"><label for="a-message">Nachricht</label><textarea id="a-message" name="message" rows="4"></textarea></div>
+          <div class="form-field"><label for="a-message">Message</label><textarea id="a-message" name="message" rows="4"></textarea></div>
         </div>
         <input type="hidden" id="a-rooms" name="rooms" value="">
         <input type="hidden" id="a-budget" name="budget" value="">
         <input type="hidden" id="a-parking" name="parking" value="">
         <!-- Honigtopf: fuer Menschen unsichtbar und nicht anwaehlbar, Bots fuellen ihn. -->
         <div class="hp" aria-hidden="true">
-          <label for="a-company-website">Firmenwebsite, bitte leer lassen</label>
+          <label for="a-company-website">Site web de l'entreprise, laisser vide</label>
           <input type="text" class="hp" id="a-company-website" name="company_website" tabindex="-1" autocomplete="off" aria-hidden="true">
         </div>
-        <button type="submit" id="a-submit" class="btn btn-accent btn-lg">Anfrage senden</button>
-        <p class="g-note">Wir verwenden Ihre Angaben, um die Besichtigung mit Ihnen zu vereinbaren. Näheres in der <a href="../privacy/">Datenschutzerklärung</a>.</p>
+        <button type="submit" id="a-submit" class="btn btn-accent btn-lg">Envoyer la demande</button>
+        <p class="g-note">Nous utilisons vos données pour convenir de la visite avec vous. Plus d'informations dans la <a href="../privacy/" hreflang="de">déclaration de protection des données</a> (en allemand).</p>
       </form>
       <p id="a-status" class="g-status" role="status"></p>
       <div id="a-success" class="g-success" hidden>
-        <p>Vielen Dank. Wir melden uns bei Ihnen, um den Besichtigungstermin zu bestätigen.</p>
-        <a id="a-termin" class="btn btn-accent" href="#" hidden>Termin jetzt online wählen</a>
+        <p>Merci. Nous vous recontactons pour confirmer le rendez-vous de visite.</p>
+        <a id="a-termin" class="btn btn-accent" href="#" hidden>Choisir un rendez-vous en ligne</a>
       </div>
     </div>
   </section>
 
   <section class="section" id="lage">
     <div class="container">
-      <p class="section-label">Lage</p>
+      <p class="section-label">Situation</p>
       <h2 class="section-title">Bettlachstrasse 20, 2540 Grenchen</h2>
-      <p class="section-subtitle">Grenchen liegt zwischen Biel/Bienne und Solothurn, mit Anschluss an die Autobahn A5. In Grenchen gibt es rund 11'000 Arbeitsplätze, vor allem in der Uhren- und Präzisionsindustrie.</p>
+      <p class="section-subtitle">Grenchen se situe entre Biel/Bienne et Soleure, avec accès à l'autoroute A5. La ville compte environ 11'000 emplois, surtout dans l'horlogerie et l'industrie de précision.</p>
       <ul class="g-lage">
-        <li>Apotheke <strong>90 m</strong></li>
-        <li>Stadtzentrum <strong>150 m</strong></li>
+        <li>Pharmacie <strong>90 m</strong></li>
+        <li>Centre-ville <strong>150 m</strong></li>
         <li>Coop <strong>160 m</strong></li>
-        <li>Bushaltestelle Storchengasse <strong>220 m</strong></li>
-        <li>Hallenbad <strong>450 m</strong></li>
-        <li>Bahnhof Grenchen Süd <strong>550 m</strong></li>
+        <li>Arrêt de bus Storchengasse <strong>220 m</strong></li>
+        <li>Piscine couverte <strong>450 m</strong></li>
+        <li>Gare de Grenchen Süd <strong>550 m</strong></li>
       </ul>
     </div>
   </section>
 
   <section class="section section-alt" id="fotos">
     <div class="container">
-      <p class="section-label">Fotos</p>
-      <h2 class="section-title">So wohnen Sie an der Bettlachstrasse</h2>
+      <p class="section-label">Photos</p>
+      <h2 class="section-title">Votre logement à la Bettlachstrasse</h2>
       <div class="g-gallery">
-        <img src="../images/solothurn/grenchen-kueche-flur.webp" loading="lazy" width="1600" height="947" alt="Weisse Einbauküche mit Backofen und Blick durch den Flur in ein Schlafzimmer">
-        <img src="../images/solothurn/grenchen-schlafzimmer.webp" loading="lazy" width="1600" height="1044" alt="Schlafzimmer mit Doppelbett, Nachttisch und Fenstern über Eck">
-        <img src="../images/solothurn/grenchen-kueche.webp" loading="lazy" width="1600" height="1044" alt="Offener Wohnraum mit voll ausgestatteter Küchenzeile, Backofen und Mikrowelle">
-        <img src="../images/solothurn/grenchen-kochfeld.webp" loading="lazy" width="1600" height="1044" alt="Glaskeramik-Kochfeld auf dunkler Arbeitsplatte, Nahaufnahme">
-        <img src="../images/solothurn/grenchen-mikrowelle.webp" loading="lazy" width="1600" height="1044" alt="Eingebaute Mikrowelle über der Küchenzeile">
+        <img src="../images/solothurn/grenchen-kueche-flur.webp" loading="lazy" width="1600" height="947" alt="Cuisine encastrée blanche avec four et vue à travers le couloir sur une chambre">
+        <img src="../images/solothurn/grenchen-schlafzimmer.webp" loading="lazy" width="1600" height="1044" alt="Chambre avec lit double, table de nuit et fenêtres d'angle">
+        <img src="../images/solothurn/grenchen-kueche.webp" loading="lazy" width="1600" height="1044" alt="Séjour ouvert avec cuisine entièrement équipée, four et micro-ondes">
+        <img src="../images/solothurn/grenchen-kochfeld.webp" loading="lazy" width="1600" height="1044" alt="Plaque de cuisson vitrocéramique sur plan de travail sombre, gros plan">
+        <img src="../images/solothurn/grenchen-mikrowelle.webp" loading="lazy" width="1600" height="1044" alt="Micro-ondes encastré au-dessus de la cuisine">
       </div>
     </div>
   </section>
 
   <section class="section" id="faq">
     <div class="container container-narrow">
-      <p class="section-label">Fragen und Antworten</p>
-      <h2 class="section-title">Was Sie vor der Anfrage wissen sollten</h2>
+      <p class="section-label">Questions et réponses</p>
+      <h2 class="section-title">Ce qu'il faut savoir avant votre demande</h2>
       <div class="faq-list">
-        <details class="faq-item"><summary>Wie lange muss ich mindestens mieten?</summary>
-          <p class="faq-answer">Die Mindestmietdauer beträgt 12 Monate. Der Bezug erfolgt nach Vereinbarung.</p></details>
-        <details class="faq-item"><summary>Kann ich meinen Wohnsitz hier anmelden?</summary>
-          <p class="faq-answer">Ja. Die Wohnungen sind Langzeitwohnungen, der Wohnsitz ist anmeldbar.</p></details>
-        <details class="faq-item"><summary>Was ist in der Miete enthalten?</summary>
-          <p class="faq-answer">Die Wohnung ist möbliert und hat eine voll ausgestattete Küche. Die Nebenkosten sind in der Bruttomiete enthalten, die Sie beim Wohnungsfinder sehen.</p></details>
-        <details class="faq-item"><summary>Gibt es einen Parkplatz?</summary>
-          <p class="faq-answer">Aussenparkplätze sind separat anmietbar, der Preis auf Anfrage. Setzen Sie im Wohnungsfinder das Häkchen, dann klären wir das mit Ihnen zusammen.</p></details>
-        <details class="faq-item"><summary>Wie läuft eine Besichtigung ab?</summary>
-          <p class="faq-answer">Sie senden die Anfrage über das Formular auf dieser Seite. Wir melden uns bei Ihnen, bestätigen den Termin und zeigen Ihnen die Wohnung vor Ort.</p></details>
+        <details class="faq-item"><summary>Quelle est la durée minimale de location?</summary>
+          <p class="faq-answer">La durée minimale de location est de 12 mois. L'entrée a lieu selon entente.</p></details>
+        <details class="faq-item"><summary>Puis-je y établir mon domicile?</summary>
+          <p class="faq-answer">Oui. Il s'agit de logements de longue durée, vous pouvez y établir votre domicile.</p></details>
+        <details class="faq-item"><summary>Qu'est-ce qui est compris dans le loyer?</summary>
+          <p class="faq-answer">L'appartement est meublé et dispose d'une cuisine entièrement équipée. Les charges sont comprises dans le loyer brut affiché dans la recherche d'appartement.</p></details>
+        <details class="faq-item"><summary>Y a-t-il une place de parc?</summary>
+          <p class="faq-answer">Des places de parc extérieures se louent séparément, prix sur demande. Cochez la case dans la recherche d'appartement et nous en parlons ensemble.</p></details>
+        <details class="faq-item"><summary>Comment se déroule une visite?</summary>
+          <p class="faq-answer">Vous envoyez la demande via le formulaire de cette page. Nous vous recontactons, confirmons le rendez-vous et vous montrons l'appartement sur place.</p></details>
       </div>
     </div>
   </section>
 
   <section class="section section-alt" id="kontakt">
     <div class="container container-narrow g-kontakt">
-      <p class="section-label">Kontakt</p>
-      <h2 class="section-title">Julian Neyer, Immobilienberater</h2>
+      <p class="section-label">Contact</p>
+      <h2 class="section-title">Julian Neyer, conseiller immobilier</h2>
       <p>Bettlachstrasse 20, 2540 Grenchen</p>
-      <p>Telefon: <a href="tel:+41415639900">+41 41 563 99 00</a></p>
-      <p>E-Mail: <a href="mailto:info@amanthosliving.com">info@amanthosliving.com</a></p>
+      <p>Téléphone&nbsp;: <a href="tel:+41415639900">+41 41 563 99 00</a></p>
+      <p>E-mail&nbsp;: <a href="mailto:info@amanthosliving.com">info@amanthosliving.com</a></p>
     </div>
   </section>
   </main>
@@ -293,10 +291,10 @@
       <div class="footer-bottom" style="border-top:none;padding-top:0;">
         <p>&copy; 2026 Amanthos Living</p>
         <div class="footer-legal">
-          <a href="../">Startseite</a>
-          <a href="../privacy/">Datenschutz</a>
-          <a href="../imprint/">Impressum</a>
-          <button type="button" id="a-consent">Cookie-Einstellungen</button>
+          <a href="../">Accueil</a>
+          <a href="../privacy/" hreflang="de">Protection des données</a>
+          <a href="../imprint/" hreflang="de">Mentions légales</a>
+          <button type="button" id="a-consent">Paramètres des cookies</button>
         </div>
       </div>
     </div>
