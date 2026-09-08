@@ -206,12 +206,13 @@ test('K6: floorLabel schreibt die Etage als OG', () => {
 
 test('K6: availabilityLabel bei flexiblem Datum, hartem Datum und ohne Datum', () => {
   const byNr = (nr) => UNITS.find((u) => u.nr === nr);
-  assert.equal(finder.availabilityLabel(byNr('31')), 'ab 1. November 2026, früher nach Vereinbarung');
-  assert.equal(finder.availabilityLabel(byNr('56')), 'ab 1. Oktober 2026');
+  assert.equal(finder.availabilityLabel(byNr('31')), 'sofort frei, Bezug nach Vereinbarung');
+  assert.equal(finder.availabilityLabel({ availableFrom: '2026-11-01', flexible: true }), 'ab 1. November 2026, früher nach Vereinbarung');
+  assert.equal(finder.availabilityLabel({ availableFrom: '2026-10-01', flexible: false }), 'ab 1. Oktober 2026');
   assert.equal(finder.availabilityLabel(byNr('34')), 'ab 1. Januar 2027');
-  assert.equal(finder.availabilityLabel({ availableFrom: null, flexible: true }), 'nach Vereinbarung');
-  assert.equal(finder.availabilityLabel({ availableFrom: '2026-13-01', flexible: false }), 'nach Vereinbarung');
-  assert.equal(finder.availabilityLabel(undefined), 'nach Vereinbarung');
+  assert.equal(finder.availabilityLabel({ availableFrom: null, flexible: true }), 'sofort frei, Bezug nach Vereinbarung');
+  assert.equal(finder.availabilityLabel({ availableFrom: '2026-13-01', flexible: false }), 'sofort frei, Bezug nach Vereinbarung');
+  assert.equal(finder.availabilityLabel(undefined), 'sofort frei, Bezug nach Vereinbarung');
 });
 
 test('K6: der Tag steht ohne fuehrende Null', () => {
@@ -260,7 +261,7 @@ test('FR: setLocale(fr) beschriftet franzoesisch, setLocale(de) zurueck', () => 
     assert.equal(finder.availabilityLabel({ availableFrom: '2026-11-01', flexible: true }),
       'dès le 1er novembre 2026, plus tôt sur demande');
     assert.equal(finder.availabilityLabel({ availableFrom: '2026-12-15', flexible: false }), 'dès le 15 décembre 2026');
-    assert.equal(finder.availabilityLabel(undefined), 'sur demande');
+    assert.equal(finder.availabilityLabel(undefined), 'libre immédiatement, entrée selon entente');
     assert.equal(finder.setLocale('xx'), 'de', 'unbekannte Sprache faellt auf Deutsch zurueck');
   } finally {
     finder.setLocale('de');
