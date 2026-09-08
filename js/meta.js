@@ -23,11 +23,15 @@
 (function () {
   'use strict';
 
-  // Datenquelle "amanthos pixel" im Business-Portfolio Amanthos (548121105749958).
-  // EIN Pixel fuer alle vier Domains, nicht vier einzelne: Bei geschaetzt unter
-  // 50 Conversions pro Woche und Haus kaeme keines davon je aus der Lernphase.
+  // Datenquelle "Amanthos Living" (1113120988050573) im Business-Portfolio Amanthos
+  // (548121105749958), seit dem 08.09.2026 der eigene Pixel dieser Domain. Vorher
+  // lief amanthosliving.com auf dem gemeinsamen Pixel 516536478992095 der Hotels,
+  // und Mietanfragen aus Grenchen, Hotelbuchungen und Wohnidyll W5 lagen in einem
+  // Ereignisstrom. Die Hotelseiten bleiben auf dem alten Pixel. Das Backend meldet
+  // den Kauf fuer diese Domain an denselben Pixel (META_PIXEL_ID_LIVING), sonst
+  // greift die Deduplizierung ueber die eventID nicht.
   // Leert man die Konstante, ist dieser Teil wieder vollstaendig still.
-  var PIXEL_ID = '516536478992095';
+  var PIXEL_ID = '1113120988050573';
 
   var STORE_KEY = 'am_click_ids';
   var MAX_AGE_MS = 90 * 24 * 60 * 60 * 1000;  // Google-Ads-Klickfenster
