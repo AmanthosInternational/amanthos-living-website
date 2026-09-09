@@ -147,10 +147,6 @@
     "save_amount": "Risparmi CHF 917",
     "cta": "Calcoli il Suo risparmio"
   },
-  "fomo": {
-    "comparing": "In questo momento {n} persone confrontano Amanthos con il loro hotel",
-    "last_booking": "Ultima prenotazione: {t} a {loc}"
-  },
   "locations": {
     "section_label": "Le nostre sedi",
     "title": "Tre destinazioni. Un unico standard di eccellenza.",
@@ -294,37 +290,11 @@
     "error_connection": "Errore di connessione. La preghiamo di riprovare tra un momento.",
     "error_waking": "Mi sto avviando \u2014 La preghiamo di riprovare tra circa 30 secondi. Il nostro server ha bisogno di un momento per avviarsi."
   },
-  "ticker": {
-    "viewing": "{n} persone stanno consultando gli appartamenti in questo momento",
-    "just_booked": "Un ospite ha appena prenotato {loc} per {d} notti",
-    "bookings_today": "{n} prenotazioni oggi \u2014 gli appartamenti si riempiono velocemente",
-    "apartments_left": "{loc} ha solo {r} appartamenti rimasti questa settimana",
-    "last_booking": "Ultima prenotazione a {loc}: {t} minuti fa",
-    "fully_booked": "{loc} \u00e8 quasi al completo questo mese",
-    "guests_saved": "{n} ospiti hanno risparmiato oltre CHF 1.000 questa settimana"
-  },
-  "toast": {
-    "just_booked": "ha appena prenotato",
-    "just_now": "proprio ora",
-    "one_minute_ago": "1 minuto fa",
-    "two_minutes_ago": "2 minuti fa",
-    "three_minutes_ago": "3 minuti fa",
-    "five_minutes_ago": "5 minuti fa"
-  },
   "exit_popup": {
-    "limited_availability": "Disponibilit\u00e0 limitata",
-    "title": "Sta per perdere CHF 1.387 di risparmi",
-    "text": "\u00c8 quanto i nostri ospiti risparmiano a settimana rispetto agli hotel. Ogni giorno di attesa, i prezzi salgono man mano che gli appartamenti si riempiono.",
-    "searching_now": "stanno cercando ora",
-    "booked_today": "prenotati oggi",
-    "apartments_left": "appartamenti rimasti",
+    "title": "Prenoti direttamente",
+    "text": "Cucina, Wi-Fi e lavatrice sono inclusi in ogni appartamento. Prenotando qui, prenota direttamente da noi.",
     "cta": "Blocchi la tariffa di oggi",
     "reassurance": "Zero rischi \u00b7 Nessun pagamento richiesto per la ricerca \u00b7 Cancellazione gratuita disponibile"
-  },
-  "urgency_banner": {
-    "booked_24h": "{n} appartamenti prenotati nelle ultime 24 ore \u2014",
-    "only_left": "solo {n} disponibili questa settimana",
-    "secure_yours": "Si assicuri il Suo ora"
   },
   "common": {
     "guest_1": "1 ospite",

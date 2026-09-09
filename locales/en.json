@@ -147,10 +147,6 @@
     "save_amount": "Save CHF 917",
     "cta": "Check Your Savings Now"
   },
-  "fomo": {
-    "comparing": "Right now, {n} people are comparing Amanthos to their hotel",
-    "last_booking": "Last booking: {t} in {loc}"
-  },
   "locations": {
     "section_label": "Our Locations",
     "title": "Three Destinations. One Standard of Excellence.",
@@ -294,37 +290,11 @@
     "error_connection": "Connection error. Please try again in a moment.",
     "error_waking": "I'm waking up \u2014 please try again in about 30 seconds. Our server may need a moment to start."
   },
-  "ticker": {
-    "viewing": "{n} people are viewing apartments right now",
-    "just_booked": "A guest just booked {loc} for {d} nights",
-    "bookings_today": "{n} bookings made today \u2014 apartments filling fast",
-    "apartments_left": "{loc} has only {r} apartments left this week",
-    "last_booking": "Last booking in {loc}: {t} minutes ago",
-    "fully_booked": "{loc} is almost fully booked for this month",
-    "guests_saved": "{n} guests saved over CHF 1,000 this week"
-  },
-  "toast": {
-    "just_booked": "just booked",
-    "just_now": "just now",
-    "one_minute_ago": "1 minute ago",
-    "two_minutes_ago": "2 minutes ago",
-    "three_minutes_ago": "3 minutes ago",
-    "five_minutes_ago": "5 minutes ago"
-  },
   "exit_popup": {
-    "limited_availability": "Limited Availability",
-    "title": "You're About to Lose CHF 1,387 in Savings",
-    "text": "That's how much our guests save per week vs hotels. Every day you wait, prices go up as apartments fill.",
-    "searching_now": "searching right now",
-    "booked_today": "booked today",
-    "apartments_left": "apartments left",
+    "title": "Book direct and save",
+    "text": "Every apartment comes with a kitchen, Wi-Fi and a washing machine included. Book here and you book directly with us.",
     "cta": "Lock In Today's Rate",
     "reassurance": "Zero risk \u00b7 No payment required to search \u00b7 Free cancellation available"
-  },
-  "urgency_banner": {
-    "booked_24h": "{n} apartments booked in the last 24h \u2014",
-    "only_left": "only {n} left this week",
-    "secure_yours": "Secure Yours Now"
   },
   "common": {
     "guest_1": "1 Guest",

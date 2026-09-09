@@ -173,8 +173,8 @@
    beim ersten Rendern, ist die Buchungsleiste 93px statt 260px hoch, und alles
    darueber rutscht beim Nachladen um 123px nach oben (gemessen bei 412px).
    ACHTUNG: Aendern sich diese Regeln in css/style.css, muessen sie hier mit. */
-.hero-live-ticker{display:inline-flex;align-items:center;gap:0.5rem;background:rgba(0,0,0,0.25);backdrop-filter:blur(8px);padding:0.4rem 1rem;border-radius:var(--radius-full);color:rgba(255,255,255,0.9);font-size:0.75rem;font-weight:500;margin-bottom:1rem}.ticker-dot{width:8px;height:8px;background:#4ADE80;border-radius:50%;animation:tickerPulse 2s ease-in-out infinite}.hero-live-ticker{font-size:.68rem;padding:.35rem .85rem;margin-bottom:.75rem}.hero-booking{display:flex;align-items:center;background:rgba(26,43,74,.85);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-radius:60px;padding:.65rem .65rem .65rem 1.5rem;gap:0;max-width:900px;width:100%;position:relative;margin:1.5rem auto 0;z-index:10;animation:bookingBarIn .8s var(--ease) .3s both;box-shadow:0 8px 32px rgba(0,0,0,.35),0 0 0 1px rgba(255,255,255,.15)}.hero-bb-field{display:flex;align-items:center;gap:.6rem;padding:.75rem .5rem;cursor:pointer;color:rgba(255,255,255,.9);font-size:.88rem;font-weight:400;white-space:nowrap;transition:color .2s}.hero-bb-field:hover{color:#fff}.hero-bb-field svg{flex-shrink:0;opacity:.7}.hero-bb-location{flex-shrink:0}.hero-bb-dates{flex:1}.hero-bb-dates span{transition:color .2s}.hero-bb-dates span.has-value{color:#fff;font-weight:500}.hero-bb-divider{width:1px;height:28px;background:rgba(255,255,255,.2);flex-shrink:0;margin:0 .25rem}.hero-bb-guests{flex-shrink:0}.hero-bb-search{padding:.85rem 2rem;background:var(--color-accent);color:#fff;border:none;border-radius:60px;font-size:.78rem;font-weight:600;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;transition:all .25s;white-space:nowrap;margin-left:.5rem;flex-shrink:0;font-family:var(--font-body);box-shadow:0 2px 8px rgba(139,105,20,0.3)}.hero-bb-search:hover{background:var(--color-accent-hover);box-shadow:0 4px 16px rgba(139,105,20,0.4)}.hero-booking .nights-badge{position:absolute;top:-10px;left:50%;transform:translateX(-50%)}
-@media(max-width:768px){.hero-live-ticker{font-size:.68rem;padding:.35rem .85rem;margin-bottom:.75rem}.hero-booking{flex-direction:column;border-radius:var(--radius);padding:1rem;gap:.5rem;max-width:100%}.hero-bb-divider{width:100%;height:1px;margin:0}.hero-bb-field{width:100%;justify-content:center}.hero-bb-search{width:100%;text-align:center;justify-content:center;margin-left:0;margin-top:.25rem}}
+.hero-booking{display:flex;align-items:center;background:rgba(26,43,74,.85);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-radius:60px;padding:.65rem .65rem .65rem 1.5rem;gap:0;max-width:900px;width:100%;position:relative;margin:1.5rem auto 0;z-index:10;animation:bookingBarIn .8s var(--ease) .3s both;box-shadow:0 8px 32px rgba(0,0,0,.35),0 0 0 1px rgba(255,255,255,.15)}.hero-bb-field{display:flex;align-items:center;gap:.6rem;padding:.75rem .5rem;cursor:pointer;color:rgba(255,255,255,.9);font-size:.88rem;font-weight:400;white-space:nowrap;transition:color .2s}.hero-bb-field:hover{color:#fff}.hero-bb-field svg{flex-shrink:0;opacity:.7}.hero-bb-location{flex-shrink:0}.hero-bb-dates{flex:1}.hero-bb-dates span{transition:color .2s}.hero-bb-dates span.has-value{color:#fff;font-weight:500}.hero-bb-divider{width:1px;height:28px;background:rgba(255,255,255,.2);flex-shrink:0;margin:0 .25rem}.hero-bb-guests{flex-shrink:0}.hero-bb-search{padding:.85rem 2rem;background:var(--color-accent);color:#fff;border:none;border-radius:60px;font-size:.78rem;font-weight:600;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;transition:all .25s;white-space:nowrap;margin-left:.5rem;flex-shrink:0;font-family:var(--font-body);box-shadow:0 2px 8px rgba(139,105,20,0.3)}.hero-bb-search:hover{background:var(--color-accent-hover);box-shadow:0 4px 16px rgba(139,105,20,0.4)}.hero-booking .nights-badge{position:absolute;top:-10px;left:50%;transform:translateX(-50%)}
+@media(max-width:768px){.hero-booking{flex-direction:column;border-radius:var(--radius);padding:1rem;gap:.5rem;max-width:100%}.hero-bb-divider{width:100%;height:1px;margin:0}.hero-bb-field{width:100%;justify-content:center}.hero-bb-search{width:100%;text-align:center;justify-content:center;margin-left:0;margin-top:.25rem}}
 
 /* Steht in css/style.css nach den Bruchpunkten und ueberschreibt deren
    padding-bottom (Repositionierung der Buchungsleiste). Deshalb auch hier
@@ -241,13 +241,7 @@
           {"@type": "LocationFeatureSpecification", "name": "Cleaning Service", "value": true},
           {"@type": "LocationFeatureSpecification", "name": "Digital Check-in", "value": true},
           {"@type": "LocationFeatureSpecification", "name": "Keyless Entry", "value": true}
-        ],
-        "aggregateRating": {
-          "@type": "AggregateRating",
-          "ratingValue": "4.3",
-          "reviewCount": "1220",
-          "bestRating": "5"
-        }
+        ]
       },
       {
         "@type": "FAQPage",
@@ -330,11 +324,12 @@
         <img src="./images/landing-hero.jpg" alt="Premium serviced apartment bedroom with Swiss vineyard and mountain views" width="2400" height="1596" fetchpriority="high">
       </picture>
     </div>
-    <!-- Social Proof Live Ticker -->
-    <div class="hero-live-ticker" id="liveTicker" aria-live="polite">
-      <span class="ticker-dot"></span>
-      <span id="tickerText">23 people are viewing apartments right now</span>
-    </div>
+    <!--
+      Hier stand ein "Live-Ticker" mit Betrachter- und Buchungszahlen. Die Zahlen
+      kamen aus Math.random(), es gab keine Datenquelle dahinter. Erfundene
+      Nachfrage- und Verknappungsangaben sind nach UWG (CH) und der Richtlinie
+      2005/29/EG (EU) unzulaessig, deshalb ersatzlos entfernt (09.09.2026).
+    -->
 
     <div class="hero-badge">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
@@ -654,14 +649,11 @@
     </div>
   </section>
 
-  <!-- FOMO Strip -->
-  <div class="fomo-strip" style="background:var(--color-primary);padding:1.25rem 1rem;text-align:center;color:#fff;" data-animate>
-    <div class="container fomo-strip-inner" style="display:flex;align-items:center;justify-content:center;gap:2rem;flex-wrap:wrap;font-size:.85rem;">
-      <span style="opacity:.9;">Right now, <strong style="color:#c99a28;" id="fomoViewers">23</strong> people are comparing Amanthos to their hotel</span>
-      <span style="opacity:.6;">|</span>
-      <span style="opacity:.9;">Last booking: <strong style="color:#c99a28;" id="fomoTime">4 min ago</strong> in <strong id="fomoLoc">Zurich</strong></span>
-    </div>
-  </div>
+  <!--
+    Hier stand eine Leiste mit der Zahl der angeblich gerade Vergleichenden und
+    der angeblich letzten Buchung. Beide Werte kamen aus Math.random(). Ersatzlos
+    entfernt (09.09.2026), Begruendung wie beim Ticker im Hero.
+  -->
 
   <!-- ========== LOCATIONS ========== -->
   <section class="section section-alt" id="locations">
@@ -1175,40 +1167,30 @@
     </div>
   </div>
 
-  <!-- Recent Booking Popup (toast) -->
-  <div class="booking-toast" id="bookingToast" style="display:none" role="alert">
-    <div class="toast-icon">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-success)" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-    </div>
-    <div class="toast-content">
-      <strong id="toastName">Someone</strong> <span data-i18n="toast.just_booked">just booked</span>
-      <span id="toastLocation">Zurich Airport</span>
-      <span class="toast-time">2 minutes ago</span>
-    </div>
-  </div>
+  <!--
+    Hier stand eine Einblendung "<Vorname N.> just booked <Ort>". Die Namen kamen
+    aus einer Liste von 96 erfundenen Personen im Skript, Ort und Zeitpunkt aus
+    Math.random(). Eine namentliche Buchungsbehauptung ohne Buchung ist der
+    schwerste Fall irrefuehrender Werbung auf dieser Seite. Ersatzlos entfernt
+    (09.09.2026).
+  -->
 
   <!-- Exit Intent Popup -->
-  <div class="exit-popup" id="exitPopup" style="display:none" role="dialog" aria-modal="true" aria-label="Special offer">
+  <!--
+    Das Fenster bleibt, sein Inhalt nicht. Es zeigte drei Zahlen aus Math.random()
+    (angeblich Suchende, heutige Buchungen, freie Apartments) und drohte mit einem
+    Verlust von CHF 1'387. Stattdessen steht hier jetzt eine Aussage, die auf
+    dieser Seite belegt ist: Kueche, WLAN und Waschmaschine sind inbegriffen
+    (siehe Vergleichstabelle und Kostenrechnung). Auch das rote Feld
+    "Limited Availability" ist weg, es war dieselbe unbelegte
+    Verknappungsbehauptung. Geaendert 09.09.2026.
+  -->
+  <div class="exit-popup" id="exitPopup" style="display:none" role="dialog" aria-modal="true" aria-label="Book direct">
     <div class="exit-popup-overlay" data-close-popup="exitPopup"></div>
     <div class="exit-popup-content">
       <button class="exit-popup-close" data-close-popup="exitPopup" aria-label="Close">&times;</button>
-      <div style="background:var(--color-error);color:#fff;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;padding:.35rem .8rem;border-radius:4px;display:inline-block;margin-bottom:1rem;" data-i18n="exit_popup.limited_availability">Limited Availability</div>
-      <h3 class="exit-popup-title" data-i18n="exit_popup.title">You're About to Lose CHF 1,387 in Savings</h3>
-      <p class="exit-popup-text" data-i18n="exit_popup.text">That's how much our guests save per week vs hotels. Every day you wait, prices go up as apartments fill.</p>
-      <div class="exit-popup-stats">
-        <div class="exit-stat">
-          <strong id="exitViewers">17</strong>
-          <span data-i18n="exit_popup.searching_now">searching right now</span>
-        </div>
-        <div class="exit-stat">
-          <strong id="exitBooked">8</strong>
-          <span data-i18n="exit_popup.booked_today">booked today</span>
-        </div>
-        <div class="exit-stat">
-          <strong style="color:var(--color-error);" id="exitLeft">4</strong>
-          <span data-i18n="exit_popup.apartments_left">apartments left</span>
-        </div>
-      </div>
+      <h3 class="exit-popup-title" data-i18n="exit_popup.title">Book direct and save</h3>
+      <p class="exit-popup-text" data-i18n="exit_popup.text">Every apartment comes with a kitchen, Wi-Fi and a washing machine included. Book here and you book directly with us.</p>
       <a href="#booking" class="btn btn-accent btn-lg exit-popup-cta" data-close-popup="exitPopup" data-scroll-to="bookingBar" style="font-size:1rem;padding:1rem 2rem;">
         <span data-i18n="exit_popup.cta">Lock In Today's Rate</span> &rarr;
       </a>
@@ -1216,18 +1198,11 @@
     </div>
   </div>
 
-  <!-- Limited Availability Banner (below hero) -->
-  <div class="urgency-banner" id="urgencyBanner" data-animate>
-    <div class="container">
-      <div class="urgency-inner">
-        <span class="urgency-icon urgency-pulse" aria-hidden="true">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
-        </span>
-        <span class="urgency-text"><strong id="urgencyCount">11</strong> apartments booked in the last 24h &mdash; <strong>only <span id="urgencyLeft">6</span> left this week</strong></span>
-        <a href="#booking" class="urgency-cta" data-scroll-to="bookingBar" data-i18n="urgency_banner.secure_yours">Secure Yours Now</a>
-      </div>
-    </div>
-  </div>
+  <!--
+    Hier stand eine Verknappungsleiste ("N Apartments in den letzten 24h gebucht,
+    nur noch M diese Woche frei"). Beide Zahlen kamen aus Math.random(), das PMS
+    wurde nie gefragt. Ersatzlos entfernt (09.09.2026).
+  -->
 
   <!-- Scripts (deferred) -->
   <script src="./js/i18n.js" defer></script>
