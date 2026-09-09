@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="de" data-i18n-fixed>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
+  <title>Skelett Wohnen auf Zeit (Testfixture)</title>
+  <!--
+    Kleinste Seite, die jede ID aus tests/fixtures/longstay-dom-contract.json
+    genau einmal traegt (Kontrakt K5). Segment 2 prueft dagegen im Browser,
+    solange der Abschnitt in zurich/index.html noch nicht gemergt ist. Kein
+    Produktivcode, keine Gestaltung, nicht ausliefern: noindex steht oben.
+
+    Geladen wird, was das Seitenskript braucht, in der Reihenfolge von /zurich/
+    nach Segment 1: consent.js synchron, meta.js mit defer, gtag wie auf der
+    echten Seite ueber dataLayer (der Harness haengt sich davor und sammelt die
+    Aufrufe in window.__gtagCalls), am Ende i18n.js, longstay-config.js und
+    longstay-page.js. Sentry, Plausible, app.js, booking.js und chat.js fehlen
+    bewusst: sie wuerden Netzverkehr ausloesen oder tragen zum DOM-Kontrakt
+    nichts bei. Weil booking.js fehlt, ersetzt ein Stub unten
+    window.amanthosBooking und zeichnet setSearch-Aufrufe in
+    window.__setSearchCalls auf (K2, Knopf ls-book).
+
+    Anders als auf der echten Seite tragen Abschnitt und Nav-Eintrag hier KEIN
+    hidden, sonst waere im Skelett nichts zu pruefen. Die Seite ist fest
+    deutsch (lang="de" data-i18n-fixed, K6); i18n.js liest die Schluessel
+    longstay.* aus locales/de.json, sobald Segment 1 sie anlegt, und laesst
+    lang und Titel stehen.
+  -->
+  <script src="../../js/consent.js"></script>
+  <script defer src="../../js/meta.js"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-8LPLG0BPJ6');
+    gtag('config', 'AW-702540316');
+  </script>
+  <style>
+    .ls-hp { position: absolute; left: -9999px; }
+    [hidden] { display: none !important; }
+  </style>
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="#book">Verfügbarkeit</a></li>
+      <li id="ls-nav"><a href="#wohnen-auf-zeit" data-i18n="longstay.nav">Wohnen auf Zeit</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <section id="wohnen-auf-zeit" class="section section-alt ls-section">
+      <div class="container container-narrow">
+        <p class="section-label" data-i18n="longstay.label">Monatsaufenthalte</p>
+        <h2 class="section-title" data-i18n="longstay.title">Wohnen auf Zeit am Flughafen Zürich</h2>
+        <p class="section-subtitle" data-i18n="longstay.intro">Möblierte Business-Suite mit Küche, WLAN und Arbeitsplatz, 1 km vom Flughafen Zürich, ab einem Monat, digitaler Check-in.</p>
+
+        <p class="ls-price" id="ls-price" data-i18n="longstay.price_loading">Monatspreis wird geladen</p>
+        <p class="ls-price-note" id="ls-price-note"></p>
+        <div class="ls-actions">
+          <button type="button" class="btn btn-outline" id="ls-book" hidden data-i18n="longstay.book">Direkt buchen</button>
+        </div>
+
+        <ul class="ls-benefits">
+          <li data-i18n="longstay.benefit_kitchen">Voll ausgestattete Küche</li>
+          <li data-i18n="longstay.benefit_wifi">Schnelles WLAN kostenlos</li>
+          <li data-i18n="longstay.benefit_desk">Arbeitsplatz mit Schreibtisch</li>
+          <li data-i18n="longstay.benefit_parking">Privater Parkplatz, CHF 10 pro Tag</li>
+          <li data-i18n="longstay.benefit_checkin">Digitaler Check-in rund um die Uhr</li>
+          <li data-i18n="longstay.benefit_airport">1 km zum Flughafen Zürich</li>
+        </ul>
+
+        <h3 data-i18n="longstay.form_title">Angebot anfragen</h3>
+        <form id="ls-form" class="form-grid" novalidate>
+          <div class="form-field">
+            <label for="ls-name" data-i18n="longstay.name">Name</label>
+            <input type="text" id="ls-name" name="name" autocomplete="name" required>
+          </div>
+          <div class="form-field">
+            <label for="ls-email" data-i18n="longstay.email">E-Mail</label>
+            <input type="email" id="ls-email" name="email" required>
+          </div>
+          <div class="form-field">
+            <label for="ls-phone" data-i18n="longstay.phone">Telefon</label>
+            <input type="tel" id="ls-phone" name="phone">
+          </div>
+          <div class="form-field">
+            <label for="ls-movein" data-i18n="longstay.move_in">Einzug ab</label>
+            <input type="month" id="ls-movein" name="move_in" min="2026-09" max="2028-03">
+          </div>
+          <div class="form-field">
+            <label for="ls-duration" data-i18n="longstay.duration">Dauer in Monaten</label>
+            <input type="number" id="ls-duration" name="duration_months" min="1" max="24" step="1">
+          </div>
+          <div class="form-field">
+            <label for="ls-persons" data-i18n="longstay.persons">Personen</label>
+            <select id="ls-persons" name="persons">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label for="ls-message" data-i18n="longstay.message">Nachricht</label>
+            <textarea id="ls-message" name="message"></textarea>
+          </div>
+          <div class="ls-hp" aria-hidden="true">
+            <label for="ls-company-website">Firmenwebsite, bitte leer lassen</label>
+            <input type="text" id="ls-company-website" name="company_website" tabindex="-1" autocomplete="off">
+          </div>
+          <button type="submit" class="btn btn-accent btn-lg" id="ls-submit" data-i18n="longstay.submit">Anfrage senden</button>
+          <p class="ls-note"><span data-i18n="longstay.note">Wir verwenden Ihre Angaben, um Ihnen ein Angebot zu machen. Mehr in der Datenschutzerklärung.</span> <a href="../../privacy/">Datenschutzerklärung</a></p>
+        </form>
+        <p id="ls-status" class="ls-status" role="status"></p>
+        <div id="ls-success" class="ls-success" hidden>
+          <p>Vielen Dank. Wir melden uns mit einem Angebot.</p>
+        </div>
+
+        <p>Telefon: <a href="tel:+41415629700">+41 41 562 97 00</a>, E-Mail: <a href="mailto:info@amanthosliving.com">info@amanthosliving.com</a></p>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // Ersatz fuer js/booking.js, das im Skelett nicht laedt: nimmt setSearch-Aufrufe
+    // des Knopfs ls-book entgegen und zeichnet sie in window.__setSearchCalls auf.
+    window.__setSearchCalls = [];
+    window.amanthosBooking = window.amanthosBooking || {
+      setSearch: function (params) { window.__setSearchCalls.push(params); }
+    };
+  </script>
+  <script src="../../js/i18n.js" defer></script>
+  <script src="../../js/longstay-config.js" defer></script>
+  <script src="../../js/longstay-page.js" defer></script>
+</body>
+</html>

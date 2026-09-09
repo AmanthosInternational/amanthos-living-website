@@ -1,0 +1,175 @@
+{
+  "property": "GBAL",
+  "propertyName": "Amanthos Living Zurich Airport",
+  "arrival": "2026-10-15",
+  "departure": "2026-11-14",
+  "nights": 30,
+  "adults": 1,
+  "offers": [
+    {
+      "ratePlanId": "GBAL-NONREFRO_IBE-CLS",
+      "ratePlanCode": "NONREFRO_IBE",
+      "ratePlanName": "NON-REFUNDABLE RO_IBE",
+      "category": "Non-Refundable",
+      "unitGroupId": "GBAL-CLS",
+      "unitGroupName": "Classic Suite",
+      "unitGroupDescription": "Classic Suite",
+      "availableUnits": 3,
+      "totalGrossAmount": {
+        "amount": 2875.0,
+        "currency": "CHF"
+      },
+      "averagePerNight": {
+        "amount": 95.85,
+        "currency": "CHF"
+      },
+      "cancellationFee": {
+        "code": "NONREF",
+        "name": "Non Refundable",
+        "description": "No free cancellation",
+        "dueDateTime": "2026-09-09T17:55:43.8929718+02:00",
+        "fee": {
+          "amount": 2875.0,
+          "currency": "CHF"
+        }
+      },
+      "cityTax": {
+        "amount": 0,
+        "currency": "CHF",
+        "included": false
+      }
+    },
+    {
+      "ratePlanId": "GBAL-NONREFRO_IBE-SUPS",
+      "ratePlanCode": "NONREFRO_IBE",
+      "ratePlanName": "NON-REFUNDABLE RO_IBE",
+      "category": "Non-Refundable",
+      "unitGroupId": "GBAL-SUPS",
+      "unitGroupName": "Superior Suite",
+      "unitGroupDescription": "Superior Suite",
+      "availableUnits": 1,
+      "totalGrossAmount": {
+        "amount": 3131.0,
+        "currency": "CHF"
+      },
+      "averagePerNight": {
+        "amount": 104.35,
+        "currency": "CHF"
+      },
+      "cancellationFee": {
+        "code": "NONREF",
+        "name": "Non Refundable",
+        "description": "No free cancellation",
+        "dueDateTime": "2026-09-09T17:55:43.8929718+02:00",
+        "fee": {
+          "amount": 3131.0,
+          "currency": "CHF"
+        }
+      },
+      "cityTax": {
+        "amount": 0,
+        "currency": "CHF",
+        "included": false
+      }
+    },
+    {
+      "ratePlanId": "GBAL-NONREFRO_IBE-SKS",
+      "ratePlanCode": "NONREFRO_IBE",
+      "ratePlanName": "NON-REFUNDABLE RO_IBE",
+      "category": "Non-Refundable",
+      "unitGroupId": "GBAL-SKS",
+      "unitGroupName": "Sky Suite",
+      "unitGroupDescription": "Sky Suite",
+      "availableUnits": 2,
+      "totalGrossAmount": {
+        "amount": 3258.0,
+        "currency": "CHF"
+      },
+      "averagePerNight": {
+        "amount": 108.6,
+        "currency": "CHF"
+      },
+      "cancellationFee": {
+        "code": "NONREF",
+        "name": "Non Refundable",
+        "description": "No free cancellation",
+        "dueDateTime": "2026-09-09T17:55:43.8929718+02:00",
+        "fee": {
+          "amount": 3258.0,
+          "currency": "CHF"
+        }
+      },
+      "cityTax": {
+        "amount": 0,
+        "currency": "CHF",
+        "included": false
+      }
+    },
+    {
+      "ratePlanId": "GBAL-NONREFRO_IBE-BUS",
+      "ratePlanCode": "NONREFRO_IBE",
+      "ratePlanName": "NON-REFUNDABLE RO_IBE",
+      "category": "Non-Refundable",
+      "unitGroupId": "GBAL-BUS",
+      "unitGroupName": "Business Suite",
+      "unitGroupDescription": "Business Suite",
+      "availableUnits": 1,
+      "totalGrossAmount": {
+        "amount": 3696.0,
+        "currency": "CHF"
+      },
+      "averagePerNight": {
+        "amount": 123.2,
+        "currency": "CHF"
+      },
+      "cancellationFee": {
+        "code": "NONREF",
+        "name": "Non Refundable",
+        "description": "No free cancellation",
+        "dueDateTime": "2026-09-09T17:55:43.8929718+02:00",
+        "fee": {
+          "amount": 3696.0,
+          "currency": "CHF"
+        }
+      },
+      "cityTax": {
+        "amount": 0,
+        "currency": "CHF",
+        "included": false
+      }
+    },
+    {
+      "ratePlanId": "GBAL-NONREFRO_IBE-BUPS",
+      "ratePlanCode": "NONREFRO_IBE",
+      "ratePlanName": "NON-REFUNDABLE RO_IBE",
+      "category": "Non-Refundable",
+      "unitGroupId": "GBAL-BUPS",
+      "unitGroupName": "Business Plus Suite",
+      "unitGroupDescription": "Business Plus Suite",
+      "availableUnits": 1,
+      "totalGrossAmount": {
+        "amount": 3968.0,
+        "currency": "CHF"
+      },
+      "averagePerNight": {
+        "amount": 132.25,
+        "currency": "CHF"
+      },
+      "cancellationFee": {
+        "code": "NONREF",
+        "name": "Non Refundable",
+        "description": "No free cancellation",
+        "dueDateTime": "2026-09-09T17:55:43.8929718+02:00",
+        "fee": {
+          "amount": 3968.0,
+          "currency": "CHF"
+        }
+      },
+      "cityTax": {
+        "amount": 0,
+        "currency": "CHF",
+        "included": false
+      }
+    }
+  ]
+}
