@@ -347,5 +347,29 @@
     "text": "We use cookies for functionality, analytics, and to improve your experience. Your language preference is stored locally.",
     "accept": "Got it",
     "learn_more": "Privacy Policy"
+  },
+  "longstay": {
+    "nav": "Extended Stay",
+    "label": "Monthly stays",
+    "title": "Extended stay at Zurich Airport",
+    "intro": "Furnished business suite with kitchen, Wi-Fi and workspace, 1 km from Zurich Airport, from one month, digital check-in.",
+    "price_loading": "Loading the monthly price",
+    "benefit_kitchen": "Fully equipped kitchen",
+    "benefit_wifi": "Fast Wi-Fi, free of charge",
+    "benefit_desk": "Workspace with a desk",
+    "benefit_parking": "Private parking, CHF 10 per day",
+    "benefit_checkin": "Digital check-in around the clock",
+    "benefit_airport": "1 km to Zurich Airport",
+    "form_title": "Request an offer",
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone",
+    "move_in": "Moving in from",
+    "duration": "Duration in months",
+    "persons": "Guests",
+    "message": "Message",
+    "submit": "Send request",
+    "note": "We use your details to prepare an offer for you. More in the privacy policy.",
+    "book": "Book directly"
   }
 }

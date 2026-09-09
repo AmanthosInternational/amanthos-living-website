@@ -347,5 +347,29 @@
     "text": "Wir verwenden Cookies für Funktionalität, Analyse und zur Verbesserung Ihres Erlebnisses. Ihre Spracheinstellung wird lokal gespeichert.",
     "accept": "Verstanden",
     "learn_more": "Datenschutz"
+  },
+  "longstay": {
+    "nav": "Wohnen auf Zeit",
+    "label": "Monatsaufenthalte",
+    "title": "Wohnen auf Zeit am Flughafen Zürich",
+    "intro": "Möblierte Business-Suite mit Küche, WLAN und Arbeitsplatz, 1 km vom Flughafen Zürich, ab einem Monat, digitaler Check-in.",
+    "price_loading": "Monatspreis wird geladen",
+    "benefit_kitchen": "Voll ausgestattete Küche",
+    "benefit_wifi": "Schnelles WLAN kostenlos",
+    "benefit_desk": "Arbeitsplatz mit Schreibtisch",
+    "benefit_parking": "Privater Parkplatz, CHF 10 pro Tag",
+    "benefit_checkin": "Digitaler Check-in rund um die Uhr",
+    "benefit_airport": "1 km zum Flughafen Zürich",
+    "form_title": "Angebot anfragen",
+    "name": "Name",
+    "email": "E-Mail",
+    "phone": "Telefon",
+    "move_in": "Einzug ab",
+    "duration": "Dauer in Monaten",
+    "persons": "Personen",
+    "message": "Nachricht",
+    "submit": "Anfrage senden",
+    "note": "Wir verwenden Ihre Angaben, um Ihnen ein Angebot zu machen. Mehr in der Datenschutzerklärung.",
+    "book": "Direkt buchen"
   }
 }
