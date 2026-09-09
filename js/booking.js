@@ -1001,9 +1001,11 @@ function renderOffers(data) {
   html += '<h3>' + escapeHtml(propName) + '</h3>';
   html += '<div class="offers-summary-dates">' + escapeHtml(data.arrival) + ' &mdash; ' + escapeHtml(data.departure) + '</div>';
   html += '<div class="offers-summary-detail">' + nights + ' ' + nightLabel + ' &middot; ' + guestSummary + '</div>';
-  var viewerCount = Math.floor(Math.random() * 8) + 3;
-  var lookingMsg = window.t ? window.t('booking.people_looking', { n: viewerCount, loc: escapeHtml(PROPERTIES[data.property] ? PROPERTIES[data.property].short : '') }) : viewerCount + ' people are looking at ' + escapeHtml(PROPERTIES[data.property] ? PROPERTIES[data.property].short : '') + ' right now';
-  html += '<p class="offers-urgency"><span class="urgency-dot"></span> ' + lookingMsg + '</p>';
+  // Hier stand bis zum 09.09.2026 eine Zeile "N Personen schauen sich das gerade an".
+  // Die Zahl kam aus Math.random(), nicht aus dem PMS. Eine erfundene Nachfrageangabe
+  // unmittelbar vor der Preisauswahl ist nach UWG Art. 3 und der EU-Richtlinie ueber
+  // unlautere Geschaeftspraktiken unzulaessig. Wer echte Knappheit zeigen will, nimmt
+  // die verfuegbaren Einheiten aus der Angebotsantwort, die stehen je Angebot bereit.
   html += '</div>';
 
   var refundable = currentOffers.filter(function (o) { return o.category === 'Refundable'; });
