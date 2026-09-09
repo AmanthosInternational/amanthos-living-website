@@ -423,7 +423,11 @@ test('Abschnitt 0: kein Gedankenstrich und keine Personendaten im Quelltext', ()
 test('K1: das Skript liest seine Konstanten aus longstay-config.js', () => {
   assert.equal(config.NIGHTS, 30);
   assert.equal(config.PROPERTY, 'GBAL');
-  assert.equal(config.ADS_SEND_TO, '');
+  // Vor der Verdrahtung war das Label leer, seit der Verdrahtung traegt es die
+  // Conversion-Aktion Lead Living Wohnen auf Zeit. Geprueft wird deshalb die Form,
+  // nicht der Zustand: leer oder ein gueltiges Label, nie etwas dazwischen.
+  assert.ok(config.ADS_SEND_TO === '' || /^AW-\d+\/[A-Za-z0-9_-]+$/.test(config.ADS_SEND_TO),
+    'ADS_SEND_TO ist weder leer noch ein gueltiges Conversion-Label: ' + config.ADS_SEND_TO);
   assert.ok(src.includes("require('./longstay-config.js')"));
   assert.ok(src.includes('window.LONGSTAY_CONFIG'));
 });

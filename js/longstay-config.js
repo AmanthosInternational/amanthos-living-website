@@ -11,7 +11,7 @@
  * String (gleiche Origin), und ein leerer String ist falsy (Muster
  * js/grenchen-config.js).
  *
- * ADS_SEND_TO bleibt leer, bis die Verdrahtung das Label der Conversion-Aktion
+ * ADS_SEND_TO traegt seit der Verdrahtung das Label der Conversion-Aktion
  * eintraegt; leer heisst, kein Conversion-Aufruf (K4). MAX_PERSONS entspricht
  * MAX_GUESTS.GBAL in js/booking.js. Telefonnummer aus dem JSON-LD von
  * zurich/index.html.
@@ -32,7 +32,7 @@
     PAGE_URL: 'https://www.amanthosliving.com/zurich/',
     GA4_ID: 'G-8LPLG0BPJ6',
     ADS_ID: 'AW-702540316',
-    ADS_SEND_TO: '',
+    ADS_SEND_TO: 'AW-702540316/WwQJCKvhpPIcEJzU_84C',
     PHONE: '+41 41 562 97 00',
     PHONE_HREF: 'tel:+41415629700',
     EMAIL: 'info@amanthosliving.com',
