@@ -22,6 +22,18 @@
   var translations = {};
   var basePath = '';
 
+  // Fester Sprachmodus (Kontrakt K6): traegt <html> das Attribut data-i18n-fixed,
+  // ist das lang-Attribut der Seite die Sprache. ?lang=, localStorage und
+  // Browsersprache werden dann weder gelesen noch geschrieben, und lang, Titel
+  // und Meta-Description bleiben stehen: auf einer einsprachigen Seite wie
+  // appartements-nyon/ stimmen sie im HTML, und meta.* der Sprachdatei
+  // beschreibt die Startseite. Seiten ohne das Attribut verhalten sich wie bisher.
+  function isFixedLanguage() {
+    try {
+      return document.documentElement.getAttribute('data-i18n-fixed') !== null;
+    } catch (e) { return false; }
+  }
+
   // Detect base path (handles subpages like /zurich/)
   function detectBasePath() {
     var scripts = document.querySelectorAll('script[src*="i18n.js"]');
@@ -33,6 +45,12 @@
 
   // Detect user language: (0) URL param, (1) localStorage, (2) navigator.language, (3) default EN
   function detectLanguage() {
+    // Feste Seitensprache (K6): nur das lang-Attribut zaehlt, sonst en.
+    if (isFixedLanguage()) {
+      var pageLang = (document.documentElement.getAttribute('lang') || '').trim().slice(0, 2).toLowerCase();
+      return SUPPORTED_LANGS[pageLang] ? pageLang : DEFAULT_LANG;
+    }
+
     // 0. URL parameter ?lang=xx (highest priority, also saves to localStorage).
     // Ein vorhandenes, aber unbekanntes ?lang= faellt auf EN und nicht mehr auf
     // Storage oder Browsersprache zurueck (Kontrakt K1): wer aus einem Deep Link
@@ -127,20 +145,24 @@
       if (aval) ael.setAttribute('aria-label', aval);
     }
 
-    // Update html lang attribute
-    document.documentElement.setAttribute('lang', currentLang);
+    // lang, Meta-Description und Titel gehoeren der Seite, wenn sie fest
+    // einsprachig ist (K6); sonst wie bisher aus der Sprachdatei.
+    if (!isFixedLanguage()) {
+      // Update html lang attribute
+      document.documentElement.setAttribute('lang', currentLang);
 
-    // Update meta description
-    var metaDesc = document.querySelector('meta[name="description"]');
-    var descValue = getNestedValue(dict, 'meta.description');
-    if (metaDesc && descValue) {
-      metaDesc.setAttribute('content', descValue);
-    }
+      // Update meta description
+      var metaDesc = document.querySelector('meta[name="description"]');
+      var descValue = getNestedValue(dict, 'meta.description');
+      if (metaDesc && descValue) {
+        metaDesc.setAttribute('content', descValue);
+      }
 
-    // Update page title
-    var titleValue = getNestedValue(dict, 'meta.title');
-    if (titleValue) {
-      document.title = titleValue;
+      // Update page title
+      var titleValue = getNestedValue(dict, 'meta.title');
+      if (titleValue) {
+        document.title = titleValue;
+      }
     }
 
     // Load CJK fonts if needed
@@ -200,6 +222,7 @@
 
   // Build language selector UI
   function buildSelector() {
+    if (isFixedLanguage()) return; // kein Umschalter auf festen Seiten (K6)
     var container = document.getElementById('langSelector');
     if (!container) return;
 
@@ -250,6 +273,7 @@
 
   // Update selector highlight
   function updateSelector() {
+    if (isFixedLanguage()) return;
     var container = document.getElementById('langSelector');
     if (!container) return;
     var currentEl = container.querySelector('.lang-current');
