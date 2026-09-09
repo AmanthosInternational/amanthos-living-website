@@ -107,7 +107,22 @@
     "citytax": "Taxe de séjour",
     "citytax_separate_note": "facturée séparément",
     "summary_total": "Total",
-    "extras": "Extras"
+    "extras": "Extras",
+    "flexible": "Flexible",
+    "checking_payment": "Vérification du paiement en cours...",
+    "payment_not_confirmed_yet": "Paiement pas encore confirmé",
+    "payment_processing_wait": "Si vous avez payé, le traitement peut prendre un moment. Vous pouvez relancer la vérification ou nous contacter.",
+    "keep_checking": "Relancer la vérification",
+    "did_not_pay_cancel": "Je n'ai pas payé, annuler la réservation",
+    "or_contact": "Ou contactez-nous :"
+  },
+  "booking_bar": {
+    "set_dates": "Choisir les dates",
+    "search_btn": "RECHERCHER"
+  },
+  "calendar": {
+    "select_checkin": "Choisissez la date d'arrivée",
+    "select_checkout": "Choisissez la date de départ"
   },
   "social_proof": {
     "happy_guests": "Clients satisfaits",
