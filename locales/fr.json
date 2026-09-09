@@ -162,10 +162,6 @@
     "save_amount": "Économisez CHF 917",
     "cta": "Calculez vos économies maintenant"
   },
-  "fomo": {
-    "comparing": "En ce moment, {n} personnes comparent Amanthos à leur hôtel",
-    "last_booking": "Dernière réservation : {t} à {loc}"
-  },
   "locations": {
     "section_label": "Nos emplacements",
     "title": "Trois destinations. Un seul standard d'excellence.",
@@ -309,37 +305,11 @@
     "error_connection": "Erreur de connexion. Veuillez réessayer dans un instant.",
     "error_waking": "Je me mets en route — veuillez réessayer dans environ 30 secondes. Notre serveur peut avoir besoin d'un moment pour démarrer."
   },
-  "ticker": {
-    "viewing": "{n} personnes consultent des appartements en ce moment",
-    "just_booked": "Un client vient de réserver {loc} pour {d} nuits",
-    "bookings_today": "{n} réservations effectuées aujourd'hui — les appartements se remplissent vite",
-    "apartments_left": "Il ne reste que {r} appartements à {loc} cette semaine",
-    "last_booking": "Dernière réservation à {loc} : il y a {t} minutes",
-    "fully_booked": "{loc} est presque complet pour ce mois",
-    "guests_saved": "{n} clients ont économisé plus de CHF 1 000 cette semaine"
-  },
-  "toast": {
-    "just_booked": "vient de réserver",
-    "just_now": "à l'instant",
-    "one_minute_ago": "il y a 1 minute",
-    "two_minutes_ago": "il y a 2 minutes",
-    "three_minutes_ago": "il y a 3 minutes",
-    "five_minutes_ago": "il y a 5 minutes"
-  },
   "exit_popup": {
-    "limited_availability": "Disponibilité limitée",
-    "title": "Vous êtes sur le point de perdre CHF 1 387 d'économies",
-    "text": "C'est ce que nos clients économisent par semaine par rapport aux hôtels. Chaque jour d'attente, les prix augmentent à mesure que les appartements se remplissent.",
-    "searching_now": "recherchent en ce moment",
-    "booked_today": "réservé(s) aujourd'hui",
-    "apartments_left": "appartements restants",
+    "title": "Réservez en direct",
+    "text": "Cuisine, Wi-Fi et lave-linge sont inclus dans chaque appartement. En réservant ici, vous réservez directement chez nous.",
     "cta": "Bloquez le tarif du jour",
     "reassurance": "Aucun risque · Aucun paiement requis pour la recherche · Annulation gratuite disponible"
-  },
-  "urgency_banner": {
-    "booked_24h": "{n} appartements réservés dans les dernières 24h —",
-    "only_left": "plus que {n} cette semaine",
-    "secure_yours": "Réservez le vôtre"
   },
   "common": {
     "guest_1": "1 voyageur",

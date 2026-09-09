@@ -147,10 +147,6 @@
     "save_amount": "CHF 917 절약",
     "cta": "절약 금액 확인하기"
   },
-  "fomo": {
-    "comparing": "현재 {n}명이 Amanthos와 호텔을 비교하고 있습니다",
-    "last_booking": "최근 예약: {t} — {loc}"
-  },
   "locations": {
     "section_label": "위치 안내",
     "title": "세 곳의 목적지. 하나의 탁월한 기준.",
@@ -294,37 +290,11 @@
     "error_connection": "연결 오류가 발생하였습니다. 잠시 후 다시 시도해 주십시오.",
     "error_waking": "서버를 시작하고 있습니다 — 약 30초 후에 다시 시도해 주십시오."
   },
-  "ticker": {
-    "viewing": "현재 {n}명이 아파트먼트를 조회하고 있습니다",
-    "just_booked": "고객이 방금 {loc}을(를) {d}박으로 예약하였습니다",
-    "bookings_today": "오늘 {n}건 예약 완료 — 객실이 빠르게 마감되고 있습니다",
-    "apartments_left": "{loc}에 이번 주 잔여 아파트먼트 {r}실",
-    "last_booking": "{loc} 최근 예약: {t}분 전",
-    "fully_booked": "{loc}은(는) 이번 달 거의 만실입니다",
-    "guests_saved": "이번 주 {n}명의 고객이 CHF 1,000 이상 절약하였습니다"
-  },
-  "toast": {
-    "just_booked": "방금 예약됨",
-    "just_now": "방금",
-    "one_minute_ago": "1분 전",
-    "two_minutes_ago": "2분 전",
-    "three_minutes_ago": "3분 전",
-    "five_minutes_ago": "5분 전"
-  },
   "exit_popup": {
-    "limited_availability": "잔여 객실 한정",
-    "title": "CHF 1,387의 절약 기회를 놓치려 하고 계십니다",
-    "text": "저희 고객이 호텔 대비 매주 절약하는 금액입니다. 아파트먼트가 마감됨에 따라 매일 요금이 상승합니다.",
-    "searching_now": "현재 검색 중",
-    "booked_today": "오늘 예약됨",
-    "apartments_left": "잔여 객실",
+    "title": "직접 예약하세요",
+    "text": "모든 아파트에 주방, Wi-Fi, 세탁기가 포함되어 있습니다. 여기서 예약하시면 저희에게 직접 예약하시는 것입니다.",
     "cta": "오늘의 요금 확보하기",
     "reassurance": "위험 부담 없음 · 검색 시 결제 불필요 · 무료 취소 가능"
-  },
-  "urgency_banner": {
-    "booked_24h": "지난 24시간 동안 {n}개 아파트먼트 예약 완료 —",
-    "only_left": "이번 주 잔여 {n}실",
-    "secure_yours": "지금 예약하기"
   },
   "common": {
     "guest_1": "1명",

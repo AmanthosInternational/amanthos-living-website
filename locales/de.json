@@ -147,10 +147,6 @@
     "save_amount": "CHF 917 sparen",
     "cta": "Jetzt Ihre Ersparnis berechnen"
   },
-  "fomo": {
-    "comparing": "Gerade vergleichen {n} Personen Amanthos mit ihrem Hotel",
-    "last_booking": "Letzte Buchung: {t} in {loc}"
-  },
   "locations": {
     "section_label": "Unsere Standorte",
     "title": "Drei Destinationen. Ein Standard der Exzellenz.",
@@ -294,37 +290,11 @@
     "error_connection": "Verbindungsfehler. Bitte versuchen Sie es in einem Moment erneut.",
     "error_waking": "Ich starte gerade \u2014 bitte versuchen Sie es in etwa 30 Sekunden erneut. Unser Server braucht einen Moment zum Starten."
   },
-  "ticker": {
-    "viewing": "{n} Personen schauen sich gerade Apartments an",
-    "just_booked": "Ein Gast hat gerade {loc} f\u00fcr {d} N\u00e4chte gebucht",
-    "bookings_today": "{n} Buchungen heute \u2014 Apartments f\u00fcllen sich schnell",
-    "apartments_left": "{loc} hat diese Woche nur noch {r} Apartments frei",
-    "last_booking": "Letzte Buchung in {loc}: vor {t} Minuten",
-    "fully_booked": "{loc} ist diesen Monat fast ausgebucht",
-    "guests_saved": "{n} G\u00e4ste haben diese Woche \u00fcber CHF 1'000 gespart"
-  },
-  "toast": {
-    "just_booked": "hat gerade gebucht",
-    "just_now": "gerade eben",
-    "one_minute_ago": "vor 1 Minute",
-    "two_minutes_ago": "vor 2 Minuten",
-    "three_minutes_ago": "vor 3 Minuten",
-    "five_minutes_ago": "vor 5 Minuten"
-  },
   "exit_popup": {
-    "limited_availability": "Begrenzte Verf\u00fcgbarkeit",
-    "title": "Sie verpassen gleich CHF 1'387 Ersparnis",
-    "text": "So viel sparen unsere G\u00e4ste pro Woche gegen\u00fcber Hotels. Jeden Tag, den Sie warten, steigen die Preise, da die Apartments sich f\u00fcllen.",
-    "searching_now": "suchen gerade",
-    "booked_today": "heute gebucht",
-    "apartments_left": "Apartments verf\u00fcgbar",
+    "title": "Direkt buchen lohnt sich",
+    "text": "K\u00fcche, WLAN und Waschmaschine sind in jedem Apartment inbegriffen. Wer hier bucht, bucht direkt bei uns.",
     "cta": "Heutigen Preis sichern",
     "reassurance": "Kein Risiko \u00b7 Keine Zahlung f\u00fcr die Suche \u00b7 Kostenlose Stornierung m\u00f6glich"
-  },
-  "urgency_banner": {
-    "booked_24h": "{n} Apartments in den letzten 24 Stunden gebucht \u2014",
-    "only_left": "nur noch {n} diese Woche verf\u00fcgbar",
-    "secure_yours": "Jetzt Ihres sichern"
   },
   "common": {
     "guest_1": "1 Gast",

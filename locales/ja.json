@@ -147,10 +147,6 @@
     "save_amount": "CHF 917の節約",
     "cta": "節約額を今すぐ確認"
   },
-  "fomo": {
-    "comparing": "現在{n}名のお客様がAmanthos Livingとホテルを比較中です",
-    "last_booking": "最新の予約: {t}に{loc}"
-  },
   "locations": {
     "section_label": "ロケーション",
     "title": "3つの拠点。変わらない卓越した品質。",
@@ -294,37 +290,11 @@
     "error_connection": "接続エラーが発生しました。しばらくしてから再度お試しください。",
     "error_waking": "サーバーを起動中です。約30秒後に再度お試しください。"
   },
-  "ticker": {
-    "viewing": "現在{n}名のお客様がアパートメントを閲覧中です",
-    "just_booked": "ゲストが{loc}を{d}泊でご予約されました",
-    "bookings_today": "本日{n}件のご予約 — アパートメントが埋まりつつあります",
-    "apartments_left": "{loc}は今週残り{r}室のみです",
-    "last_booking": "{loc}の最新予約: {t}分前",
-    "fully_booked": "{loc}は今月ほぼ満室です",
-    "guests_saved": "今週{n}名のゲストがCHF 1,000以上を節約されました"
-  },
-  "toast": {
-    "just_booked": "ご予約済み",
-    "just_now": "たった今",
-    "one_minute_ago": "1分前",
-    "two_minutes_ago": "2分前",
-    "three_minutes_ago": "3分前",
-    "five_minutes_ago": "5分前"
-  },
   "exit_popup": {
-    "limited_availability": "空室わずか",
-    "title": "週あたりCHF 1,387の節約を見逃していませんか？",
-    "text": "これはホテルと比較した場合のゲストの週あたりの平均節約額です。アパートメントが埋まるにつれ、料金は日々上昇しています。",
-    "searching_now": "名が今検索中",
-    "booked_today": "本日予約済み",
-    "apartments_left": "残りのアパートメント",
+    "title": "直接ご予約ください",
+    "text": "すべてのアパートメントにキッチン、Wi-Fi、洗濯機が含まれています。こちらからのご予約は、当社への直接予約です。",
     "cta": "本日の料金を確保する",
     "reassurance": "リスクゼロ · 検索に支払い不要 · 無料キャンセル可能"
-  },
-  "urgency_banner": {
-    "booked_24h": "過去24時間で{n}室が予約されました —",
-    "only_left": "今週残り{n}室のみ",
-    "secure_yours": "今すぐ確保"
   },
   "common": {
     "guest_1": "1名",

@@ -147,10 +147,6 @@
     "save_amount": "节省CHF 917",
     "cta": "立即计算您的节省金额"
   },
-  "fomo": {
-    "comparing": "目前有{n}人正在将Amanthos与酒店进行比较",
-    "last_booking": "最近一次预订：{t}前在{loc}"
-  },
   "locations": {
     "section_label": "我们的地点",
     "title": "三大目的地，统一卓越标准。",
@@ -294,37 +290,11 @@
     "error_connection": "连接错误。请稍后重试。",
     "error_waking": "系统正在启动中，请约30秒后重试。服务器可能需要片刻时间启动。"
   },
-  "ticker": {
-    "viewing": "目前有{n}人正在浏览公寓",
-    "just_booked": "一位住客刚刚预订了{loc}，入住{d}晚",
-    "bookings_today": "今日已有{n}笔预订——房源正在快速减少",
-    "apartments_left": "{loc}本周仅剩{r}间公寓",
-    "last_booking": "{loc}的上一笔预订：{t}分钟前",
-    "fully_booked": "{loc}本月即将满房",
-    "guests_saved": "本周有{n}位住客节省了超过CHF 1,000"
-  },
-  "toast": {
-    "just_booked": "刚刚预订了",
-    "just_now": "刚刚",
-    "one_minute_ago": "1分钟前",
-    "two_minutes_ago": "2分钟前",
-    "three_minutes_ago": "3分钟前",
-    "five_minutes_ago": "5分钟前"
-  },
   "exit_popup": {
-    "limited_availability": "房源有限",
-    "title": "您即将错过每周CHF 1,387的节省",
-    "text": "这是我们的住客与酒店相比每周节省的金额。每多等一天，随着房源减少，价格就会上涨。",
-    "searching_now": "人正在搜索",
-    "booked_today": "间今日已被预订",
-    "apartments_left": "间公寓尚余",
+    "title": "直接预订",
+    "text": "每套公寓均包含厨房、Wi-Fi 和洗衣机。在此预订即为向我们直接预订。",
     "cta": "锁定今日优惠价",
     "reassurance": "零风险 · 搜索无需付款 · 支持免费取消"
-  },
-  "urgency_banner": {
-    "booked_24h": "过去24小时内已有{n}间公寓被预订——",
-    "only_left": "本周仅剩{n}间",
-    "secure_yours": "立即锁定"
   },
   "common": {
     "guest_1": "1位住客",

@@ -107,85 +107,15 @@ window.amanthosBooking.selectLocation(preselect);
 localStorage.removeItem('preselect_location');
 }
 } catch (e) { /* Storage gesperrt: Private Mode, Cookie-Blocker */ }
-var tickerText = document.getElementById('tickerText');
-if (tickerText) {
-var tickerKeys = [
-'ticker.viewing',
-'ticker.just_booked',
-'ticker.bookings_today',
-'ticker.apartments_left',
-'ticker.last_booking',
-'ticker.fully_booked',
-'ticker.guests_saved',
-];
-var tickerLocations = ['Zurich Airport', 'Solothurn', 'Nyon'];
-function updateTicker() {
-var key = tickerKeys[Math.floor(Math.random() * tickerKeys.length)];
-var loc = tickerLocations[Math.floor(Math.random() * tickerLocations.length)];
-var replacements = {
-n: Math.floor(Math.random() * 22) + 12,
-loc: loc,
-d: Math.floor(Math.random() * 12) + 3,
-r: Math.floor(Math.random() * 3) + 1,
-t: Math.floor(Math.random() * 12) + 2,
-};
-tickerText.textContent = window.t ? window.t(key, replacements) : key;
-}
-setInterval(updateTicker, 8000);
-}
-var bookingToast = document.getElementById('bookingToast');
-var toastName = document.getElementById('toastName');
-var toastLocation = document.getElementById('toastLocation');
-if (bookingToast) {
-var toastNames = [
-'Michael K.', 'Sarah L.', 'Thomas M.', 'Anna B.',
-'Peter R.', 'Julia S.', 'Marco P.', 'Elena W.',
-'David C.', 'Lisa F.', 'Andreas H.', 'Sophie N.',
-'Marc B.', 'Sandra W.', 'Lukas M.', 'Christine P.',
-'Oliver R.', 'Natalie S.', 'Stefan G.', 'Monika H.',
-'Robert F.', 'Claudia M.', 'Daniel W.', 'Martina K.',
-'Christian B.', 'Nicole R.', 'Markus S.', 'Karin P.',
-'Patrick L.', 'Sabine G.', 'Martin H.', 'Silvia W.',
-'Reto B.', 'Andrea M.', 'Simon K.', 'Barbara F.',
-'Jan P.', 'Katharina S.', 'Felix L.', 'Simone R.',
-'Alexander H.', 'Isabelle W.', 'Tobias M.', 'Laura K.',
-'Philipp B.', 'Melanie S.', 'Fabian R.', 'Stefanie P.',
-'Benjamin G.', 'Daniela L.', 'Florian W.', 'Manuela H.',
-'Sebastian K.', 'Corinne M.', 'Dominik F.', 'Franziska B.',
-'Jonas S.', 'Petra R.', 'Luca P.', 'Regula W.',
-'Nicolas G.', 'Verena K.', 'Raphael M.', 'Ursula L.',
-'Samuel H.', 'Brigitte F.', 'Adrian B.', 'Tamara S.',
-'Marcel R.', 'Eveline P.', 'Christoph W.', 'Ruth G.',
-'Beat M.', 'Susanne K.', 'Yves L.', 'Helena F.',
-'Pierre B.', 'Margrit S.', 'Alain R.', 'Esther P.',
-'Laurent W.', 'Nathalie G.', 'Pascal K.', 'Vreni M.',
-'René L.', 'Marie F.', 'Hans B.', 'Irene S.',
-'Fritz R.', 'Doris P.', 'Werner W.', 'Eliane G.',
-'Hugo K.', 'Anita M.', 'Kurt L.', 'Carmen F.',
-'Roland B.', 'Yvonne S.', 'Bruno R.', 'Heidi P.',
-];
-var toastLocations = ['Zurich Airport', 'Solothurn', 'Nyon'];
-var toastTimeKeys = ['toast.just_now', 'toast.one_minute_ago', 'toast.two_minutes_ago', 'toast.three_minutes_ago', 'toast.five_minutes_ago'];
-function showToast() {
-toastName.textContent = toastNames[Math.floor(Math.random() * toastNames.length)];
-toastLocation.textContent = toastLocations[Math.floor(Math.random() * toastLocations.length)];
-var timeEl = bookingToast.querySelector('.toast-time');
-if (timeEl) {
-var timeKey = toastTimeKeys[Math.floor(Math.random() * toastTimeKeys.length)];
-timeEl.textContent = window.t ? window.t(timeKey) : timeKey;
-}
-bookingToast.style.display = 'flex';
-setTimeout(function () {
-bookingToast.style.display = 'none';
-}, 5000);
-}
-setTimeout(function () {
-showToast();
-setInterval(function () {
-showToast();
-}, 18000 + Math.random() * 17000);
-}, 8000);
-}
+/*
+Entfernt am 09.09.2026: der Live-Ticker im Hero und die Buchungs-Einblendung.
+Der Ticker wuerfelte Betrachterzahlen, Buchungen pro Tag und "nur noch N frei"
+aus Math.random(); die Einblendung behauptete, eine namentlich genannte Person
+habe gerade gebucht, aus einer Liste von 96 erfundenen Namen. Beides sind
+erfundene Nachfrage- und Verknappungsangaben und damit nach UWG (CH) und
+Richtlinie 2005/29/EG (EU) unzulaessig. Ersatzlos gestrichen, samt HTML,
+Sprachschluesseln (Namensraeume ticker.*, toast.*) und CSS.
+*/
 var stickyCta = document.getElementById('stickyCta');
 if (stickyCta) {
 var heroSection = document.getElementById('hero');
@@ -268,12 +198,9 @@ document.addEventListener('mouseout', function (e) {
 if (exitShown) return;
 if (e.clientY < 5 && e.relatedTarget == null) {
 exitShown = true;
-var viewerEl = document.getElementById('exitViewers');
-var bookedEl = document.getElementById('exitBooked');
-var leftEl = document.getElementById('exitLeft');
-if (viewerEl) viewerEl.textContent = Math.floor(Math.random() * 18) + 12;
-if (bookedEl) bookedEl.textContent = Math.floor(Math.random() * 6) + 5;
-if (leftEl) leftEl.textContent = Math.floor(Math.random() * 4) + 2;
+// Das Fenster zeigte hier drei gewuerfelte Zahlen (Suchende, heutige Buchungen,
+// freie Apartments). Sie sind am 09.09.2026 entfallen, der Inhalt steht jetzt
+// fest im HTML und ist auf der Seite belegt. Das Fenster selbst bleibt.
 exitPopup.style.display = 'block';
 var exitContent = exitPopup.querySelector('.exit-popup-content');
 if (exitContent) {
@@ -288,34 +215,13 @@ if (sessionStorage.getItem('exitShown')) {
 exitShown = true;
 }
 }
-var fomoViewers = document.getElementById('fomoViewers');
-var fomoTime = document.getElementById('fomoTime');
-var fomoLoc = document.getElementById('fomoLoc');
-var fomoLocations = ['Zurich', 'Solothurn', 'Nyon'];
-if (fomoViewers) {
-fomoViewers.textContent = Math.floor(Math.random() * 20) + 15;
-}
-if (fomoTime) {
-fomoTime.textContent = (Math.floor(Math.random() * 8) + 2) + ' min ago';
-}
-if (fomoLoc) {
-fomoLoc.textContent = fomoLocations[Math.floor(Math.random() * fomoLocations.length)];
-}
-if (fomoViewers && fomoTime && fomoLoc) {
-setInterval(function () {
-fomoViewers.textContent = Math.floor(Math.random() * 20) + 15;
-fomoTime.textContent = (Math.floor(Math.random() * 8) + 1) + ' min ago';
-fomoLoc.textContent = fomoLocations[Math.floor(Math.random() * fomoLocations.length)];
-}, 20000);
-}
-var urgencyCount = document.getElementById('urgencyCount');
-if (urgencyCount) {
-urgencyCount.textContent = Math.floor(Math.random() * 8) + 7;
-}
-var urgencyLeft = document.getElementById('urgencyLeft');
-if (urgencyLeft) {
-urgencyLeft.textContent = Math.floor(Math.random() * 5) + 2;
-}
+/*
+Ebenfalls am 09.09.2026 entfernt: die Leiste unter dem Kostenvergleich
+(angeblich Vergleichende, angeblich letzte Buchung) und die Verknappungsleiste
+unter dem Titelbild (gebuchte Apartments in 24h, "nur noch N frei"). Alle fuenf
+Zahlen kamen aus Math.random(), keine davon aus dem PMS. Dazu die Sprachschluessel
+fomo.* und urgency_banner.* in allen sieben Sprachdateien.
+*/
 document.querySelectorAll('[data-scroll-to]').forEach(function (el) {
 el.addEventListener('click', function (e) {
 var targetId = this.getAttribute('data-scroll-to');
