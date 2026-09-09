@@ -151,3 +151,18 @@ test('das Seitenskript laedt vor der Anrufmessung, sonst greift die Weiche nicht
       `${seite} laedt anruf.js vor ${seitenskript}`);
   }
 });
+
+test('die Richtlinie der vier Seiten erlaubt den Anruf-Loader von gstatic', () => {
+  // Belegt am 09.09.2026 an der laufenden Messung auf wohnidyll-w5.de: gtag holt
+  // fuer die Website-Anrufconversion zuerst https://www.gstatic.com/wcm/loader.js
+  // und fragt erst danach die Weiterleitungsnummer ab. Fehlt die Quelle in
+  // script-src, blockt der Browser den Loader und es kommt nie zu einer Anfrage.
+  // Genau so blieb der Nummerntausch auf amanthosliving.com zunaechst wirkungslos.
+  for (const [seite] of SEITEN) {
+    const html = readFileSync(join(here, '..', seite), 'utf8');
+    const csp = /script-src [^;"]*/.exec(html);
+    assert.ok(csp, `${seite} hat keine script-src`);
+    assert.ok(csp[0].includes('https://www.gstatic.com'),
+      `${seite} erlaubt den Anruf-Loader nicht: ${csp[0]}`);
+  }
+});
