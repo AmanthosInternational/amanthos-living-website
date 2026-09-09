@@ -7,8 +7,8 @@ plankey: living-wohnen-nyon-fr
 ziel-repos:
   - AmanthosInternational/amanthos-living-website (PUBLIC, GitHub Pages, www.amanthosliving.com; Segmente 0 bis 3)
   - AmanthosInternational/amanthos-platform (PRIVATE, Ordner website-backend, Render-Service amanthos-website-api; Segmente 0 und 4)
-verdrahtung-zusaetzlich: AmanthosInternational/AmanthosWebseiten (scripts/ads-living-kampagnen.py, Branch feature/living-kampagnen, PR #63), Google Ads 1020928693, Render-Env, Plausible
-grundlage: AmanthosWebseiten docs/living/analyse-standort-living-2026-09-09.md (Branch docs/living-analyse-2026-09-09, PR #62); Entscheide Bogdan 09.09.2026, 02:30 und 03:00
+verdrahtung-zusaetzlich: AmanthosInternational/AmanthosWebseiten (scripts/ads-living-kampagnen.py, Branch feature/living-kampagnen, PR #63), Google Ads (Konto im Master), Render-Env, Plausible
+grundlage: AmanthosWebseiten docs/living/analyse-standort-living-2026-09-09.md (Branch docs/living-analyse-2026-09-09, PR #62); Entscheide des Inhabers 09.09.2026, 02:30 und 03:00
 basis-website: origin/main 9e1410b (126 Tests gruen mit node --test tests/*.test.mjs, Node 25.9.0; gemessen 09.09.2026)
 basis-backend: origin/main c5fb27a (416 Tests gruen, ruff sauber; gemessen 09.09.2026 an einem git-archive-Auszug mit dem Python 3.14.5 der Repo-venv, CI laeuft 3.11)
 vorbilder: amanthos-living-website docs/bauplan-grenchen-mieten-2026-09-07.md (verdrahtet), docs/bauplan-fbl-ibe-2026-09-06.md (Plankopien ueber mehrere Repos)
