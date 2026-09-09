@@ -1,20 +1,23 @@
 #!/usr/bin/env python3
-"""Test-Harness fuer die Browserpruefung (Kontrakt K7 Deep-Link, K8 Grenchen).
+"""Test-Harness fuer die Browserpruefung (Deep-Link K7, Grenchen K8, Wohnen auf
+Zeit und Nyon FR nach K9 des Plans living-wohnen-nyon-fr).
 
 Serviert das Repo-Verzeichnis und schreibt beim Ausliefern ausschliesslich im
 Speicher um: API-Host auf die gleiche Origin, Script-Tag fuer deeplink.js vor
 booking.js, gtag-Stub mit window.__gtagCalls. Beantwortet /health, /api/offers
-aus tests/fixtures/offers-<code>.json und /api/bookings synthetisch.
+aus tests/fixtures/offers-<code>-<nights>.json (wenn vorhanden, sonst
+offers-<code>.json) und /api/bookings synthetisch.
 
-Fuer die Seite grenchen-mieten kommt derselbe Gedanke ein zweites Mal: die Seite
-und das Skelett bekommen vor </head> einen Stub, der die API auf die gleiche
-Origin zeigen laesst und gtag und fbq mitschreibt (window.__gtagCalls,
-window.__fbqCalls). Der fbq-Stub verhindert nebenbei, dass js/meta.js das echte
-Pixel nachlaedt; dessen Loader bricht ab, sobald window.fbq existiert. Mit
-?contact=fail beziehungsweise ?contact=429 haengt ein fetch-Wrapper fail=502
-oder fail=429 an die Anfrage, damit die Fehlertexte pruefbar sind. POST
-/api/contact antwortet danach mit 502, 429 oder 200 und druckt den Body als
-CONTACT-BODY.
+Fuer die Seiten grenchen-mieten, zurich, appartements-nyon und die Skelette
+kommt derselbe Gedanke ein zweites Mal: die Seite bekommt vor </head> einen
+Stub, der die API auf die gleiche Origin zeigen laesst und gtag und fbq
+mitschreibt (window.__gtagCalls, window.__fbqCalls). Der fbq-Stub verhindert
+nebenbei, dass js/meta.js das echte Pixel nachlaedt; dessen Loader bricht ab,
+sobald window.fbq existiert. Mit ?contact=fail beziehungsweise ?contact=429
+haengt ein fetch-Wrapper fail=502 oder fail=429 an die Anfrage, damit die
+Fehlertexte pruefbar sind; mit ?fixture=empty haengt er fixture=empty an
+/api/offers, damit der Rueckfall ohne Angebote pruefbar ist. POST /api/contact
+antwortet danach mit 502, 429 oder 200 und druckt den Body als CONTACT-BODY.
 
 Legt nie eine Datei an und ist kein Produktivcode.
 Aufruf: python3 tests/dev-server.py [port]
@@ -41,8 +44,17 @@ HARNESS = (
     "})();</script>\n"
     '  <script src="./js/deeplink.js" defer></script>\n  '
 )
-GRENCHEN_PAGE = os.path.join("grenchen-mieten", "index.html")
-GRENCHEN_SKELETON = os.path.join("tests", "fixtures", "grenchen-skeleton.html")
+# Seiten, die den Stub vor </head> bekommen (K9): URL-Pfad zu Datei im Repo.
+STUBBED_PAGES = {
+    "/grenchen-mieten/": os.path.join("grenchen-mieten", "index.html"),
+    "/grenchen-mieten/index.html": os.path.join("grenchen-mieten", "index.html"),
+    "/tests/fixtures/grenchen-skeleton.html": os.path.join("tests", "fixtures", "grenchen-skeleton.html"),
+    "/zurich/": os.path.join("zurich", "index.html"),
+    "/zurich/index.html": os.path.join("zurich", "index.html"),
+    "/tests/fixtures/longstay-skeleton.html": os.path.join("tests", "fixtures", "longstay-skeleton.html"),
+    "/appartements-nyon/": os.path.join("appartements-nyon", "index.html"),
+    "/appartements-nyon/index.html": os.path.join("appartements-nyon", "index.html"),
+}
 GRENCHEN_STUB = (
     "<script>"
     "(function(){window.AMANTHOS_API_BASE='';"
@@ -53,10 +65,12 @@ GRENCHEN_STUB = (
     "window.fbq=function(){window.__fbqCalls.push(Array.prototype.slice.call(arguments));};"
     "window.fbq.loaded=true;window.fbq.version='2.0';window.fbq.queue=[];window._fbq=window.fbq;"
     "var m=/[?&]contact=(fail|429)/.exec(location.search);"
-    "if(m){var f=window.fetch;var q=m[1]==='429'?'fail=429':'fail=502';"
+    "var e=/[?&]fixture=empty/.test(location.search);"
+    "if(m||e){var f=window.fetch;var q=m?(m[1]==='429'?'fail=429':'fail=502'):'';"
     "window.fetch=function(u,o){"
-    "if(typeof u==='string'&&u.indexOf('/api/contact')!==-1){"
-    "u+=(u.indexOf('?')===-1?'?':'&')+q;}"
+    "if(typeof u==='string'){"
+    "if(m&&u.indexOf('/api/contact')!==-1){u+=(u.indexOf('?')===-1?'?':'&')+q;}"
+    "if(e&&u.indexOf('/api/offers')!==-1){u+=(u.indexOf('?')===-1?'?':'&')+'fixture=empty';}}"
     "return f(u,o);};}"
     "})();</script>\n</head>"
 )
@@ -100,19 +114,17 @@ class Harness(SimpleHTTPRequestHandler):
         if parsed.path in ("/", "/index.html"):
             html = read(ROOT, "index.html").replace(BOOKING_TAG, HARNESS + BOOKING_TAG, 1)
             return self._text(html, "text/html; charset=utf-8")
-        if parsed.path in ("/grenchen-mieten/", "/grenchen-mieten/index.html"):
-            return self._grenchen(GRENCHEN_PAGE)
-        if parsed.path == "/tests/fixtures/grenchen-skeleton.html":
-            return self._grenchen(GRENCHEN_SKELETON)
+        if parsed.path in STUBBED_PAGES:
+            return self._stubbed(STUBBED_PAGES[parsed.path])
         if parsed.path == "/js/booking.js":
             src = read(ROOT, "js", "booking.js").replace(LIVE_API, "")
             return self._text(src, "application/javascript; charset=utf-8")
         return super().do_GET()
 
     # Der Stub geht vor </head>, damit AMANTHOS_API_BASE steht, bevor irgendein
-    # defer-Skript laeuft. Fehlt die Seite noch (Segment 2), sagt der Harness das
-    # deutlich, statt ein Verzeichnis aufzulisten.
-    def _grenchen(self, relpath):
+    # defer-Skript laeuft. Fehlt die Seite noch (appartements-nyon bis Segment 3),
+    # sagt der Harness das deutlich, statt ein Verzeichnis aufzulisten.
+    def _stubbed(self, relpath):
         pfad = os.path.join(ROOT, relpath)
         if not os.path.exists(pfad):
             return self.send_error(404, "%s fehlt noch" % relpath)
@@ -121,14 +133,25 @@ class Harness(SimpleHTTPRequestHandler):
             html = html.replace("</head>", GRENCHEN_STUB, 1)
         return self._text(html, "text/html; charset=utf-8")
 
+    # Angebote nach Naechten (K9): fuer 30 Naechte bei GBAL liegt
+    # offers-gbal-30.json, sonst gilt offers-<code>.json wie bisher. Die Naechte
+    # kommen aus arrival und departure der Anfrage.
     def _offers(self, query):
         code = (query.get("propertyId") or [""])[0]
-        path = os.path.join(FIXTURES, "offers-%s.json" % code.lower())
+        arrival = (query.get("arrival") or [""])[0]
+        departure = (query.get("departure") or [""])[0]
+        try:
+            nights = (date.fromisoformat(departure) - date.fromisoformat(arrival)).days
+        except ValueError:
+            nights = None
+        path = os.path.join(FIXTURES, "offers-%s-%s.json" % (code.lower(), nights))
+        if nights is None or not os.path.exists(path):
+            path = os.path.join(FIXTURES, "offers-%s.json" % code.lower())
         data = json.loads(read(path)) if os.path.exists(path) else {"offers": []}
         data["property"] = code.upper()
         data["propertyName"] = data.get("propertyName", code.upper())
-        data["arrival"] = (query.get("arrival") or [data.get("arrival", "")])[0]
-        data["departure"] = (query.get("departure") or [data.get("departure", "")])[0]
+        data["arrival"] = arrival or data.get("arrival", "")
+        data["departure"] = departure or data.get("departure", "")
         data["adults"] = int((query.get("adults") or ["2"])[0])
         try:
             data["nights"] = (
