@@ -1,7 +1,7 @@
 ---
 thema: living-wohnen-nyon-fr
 datum: 2026-09-09
-status: draft
+status: aktiv
 repo: ~/Projects/amanthos-living-website
 plankey: living-wohnen-nyon-fr
 ziel-repos:
