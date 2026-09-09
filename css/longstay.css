@@ -1,0 +1,126 @@
+/**
+ * Amanthos Living: Abschnitt "Wohnen auf Zeit" auf /zurich/
+ * (Bauplan living-wohnen-nyon-fr vom 09.09.2026, Segment 1, Kontrakt K5).
+ *
+ * Hier steht nur, was css/style.css nicht schon hat: Preiszeile, Leistungsliste,
+ * Honigtopf, Statuszeile, Erfolgskasten und die Formularfelder, die style.css
+ * nicht gestaltet (Auswahl, Textfeld, Monat, Zahl). Alles andere kommt aus
+ * style.css (section, section-alt, container, container-narrow, section-label,
+ * section-title, section-subtitle, btn, form-grid, form-field). Eingebunden NACH
+ * style.css, deshalb gewinnt sie bei gleicher Spezifitaet ohne !important.
+ *
+ * Farben ausschliesslich aus den Variablen von style.css, damit die dort
+ * gemessenen Kontraste gelten. Tippziele mindestens 44 px. Kein Preis und keine
+ * Zahl aus /api/offers: die Preiszeile fuellt js/longstay-page.js zur Laufzeit.
+ */
+
+/* Der Abschnitt und sein Nav-Eintrag tragen hidden, bis die Verdrahtung sie
+   freischaltet. style.css setzt [hidden]{display:none !important} bereits global;
+   die Regel steht hier ein zweites Mal, weil der Kontrakt K5 sie verlangt und der
+   Abschnitt auch dann verborgen bleiben muss, wenn style.css noch nicht geladen
+   ist (style.css kommt ueber den media=print-Trick asynchron). */
+.ls-section[hidden] { display: none !important; }
+
+.ls-section .container-narrow { text-align: left; }
+
+/* Preiszeile. Die Zahl kommt zur Laufzeit, deshalb hat die Zeile eine feste
+   Mindesthoehe: sonst springt der Abschnitt, sobald das Angebot eintrifft. */
+.ls-price {
+  font-family: var(--font-heading);
+  font-size: clamp(1.4rem, 3vw, 1.9rem);
+  font-weight: 700;
+  color: var(--color-primary);
+  min-height: 2.2rem;
+  margin-top: 1.5rem;
+}
+.ls-price-note {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--color-text-muted);
+  margin-top: 0.35rem;
+}
+.ls-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1rem; }
+.ls-actions .btn { min-height: 44px; }
+
+/* Leistungen. min(18rem,100%) statt 18rem: sonst erzwingt die Spalte auf einem
+   360-px-Geraet eine breitere Zeile als das Fenster und die Seite scrollt
+   waagrecht (dieselbe Falle wie in css/grenchen.css). */
+.ls-benefits {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(18rem, 100%), 1fr));
+  gap: 0.5rem 2rem;
+  list-style: none;
+  margin: 1.75rem 0 2.25rem;
+}
+.ls-benefits li {
+  position: relative;
+  padding: 0.5rem 0 0.5rem 1.5rem;
+  border-bottom: 1px solid var(--color-border);
+  font-size: 0.95rem;
+  color: var(--color-text);
+}
+.ls-benefits li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 1.05rem;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--color-accent);
+}
+
+/* Formular. style.css gestaltet nur input[type=text] und Verwandte, Auswahl und
+   Textfeld fehlen dort. Das Textfeld, der Knopf und der Hinweis laufen ueber
+   beide Spalten des form-grid. */
+.ls-section .form-field select,
+.ls-section .form-field textarea,
+.ls-section .form-field input[type="month"],
+.ls-section .form-field input[type="number"] {
+  width: 100%;
+  min-height: 48px;
+  padding: 0.7rem 0.9rem;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  color: var(--color-text);
+  background: #fff;
+}
+.ls-section .form-field textarea { min-height: 7rem; resize: vertical; }
+.ls-section .form-field select:focus-visible,
+.ls-section .form-field textarea:focus-visible {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px var(--color-accent-light);
+}
+.ls-section .form-field:has(textarea),
+.ls-section .ls-hp,
+.ls-section #ls-submit,
+.ls-section .ls-note { grid-column: 1 / -1; }
+.ls-section #ls-submit { min-height: 48px; justify-self: start; }
+
+/* Honigtopf: fuer Menschen unsichtbar und nicht anwaehlbar, Bots fuellen ihn. */
+.ls-hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+.ls-note { font-size: 0.8rem; color: var(--color-text-muted); }
+.ls-status { margin-top: 1rem; font-weight: 600; color: var(--color-text); }
+.ls-success {
+  margin-top: 1rem;
+  padding: 1.25rem;
+  border-radius: var(--radius);
+  background: var(--color-success-bg);
+  border: 1px solid var(--color-success);
+  color: var(--color-text);
+}
+.ls-contact { margin-top: 1.25rem; font-size: 0.95rem; color: var(--color-text); }
+
+/* Unterstrichen, nicht nur farbig: axe meldet sonst link-in-text-block (serious),
+   weil Goldton und Fliesstext nur 1.65:1 auseinanderliegen. */
+.ls-note a,
+.ls-contact a { font-weight: 600; text-decoration: underline; }
+
+@media (max-width: 768px) {
+  .ls-section { padding: 3rem 0; }
+  .ls-benefits { margin: 1.25rem 0 1.75rem; }
+}
