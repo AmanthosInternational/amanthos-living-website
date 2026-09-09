@@ -164,10 +164,12 @@ test('K8: die elf neuen Schluessel stehen in fr.json und sind nicht leer', () =>
   assert.equal(fr.booking_bar.search_btn, 'RECHERCHER');
 });
 
-test('K8: booking.* in fr.json hat die 75 alten plus die 7 neuen Schluessel', () => {
-  assert.equal(Object.keys(fr.booking).length, 82);
+test('K8: booking.* in fr.json hat den Bestand aus en.json plus die neuen Schluessel', () => {
+  // Geprueft wird die Beziehung, nicht eine feste Zahl: der Bestand aendert sich, wenn ein
+  // Schluessel wegfaellt (am 09.09.2026 people_looking, dessen Zahl aus Math.random kam).
+  // Eine gepinnte Anzahl macht diesen Test dann rot, obwohl die Sprachdateien stimmig sind.
   const alt = Object.keys(en.booking);
-  assert.equal(alt.length, 75, 'en.json ist die Referenz fuer den alten Bestand');
+  assert.equal(Object.keys(fr.booking).length, alt.length + NEUE_BOOKING_KEYS.length);
   for (const k of alt) assert.ok(k in fr.booking, 'bestehender Schluessel booking.' + k + ' fehlt');
   const neu = Object.keys(fr.booking).filter((k) => !alt.includes(k)).sort();
   assert.deepEqual(neu, [...NEUE_BOOKING_KEYS].sort());
