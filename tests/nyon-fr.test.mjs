@@ -174,7 +174,12 @@ test('K8: booking.* in fr.json hat die 75 alten plus die 7 neuen Schluessel', ()
 });
 
 test('K8: die uebrigen Namensraeume von fr.json bleiben unveraendert', () => {
-  const erwartet = [...Object.keys(en), 'booking_bar', 'calendar'].sort();
+  // Anker ist en.json, abzueglich der Namensraeume, die es nur auf den deutsch und
+  // englisch gefuehrten Seiten gibt. `longstay` gehoert dem Abschnitt Wohnen auf Zeit
+  // auf /zurich/ (Segment 1) und ist dort bewusst nur de und en; fr.json braucht ihn
+  // nicht. Ohne diese Ausnahme wuerde der Test jedes neue Objekt in en.json einfordern.
+  const NUR_DE_EN = ['longstay'];
+  const erwartet = [...Object.keys(en).filter((k) => !NUR_DE_EN.includes(k)), 'booking_bar', 'calendar'].sort();
   assert.deepEqual(Object.keys(fr).sort(), erwartet);
 });
 
