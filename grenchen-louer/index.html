@@ -85,6 +85,56 @@
     }
   }
   </script>
+  <!-- Die Fragen und Antworten stehen wortgleich sichtbar auf der Seite.
+       Weicht das Schema vom sichtbaren Text ab, wertet Google das als Verstoss. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Quelle est la durée minimale de location?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "La durée minimale de location est de 12 mois. L'entrée a lieu selon entente."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Puis-je y établir mon domicile?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Oui. Il s'agit de logements de longue durée, vous pouvez y établir votre domicile."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Qu'est-ce qui est compris dans le loyer?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "L'appartement est meublé et dispose d'une cuisine entièrement équipée. Les charges sont comprises dans le loyer brut affiché dans la recherche d'appartement."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Y a-t-il une place de parc?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Des places de parc extérieures se louent séparément, prix sur demande. Cochez la case dans la recherche d'appartement et nous en parlons ensemble."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Comment se déroule une visite?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Vous envoyez la demande via le formulaire de cette page. Nous vous recontactons, confirmons le rendez-vous et vous montrons l'appartement sur place."
+        }
+      }
+    ]
+  }
+  </script>
   <!-- Sentry: Fehler- und Performance-Erfassung. Konfiguration in js/sentry-init.js -->
   <script src="https://browser.sentry-cdn.com/10.68.0/bundle.tracing.min.js"
           integrity="sha384-IDGicfmkFBjzbyXFRgxkdVAjmPeBqxWZUv7oUbKSCAc+OEMdNXzrciXnPJzd17Xc"
