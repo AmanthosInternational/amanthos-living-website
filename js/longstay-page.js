@@ -155,9 +155,11 @@
     return beste;
   }
 
-  // Schweizer Tausendertrennung mit dem geraden Apostroph (Muster
-  // js/grenchen-finder.js): 2875 wird CHF 2'875.
+  // Schweizer Tausendertrennung mit dem geraden Apostroph, gerundet auf ganze
+  // Franken (Muster js/grenchen-finder.js). Ohne lesbaren Wert bleibt es leer:
+  // eine Null waere hier ein Preis, den niemand genannt hat.
   function formatChf(value) {
+    if (value === null || value === undefined || str(value) === '') { return ''; }
     var n = Number(value);
     if (!isFinite(n)) { return ''; }
     var gerundet = Math.round(n);
