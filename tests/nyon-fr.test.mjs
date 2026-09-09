@@ -206,10 +206,13 @@ test('K8: keine Aussage ausserhalb des Faktenblatts (die ausdruecklich verbotene
 
 test('K8: Preisaussagen nur dès CHF 99 sowie die zwei Kartenpreise und die Maskenbetraege', () => {
   const betraege = [...new Set((page.match(/CHF [0-9][0-9.-]*/g) || []))].sort();
-  // 99 = Nyon (Faktenblatt), 109 und 49 = die zwei Kartenpreise der anderen Haeuser,
-  // 49-220 = priceRange aus dem JSON-LD von nyon/, 7.50 / 5 / 10 = die Betraege, die
-  // js/booking.js fuer die Extras verrechnet, 0 = Startwert des Extras-Zaehlers.
-  assert.deepEqual(betraege, ['CHF 0', 'CHF 10', 'CHF 109', 'CHF 49', 'CHF 49-220', 'CHF 5', 'CHF 7.50', 'CHF 99']);
+  // 99 = Nyon (Faktenblatt und seit dem 10.09.2026 auch die priceRange), 109 und 49 = die
+  // zwei Kartenpreise der anderen Haeuser, 7.50 / 5 / 10 = die Betraege, die js/booking.js
+  // fuer die Extras verrechnet, 0 = Startwert des Extras-Zaehlers.
+  // „CHF 49-220" ist am 10.09.2026 entfallen: die priceRange trug die Solothurner
+  // Untergrenze und eine Obergrenze, die auf keiner Seite steht. Jetzt steht dort der
+  // belegte Einstiegspreis dieses Standorts.
+  assert.deepEqual(betraege, ['CHF 0', 'CHF 10', 'CHF 109', 'CHF 49', 'CHF 5', 'CHF 7.50', 'CHF 99']);
   assert.ok(page.includes('dès CHF 99 la nuit'));
   assert.ok(page.includes('dès CHF 109 la nuit'));
   assert.ok(page.includes('dès CHF 49 la nuit'));

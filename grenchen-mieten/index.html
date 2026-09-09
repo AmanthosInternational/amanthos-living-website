@@ -88,6 +88,56 @@
     }
   }
   </script>
+  <!-- Die Fragen und Antworten stehen wortgleich sichtbar auf der Seite.
+       Weicht das Schema vom sichtbaren Text ab, wertet Google das als Verstoss. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Wie lange muss ich mindestens mieten?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Die Mindestmietdauer beträgt 12 Monate. Der Bezug erfolgt nach Vereinbarung."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Kann ich meinen Wohnsitz hier anmelden?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Ja. Die Wohnungen sind Langzeitwohnungen, der Wohnsitz ist anmeldbar."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Was ist in der Miete enthalten?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Die Wohnung ist möbliert und hat eine voll ausgestattete Küche. Die Nebenkosten sind in der Bruttomiete enthalten, die Sie beim Wohnungsfinder sehen."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Gibt es einen Parkplatz?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Aussenparkplätze sind separat anmietbar, der Preis auf Anfrage. Setzen Sie im Wohnungsfinder das Häkchen, dann klären wir das mit Ihnen zusammen."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Wie läuft eine Besichtigung ab?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Sie senden die Anfrage über das Formular auf dieser Seite. Wir melden uns bei Ihnen, bestätigen den Termin und zeigen Ihnen die Wohnung vor Ort."
+        }
+      }
+    ]
+  }
+  </script>
   <!-- Sentry: Fehler- und Performance-Erfassung. Konfiguration in js/sentry-init.js -->
   <script src="https://browser.sentry-cdn.com/10.68.0/bundle.tracing.min.js"
           integrity="sha384-IDGicfmkFBjzbyXFRgxkdVAjmPeBqxWZUv7oUbKSCAc+OEMdNXzrciXnPJzd17Xc"
