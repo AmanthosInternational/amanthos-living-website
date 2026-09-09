@@ -131,6 +131,19 @@
     };
   }
 
+  // Grenzen des Monatsfeldes nach K5: min ist der laufende Monat, max der
+  // laufende Monat plus 18. Segment 1 liefert die Werte fest im HTML aus, auf
+  // den Tag der Auslieferung gerechnet; ein paar Monate spaeter laege min in
+  // der Vergangenheit und der Gast koennte einen Einzug waehlen, fuer den es
+  // keine Angebote gibt. Deshalb rechnet das Skript sie beim Laden neu.
+  function monthBounds(today) {
+    var basis = (today instanceof Date && !isNaN(today.getTime())) ? today : new Date();
+    return {
+      min: toISO(new Date(basis.getFullYear(), basis.getMonth(), 1)).slice(0, 7),
+      max: toISO(new Date(basis.getFullYear(), basis.getMonth() + 18, 1)).slice(0, 7)
+    };
+  }
+
   function amountOf(offer) {
     var n = (offer && offer.totalGrossAmount) ? Number(offer.totalGrossAmount.amount) : NaN;
     return isFinite(n) ? n : null;
@@ -325,6 +338,12 @@
 
     function on(el, type, fn) { if (el) { el.addEventListener(type, fn); } }
 
+    if (D.moveIn) {
+      var grenzen = monthBounds(new Date());
+      D.moveIn.setAttribute('min', grenzen.min);
+      D.moveIn.setAttribute('max', grenzen.max);
+    }
+
     function personsValue() {
       var p = D.persons ? str(D.persons.value) : '';
       return PERSONS_OK.indexOf(p) === -1 ? '' : p;
@@ -509,7 +528,7 @@
 
   var api = {
     VERSION: '1',
-    quoteWindow: quoteWindow, pickOffer: pickOffer, formatChf: formatChf,
+    quoteWindow: quoteWindow, monthBounds: monthBounds, pickOffer: pickOffer, formatChf: formatChf,
     monthLabel: monthLabel, quoteText: quoteText, buildPayload: buildPayload,
     readCampaign: readCampaign, newEventId: newEventId, statusText: statusText,
     needsContact: needsContact, setLocale: setLocale,

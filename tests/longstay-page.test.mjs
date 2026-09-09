@@ -61,7 +61,7 @@ const HEUTE = new Date(2026, 8, 9); // 09.09.2026, lokale Mitternacht
 
 test('das Modul exportiert die reinen Helfer und laeuft ohne DOM', () => {
   assert.equal(page.VERSION, '1');
-  for (const fn of ['quoteWindow', 'pickOffer', 'formatChf', 'monthLabel', 'quoteText',
+  for (const fn of ['quoteWindow', 'monthBounds', 'pickOffer', 'formatChf', 'monthLabel', 'quoteText',
     'buildPayload', 'readCampaign', 'newEventId', 'statusText', 'needsContact', 'setLocale']) {
     assert.equal(typeof page[fn], 'function', `${fn} fehlt im Export`);
   }
@@ -106,6 +106,33 @@ test('K2: departure liegt immer NIGHTS Tage nach arrival, auch ueber die Zeitums
     const w = page.quoteWindow(heute, moveIn);
     assert.equal(tage(w.arrival, w.departure), config.NIGHTS, `${w.arrival} bis ${w.departure}`);
   }
+});
+
+// ---- K5: Grenzen des Monatsfeldes -----------------------------------------
+
+test('K5: monthBounds liefert den laufenden Monat und 18 Monate spaeter', () => {
+  assert.deepEqual(page.monthBounds(HEUTE), { min: '2026-09', max: '2028-03' });
+  // Ueber den Jahreswechsel, in beide Richtungen.
+  assert.deepEqual(page.monthBounds(new Date(2026, 11, 31)), { min: '2026-12', max: '2028-06' });
+  assert.deepEqual(page.monthBounds(new Date(2027, 0, 1)), { min: '2027-01', max: '2028-07' });
+  assert.deepEqual(page.monthBounds(new Date(2026, 6, 15)), { min: '2026-07', max: '2028-01' });
+});
+
+test('K5: monthBounds nimmt ohne lesbares Datum den heutigen Monat', () => {
+  const jetzt = new Date();
+  const erwartet = String(jetzt.getFullYear()) + '-'
+    + String(jetzt.getMonth() + 1).padStart(2, '0');
+  for (const wert of [undefined, null, 'heute', new Date('kaputt')]) {
+    assert.equal(page.monthBounds(wert).min, erwartet, `monthBounds(${String(wert)})`);
+  }
+});
+
+test('K5: die Grenzen passen zum Fenster, das quoteWindow daraus baut', () => {
+  const b = page.monthBounds(HEUTE);
+  // Der frueheste erlaubte Monat ist der laufende: dort beginnt das Fenster
+  // zwei Tage nach heute, nicht in der Vergangenheit.
+  assert.equal(page.quoteWindow(HEUTE, b.min).arrival, '2026-09-11');
+  assert.equal(page.quoteWindow(HEUTE, b.max).arrival, '2028-03-01');
 });
 
 // ---- K2: pickOffer --------------------------------------------------------
