@@ -157,6 +157,11 @@
       wish_slot: str(i.wishSlot).slice(0, 120),
       message: message.slice(0, 5000),
       event_id: str(i.eventId),
+      // Die Seite kennt ihre Sprache, das Backend nicht: der Referer wird
+      // cross-origin auf die Origin gekuerzt, /grenchen-mieten/ und
+      // /grenchen-louer/ sind dort ununterscheidbar. Ohne dieses Feld waere
+      // jede Eingangsbestaetigung deutsch, auch auf die franzoesische Anfrage.
+      locale: str(i.locale) === 'fr' ? 'fr' : 'de',
       gclid: str(i.gclid).slice(0, 512),
       fbclid: str(i.fbclid).slice(0, 512),
       company_website: str(i.companyWebsite)
@@ -410,6 +415,7 @@
         message: D.message ? D.message.value : '',
         parking: !!(D.aParking && D.aParking.value === 'ja'),
         eventId: eventId, campaign: campaign, gclid: ids.gclid, fbclid: ids.fbclid,
+        locale: sprache,
         companyWebsite: D.honeypot ? D.honeypot.value : ''
       });
     }
