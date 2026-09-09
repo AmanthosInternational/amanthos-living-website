@@ -25,7 +25,7 @@ const src = readFileSync(scriptFile, 'utf8');
 const K3_KEYS = [
   'form', 'name', 'email', 'phone', 'unit', 'rooms', 'budget', 'move_in', 'wish_slot',
   'message', 'event_id', 'utm_source', 'utm_medium', 'utm_campaign', 'gclid', 'fbclid',
-  'company_website'
+  'company_website', 'locale'
 ];
 
 const VOLL = {
@@ -56,10 +56,10 @@ test('das Modul exportiert die reinen Helfer und laeuft ohne DOM', () => {
 
 // ---- K3: buildPayload -----------------------------------------------------
 
-test('K3: buildPayload liefert genau die 17 Schluessel des Kontrakts', () => {
+test('K3: buildPayload liefert genau die 18 Schluessel des Kontrakts', () => {
   const payload = page.buildPayload(VOLL);
   assert.deepEqual(Object.keys(payload).sort(), [...K3_KEYS].sort());
-  assert.equal(Object.keys(payload).length, 17);
+  assert.equal(Object.keys(payload).length, 18);
 });
 
 test('K3: buildPayload uebernimmt die Werte getrimmt und setzt form auf grenchen', () => {
@@ -79,14 +79,15 @@ test('K3: buildPayload uebernimmt die Werte getrimmt und setzt form auf grenchen
   assert.equal(payload.company_website, '');
 });
 
-test('K3: ohne Eingaben sind alle 17 Schluessel da und leer, ausser form', () => {
+test('K3: ohne Eingaben sind alle 18 Schluessel da und leer, ausser form und locale', () => {
   const payload = page.buildPayload();
   assert.deepEqual(Object.keys(payload).sort(), [...K3_KEYS].sort());
   for (const key of K3_KEYS) {
     assert.equal(typeof payload[key], 'string', `${key} ist kein String`);
-    if (key !== 'form') { assert.equal(payload[key], '', `${key} ist nicht leer`); }
+    if (key !== 'form' && key !== 'locale') { assert.equal(payload[key], '', `${key} ist nicht leer`); }
   }
   assert.equal(payload.form, 'grenchen');
+  assert.equal(payload.locale, 'de');
 });
 
 test('K3: was das Muster nicht trifft, wird leer statt falsch gesendet', () => {
@@ -275,4 +276,14 @@ test('K3: kein Statustext gibt eine Servermeldung oder einen Code weiter', () =>
       assert.ok(!text.includes(verboten), `"${verboten}" steht im Text zu ${status}`);
     }
   }
+});
+
+test('K3: die Sprache kommt mit, alles ausser fr wird de', () => {
+  // Ohne dieses Feld bekaeme eine Anfrage von /grenchen-louer/ eine deutsche
+  // Eingangsbestaetigung: der Referer traegt den Pfad cross-origin nicht.
+  assert.equal(page.buildPayload({ locale: 'fr' }).locale, 'fr');
+  assert.equal(page.buildPayload({ locale: 'de' }).locale, 'de');
+  assert.equal(page.buildPayload({ locale: 'it' }).locale, 'de');
+  assert.equal(page.buildPayload({ locale: '' }).locale, 'de');
+  assert.equal(page.buildPayload({}).locale, 'de');
 });
