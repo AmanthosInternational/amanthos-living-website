@@ -207,12 +207,12 @@ test('K8: keine Aussage ausserhalb des Faktenblatts (die ausdruecklich verbotene
 test('K8: Preisaussagen nur dès CHF 99 sowie die zwei Kartenpreise und die Maskenbetraege', () => {
   const betraege = [...new Set((page.match(/CHF [0-9][0-9.-]*/g) || []))].sort();
   // 99 = Nyon (Faktenblatt und seit dem 10.09.2026 auch die priceRange), 109 und 49 = die
-  // zwei Kartenpreise der anderen Haeuser, 7.50 / 5 / 10 = die Betraege, die js/booking.js
-  // fuer die Extras verrechnet, 0 = Startwert des Extras-Zaehlers.
-  // „CHF 49-220" ist am 10.09.2026 entfallen: die priceRange trug die Solothurner
-  // Untergrenze und eine Obergrenze, die auf keiner Seite steht. Jetzt steht dort der
-  // belegte Einstiegspreis dieses Standorts.
-  assert.deepEqual(betraege, ['CHF 0', 'CHF 10', 'CHF 109', 'CHF 49', 'CHF 5', 'CHF 7.50', 'CHF 99']);
+  // zwei Kartenpreise der anderen Haeuser, 5 und 10 = die Betraege der Extras,
+  // 0 = Startwert des Extras-Zaehlers.
+  // Zwei Werte sind am 10.09.2026 entfallen. „CHF 49-220" war eine priceRange mit der
+  // Solothurner Untergrenze und einer Obergrenze, die auf keiner Seite stand. „CHF 7.50"
+  // war der Parkplatzpreis, den keine Quelle belegte; Apaleo fuehrt fuer Nyon CHF 10.
+  assert.deepEqual(betraege, ['CHF 0', 'CHF 10', 'CHF 109', 'CHF 49', 'CHF 5', 'CHF 99']);
   assert.ok(page.includes('dès CHF 99 la nuit'));
   assert.ok(page.includes('dès CHF 109 la nuit'));
   assert.ok(page.includes('dès CHF 49 la nuit'));
@@ -220,11 +220,18 @@ test('K8: Preisaussagen nur dès CHF 99 sowie die zwei Kartenpreise und die Mask
 
 test('K8: die drei Extra-Betraege stehen so auch in nyon/index.html und in js/booking.js', () => {
   const booking = readFileSync(join(root, 'js', 'booking.js'), 'utf8');
-  for (const [preis, attr] of [['7.50', '7.5'], ['5', '5'], ['10', '10']]) {
+  // Der Parkplatz kostet seit dem 10.09.2026 je Standort verschieden, nach den
+  // Apaleo-Dienstleistungen: Zuerich und Nyon CHF 10, Grenchen CHF 20. Vorher standen
+  // hier ueberall CHF 7.50, die in keiner Quelle belegt waren. Der Betrag steht deshalb
+  // nicht mehr als Zahl im Skript, sondern kommt aus PROPERTIES.
+  for (const [preis, attr] of [['10', '10'], ['5', '5']]) {
     assert.ok(sister.includes('CHF ' + preis + ' / '), 'nyon/ nennt CHF ' + preis);
     assert.ok(page.includes('data-price="' + attr + '"'), 'data-price ' + attr + ' fehlt');
   }
-  assert.ok(booking.includes('7.5 * nights'), 'js/booking.js verrechnet CHF 7.50');
+  assert.ok(booking.includes('parkpreis() * nights'), 'js/booking.js verrechnet den Parkplatz je Standort');
+  assert.match(booking, /'GBAL':[^}]*parking: 10/, 'Zuerich steht nicht auf CHF 10');
+  assert.match(booking, /'GNBE':[^}]*parking: 20/, 'Grenchen steht nicht auf CHF 20');
+  assert.ok(!booking.includes('7.5 * nights'), 'der alte Festbetrag steht noch im Skript');
 });
 
 test('K8: Adresse, Distanzen und Bewertung stehen wie im Faktenblatt', () => {
