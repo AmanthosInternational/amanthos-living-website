@@ -3,10 +3,22 @@
 
 var API_BASE = window.AMANTHOS_API_BASE || 'https://amanthos-website-api.onrender.com';
 var PROPERTIES = {
-  'GBAL': { name: 'Zurich Airport', short: 'Zurich' },
-  'GNBE': { name: 'Solothurn / Grenchen', short: 'Solothurn' },
-  'NYAL': { name: 'Nyon / Duillier', short: 'Nyon' },
+  'GBAL': { name: 'Zurich Airport', short: 'Zurich', parking: 10 },
+  'GNBE': { name: 'Solothurn / Grenchen', short: 'Solothurn', parking: 20 },
+  'NYAL': { name: 'Nyon / Duillier', short: 'Nyon', parking: 10 },
 };
+
+/**
+ * Preis des Parkplatzes pro Nacht, je Standort verschieden. Die Werte stammen aus den
+ * Apaleo-Dienstleistungen (Code PCOMP), am 10.09.2026 abgelesen: Zuerich und Nyon je
+ * CHF 10, Grenchen CHF 20. Vorher verrechnete die Buchungsstrecke ueberall CHF 7.50,
+ * waehrend die Ausstattung und die Fragen der Seite CHF 10 nannten. Der Standardwert
+ * greift nur, wenn kein Standort gewaehlt ist.
+ */
+function parkpreis() {
+  var p = PROPERTIES[searchParams.propertyId];
+  return (p && typeof p.parking === 'number') ? p.parking : 10;
+}
 
 var selectedOffer = null;
 var currentOffers = [];
@@ -1342,7 +1354,7 @@ function updateUpsellTotal(nights) {
     }
   }
   var total = 0;
-  if (selectedExtras.parking) total += 7.5 * nights;
+  if (selectedExtras.parking) total += parkpreis() * nights;
   if (selectedExtras.towels) total += 5 * nights;
   if (selectedExtras.pillows) total += 10 * nights;
 
@@ -1355,7 +1367,7 @@ function updateUpsellTotal(nights) {
       upsellTotalAmount.textContent = 'CHF ' + total.toFixed(2);
       if (upsellPerNight) {
         var perDay = 0;
-        if (selectedExtras.parking) perDay += 7.5;
+        if (selectedExtras.parking) perDay += parkpreis();
         if (selectedExtras.towels) perDay += 5;
         if (selectedExtras.pillows) perDay += 10;
         upsellPerNight.textContent = '(CHF ' + perDay.toFixed(2) + ' / day \u00D7 ' + nights + ' nights)';
@@ -1376,7 +1388,7 @@ function getExtrasTotal() {
     if (nights < 1) nights = 1;
   }
   var total = 0;
-  if (selectedExtras.parking) total += 7.5 * nights;
+  if (selectedExtras.parking) total += parkpreis() * nights;
   if (selectedExtras.towels) total += 5 * nights;
   if (selectedExtras.pillows) total += 10 * nights;
   return total;
@@ -1535,7 +1547,7 @@ if (confirmBtn) {
     var finalTotal = discountedTotal ? discountedTotal.amount : ((selectedOffer.totalGrossAmount ? selectedOffer.totalGrossAmount.amount : 0) + getExtrasTotal());
 
     var extrasComment = '';
-    if (selectedExtras.parking) extrasComment += ' | Parking (CHF 7.50/day)';
+    if (selectedExtras.parking) extrasComment += ' | Parking (CHF ' + parkpreis() + '/day)';
     if (selectedExtras.towels) extrasComment += ' | Extra Towels (CHF 5/night)';
     if (selectedExtras.pillows) extrasComment += ' | Extra Pillow & Blankets (CHF 10/night)';
     var extrasTotal = getExtrasTotal();
@@ -1550,7 +1562,7 @@ if (confirmBtn) {
     }
 
     var extras = [];
-    if (selectedExtras.parking) extras.push({ name: 'Parking', pricePerUnit: 7.5, unit: 'day', quantity: nights, total: 7.5 * nights });
+    if (selectedExtras.parking) extras.push({ name: 'Parking', pricePerUnit: parkpreis(), unit: 'day', quantity: nights, total: parkpreis() * nights });
     if (selectedExtras.towels) extras.push({ name: 'Extra Towels', pricePerUnit: 5, unit: 'night', quantity: nights, total: 5 * nights });
     if (selectedExtras.pillows) extras.push({ name: 'Extra Pillow & Blankets', pricePerUnit: 10, unit: 'night', quantity: nights, total: 10 * nights });
 
@@ -2129,7 +2141,7 @@ function showPaymentRetry(confirmationId, email, bookingData) {
         if (retryNights < 1) retryNights = 1;
       }
       var retryExtras = [];
-      if (selectedExtras.parking) retryExtras.push({ name: 'Parking', pricePerUnit: 7.5, unit: 'day', quantity: retryNights, total: 7.5 * retryNights });
+      if (selectedExtras.parking) retryExtras.push({ name: 'Parking', pricePerUnit: parkpreis(), unit: 'day', quantity: retryNights, total: parkpreis() * retryNights });
       if (selectedExtras.towels) retryExtras.push({ name: 'Extra Towels', pricePerUnit: 5, unit: 'night', quantity: retryNights, total: 5 * retryNights });
       if (selectedExtras.pillows) retryExtras.push({ name: 'Extra Pillow & Blankets', pricePerUnit: 10, unit: 'night', quantity: retryNights, total: 10 * retryNights });
 
