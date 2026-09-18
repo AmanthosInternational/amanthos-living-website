@@ -59,10 +59,18 @@ test('K2: Konstanten vollstaendig und Formularart gesetzt', () => {
   assert.ok(config.EMAIL.includes('@'));
 });
 
-test('K2: ADS_SEND_TO bleibt leer, bis eine Nyon-Conversion-Aktion existiert', () => {
-  // Ein gesetzter, aber falscher Wert misst ins Leere. Genau so verlor Bad
-  // Wiessee 54 EUR fuer 46 Klicks ohne eine einzige gezaehlte Conversion.
-  assert.equal(config.ADS_SEND_TO, '');
+test('K2: ADS_SEND_TO gehoert zum eigenen Ads-Konto oder ist leer', () => {
+  // Bis zum 18.09.2026 musste dieser Wert leer sein, weil es keine
+  // Nyon-Conversion-Aktion gab; ein gesetzter, aber falscher Wert misst ins
+  // Leere, und genau so verlor Bad Wiessee 54 EUR fuer 46 Klicks ohne eine
+  // einzige gezaehlte Conversion. Seit die Aktion 7777087800 existiert, darf
+  // der Wert gesetzt sein, aber nur auf das eigene Konto: Leer bleibt erlaubt
+  // (Aktion geloescht), eine fremde Konto-ID ist es nicht.
+  if (config.ADS_SEND_TO === '') { return; }
+  assert.match(config.ADS_SEND_TO, /^AW-702540316\/[A-Za-z0-9_-]+$/,
+    'send_to zeigt nicht auf das eigene Konto AW-702540316');
+  assert.equal(config.ADS_SEND_TO.split('/')[0], config.ADS_ID,
+    'send_to und ADS_ID muessen dasselbe Konto nennen');
 });
 
 test('K5: die Seite existiert und nennt beide Preise', () => {

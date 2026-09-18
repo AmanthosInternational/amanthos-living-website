@@ -9,11 +9,13 @@
  * Test-Harness setzt window.AMANTHOS_API_BASE auf den leeren String (gleiche
  * Origin), und ein leerer String ist falsy.
  *
- * ADS_SEND_TO ist noch leer: Fuer Nyon existiert bisher keine eigene
- * Conversion-Aktion im Google-Ads-Konto 102-092-8693. Sie muss vor dem
- * Einschalten der Anzeigen angelegt und hier eingetragen werden, sonst zaehlt
- * die Kampagne wieder ins Leere (so geschehen bei Bad Wiessee: 54 EUR fuer 46
- * Klicks ohne jede Conversion, weil keine Aktion angelegt war).
+ * ADS_SEND_TO zeigt auf die Conversion-Aktion "Amanthos Living Nyon - Demande
+ * de location (Formular)" (7777087800), angelegt am 18.09.2026 im Konto
+ * 102-092-8693: Typ WEBPAGE, Kategorie SUBMIT_LEAD_FORM, primaer, einmal je
+ * Klick. Bis dahin stand hier bewusst der leere String, weil eine Kampagne ohne
+ * Aktion ins Leere zaehlt (so geschehen bei Bad Wiessee: 54 EUR fuer 46 Klicks
+ * ohne jede Conversion). Wird die Aktion im Konto geloescht, gehoert hier
+ * wieder der leere String hin, nicht eine fremde Aktion.
  *
  * FORM_KIND geht als form=nyon an das Backend und steuert dort Empfaenger und
  * Betreff; der Wert muss mit _handle_contact in amanthos-group-booking
@@ -29,7 +31,7 @@
     FORM_KIND: 'nyon',
     GA4_ID: 'G-8LPLG0BPJ6',
     ADS_ID: 'AW-702540316',
-    ADS_SEND_TO: '',
+    ADS_SEND_TO: 'AW-702540316/nEK1CLjis_wcEJzU_84C',
     TERMIN_URL: '',
     PAGE_URL: 'https://www.amanthosliving.com/nyon-louer/',
     PHONE: '+41 41 563 99 00',
