@@ -36,7 +36,7 @@
     PAGE_URL: 'https://www.amanthosliving.com/nyon-louer/',
     PHONE: '+41 41 562 97 03',
     PHONE_HREF: 'tel:+41415629703',
-    EMAIL: 'info@amanthosliving.com',
+    EMAIL: 'sales@amanthosliving.com',
     VERSION: '1'
   };
 
