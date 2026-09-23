@@ -61,15 +61,10 @@ function plausibleEvent(name, data) {
       if (data && data[k] !== undefined) props[k] = data[k];
     });
     var opts = { props: props };
-    // Umsatz nur an der bestaetigten Buchung. select_offer und begin_checkout
-    // tragen ebenfalls total_price, sind aber kein Erloes -- wer sie mitzaehlt,
-    // meldet jede Angebotsansicht als Umsatz und zaehlt dreifach.
-    // payment_completed waere fachlich richtiger, traegt im Code aber keinen
-    // Betrag; der Umsatz zaehlt deshalb bestaetigte, nicht bezahlte Buchungen.
-    if (name === 'booking_confirmed' && data &&
-        typeof data.total_price === 'number' && data.total_price > 0) {
-      opts.revenue = { amount: data.total_price, currency: data.currency || 'CHF' };
-    }
+    // Kein Umsatz mehr im Browser, an keinem Ereignis (Bauplan kauf-nach-zahlung,
+    // K1/K7): eine bestaetigte, aber nie bezahlte Buchung zaehlte hier bisher
+    // schon als Erloes. Der bezahlte Betrag zaehlt jetzt ausschliesslich serverseitig,
+    // erst nach der Zahlung, im Worker aus payment_conversions.py.
     window.plausible(name, opts);
   } catch (e) { /* Analytics darf die Buchungsstrecke nie brechen */ }
 }
@@ -77,8 +72,8 @@ function plausibleEvent(name, data) {
 // GA4: dieselbe Event-Taxonomie, gemappt auf die GA4-E-Commerce-Standardnamen,
 // mit einer abschliessenden Parameter-Whitelist je Ereignis. Draussen bleiben
 // Namen, E-Mail, Telefon, Reisedaten (check_in/check_out/children), promo_code
-// und error_message. Einzige zulaessige Kennung ist transaction_id. Umsatz zaehlt
-// genau einmal, am purchase -- payment_completed traegt bewusst keinen Betrag.
+// und error_message. Einzige zulaessige Kennung ist transaction_id. GA4 sendet
+// nirgends einen Betrag, der Kauf zaehlt serverseitig (Bauplan kauf-nach-zahlung, K1/K7).
 function ga4Event(name, data) {
   try {
     if (typeof window.gtag !== 'function') return;
@@ -117,10 +112,10 @@ function ga4Event(name, data) {
       put('location', d.location);
       put('rate_name', d.rate_name);
     } else if (name === 'booking_confirmed') {
-      evt = 'purchase';
+      // Kein Kauf-Ereignis mehr hier (Bauplan kauf-nach-zahlung, K1/K7): eine
+      // bestaetigte, aber unbezahlte Buchung ist kein Kauf. Eigener
+      // Ereignisname, ohne Betrag; der Kauf zaehlt erst bei payment_completed.
       put('transaction_id', d.booking_id || '');
-      put('value', d.total_price);
-      put('currency', d.currency || 'CHF');
       put('booking_source', d.source);
     } else if (name === 'payment_initiated' || name === 'payment_completed' ||
                name === 'booking_cancelled_no_payment') {
@@ -136,18 +131,19 @@ function ga4Event(name, data) {
   } catch (e) { /* Analytics darf die Buchungsstrecke nie brechen */ }
 }
 
-// Google Ads: eigene Kennung, eigener Transport, unabhaengig von GA4. Die Conversion
-// haengt bewusst am booking_confirmed und nicht am payment_completed: die Adyen-Zahlung
-// verlaesst auf dem Handy die Seite und kehrt ohne verwertbaren Zustand zurueck, dort
-// wuerde payment_completed nie feuern. Gezaehlt wird also die bestaetigte Reservierung.
-// Um Stornos und Nichtanreisen korrigiert der woechentliche ROAS-Report aus Apaleo.
+// Google Ads: eigene Kennung, eigener Transport, unabhaengig von GA4. Die
+// Conversion haengt seit dem Bauplan kauf-nach-zahlung (K1/K7) an
+// payment_completed statt an booking_confirmed: eine bestaetigte, aber nie
+// bezahlte Buchung ist kein Kauf, 31 % der Buchungen storniert unbezahlt
+// (Messung 18.08. bis 17.09.2026). Die Tag-Aktion hier bleibt sekundaer neben
+// dem Klick-Conversion-Upload aus dem Worker (Segment 6 desselben Plans).
 var ADS_CONVERSION_ID = 'AW-702540316';
 var ADS_CONVERSION_LABEL = 'u6kvCMyg1PgbEJzU_84C';
 
 function adsEvent(name, data) {
   try {
     if (typeof window.gtag !== 'function') return;
-    if (name !== 'booking_confirmed') return;
+    if (name !== 'payment_completed') return;
     var d = data || {};
     window.gtag('event', 'conversion', {
       send_to: ADS_CONVERSION_ID + '/' + ADS_CONVERSION_LABEL,
@@ -1617,10 +1613,15 @@ if (confirmBtn) {
       confirmBtn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> ' + (window.t ? window.t('booking.confirm_reservation') : 'Confirm Reservation');
 
       if (data.success) {
+        // Aus den bestaetigten Daten (Bauplan kauf-nach-zahlung, K7): total_price
+        // und currency werden hier auf data gemerkt, damit payment_completed
+        // spaeter denselben Betrag traegt, ohne ihn neu zu berechnen.
+        data.total_price = finalTotal;
+        data.currency = selectedOffer.totalGrossAmount ? selectedOffer.totalGrossAmount.currency : 'CHF';
         gtmPush('booking_confirmed', {
           booking_id: data.confirmationId || '',
           total_price: finalTotal,
-          currency: selectedOffer.totalGrossAmount ? selectedOffer.totalGrossAmount.currency : 'CHF',
+          currency: data.currency,
           promo_code: appliedPromo ? appliedPromo.code : ''
         });
 
@@ -1811,7 +1812,7 @@ function showPaymentUncertain(reservationId, bookingId, paymentSection, confirma
   }
 }
 
-function cancelUnpaidBooking(reservationId, bookingId, paymentSection) {
+function cancelUnpaidBooking(reservationId, bookingId, paymentSection, totalPrice, currency) {
   fetch(API_BASE + '/api/cancel-booking', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -1854,7 +1855,7 @@ function cancelUnpaidBooking(reservationId, bookingId, paymentSection) {
       html2 += '</div>';
       html2 += '</div>';
       paymentSection.innerHTML = html2;
-      gtmPush('payment_completed', { booking_id: bookingId });
+      gtmPush('payment_completed', { booking_id: bookingId, total_price: totalPrice, currency: currency });
     }
   })
   .catch(function (err) {
@@ -1991,14 +1992,14 @@ function showPaymentStep(confirmationId, paymentLink, email, bookingData) {
         if (popup.closed) {
           clearInterval(pollTimer);
           // Poll payment status instead of cancelling immediately
-          pollPaymentStatus(reservationId, confirmationId, paymentSection, confirmationId, 0);
+          pollPaymentStatus(reservationId, confirmationId, paymentSection, confirmationId, 0, bookingData.total_price, bookingData.currency);
         }
       }, 2000);
     });
   }
 }
 
-function pollPaymentStatus(reservationId, bookingId, paymentSection, confirmationId, attempt) {
+function pollPaymentStatus(reservationId, bookingId, paymentSection, confirmationId, attempt, totalPrice, currency) {
   attempt = attempt || 0;
   var maxAttempts = 18; // 18 × 10s = 3 minutes of polling
   var checkingText = window.t ? window.t('booking.checking_payment') : '';
@@ -2027,28 +2028,31 @@ function pollPaymentStatus(reservationId, bookingId, paymentSection, confirmatio
       html += '</div>';
       html += '</div>';
       paymentSection.innerHTML = html;
-      gtmPush('payment_completed', { booking_id: bookingId });
+      // total_price und currency aus den bestaetigten Daten (Bauplan
+      // kauf-nach-zahlung, K7): payment_completed traegt den Betrag jetzt mit,
+      // fuer Meta Purchase (eventID) und den Ads-Conversion-Tag.
+      gtmPush('payment_completed', { booking_id: bookingId, total_price: totalPrice, currency: currency });
     } else if (attempt < maxAttempts - 1) {
       setTimeout(function () {
-        pollPaymentStatus(reservationId, bookingId, paymentSection, confirmationId, attempt + 1);
+        pollPaymentStatus(reservationId, bookingId, paymentSection, confirmationId, attempt + 1, totalPrice, currency);
       }, 10000);
     } else {
-      showPaymentUncertain(reservationId, bookingId, paymentSection, confirmationId);
+      showPaymentUncertain(reservationId, bookingId, paymentSection, confirmationId, totalPrice, currency);
     }
   })
   .catch(function (err) {
     console.error('Check payment error:', err);
     if (attempt < maxAttempts - 1) {
       setTimeout(function () {
-        pollPaymentStatus(reservationId, bookingId, paymentSection, confirmationId, attempt + 1);
+        pollPaymentStatus(reservationId, bookingId, paymentSection, confirmationId, attempt + 1, totalPrice, currency);
       }, 10000);
     } else {
-      showPaymentUncertain(reservationId, bookingId, paymentSection, confirmationId);
+      showPaymentUncertain(reservationId, bookingId, paymentSection, confirmationId, totalPrice, currency);
     }
   });
 }
 
-function showPaymentUncertain(reservationId, bookingId, paymentSection, confirmationId) {
+function showPaymentUncertain(reservationId, bookingId, paymentSection, confirmationId, totalPrice, currency) {
   var html = '';
   html += '<div class="payment-step-success" style="border-left:4px solid #F59E0B;background:#FFFBEB;">';
   html += '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>';
@@ -2072,14 +2076,14 @@ function showPaymentUncertain(reservationId, bookingId, paymentSection, confirma
   var keepBtn = document.getElementById('keepCheckingBtn');
   if (keepBtn) {
     keepBtn.addEventListener('click', function () {
-      pollPaymentStatus(reservationId, bookingId, paymentSection, confirmationId, 0);
+      pollPaymentStatus(reservationId, bookingId, paymentSection, confirmationId, 0, totalPrice, currency);
     });
   }
 
   var cancelBtn = document.getElementById('cancelReservationBtn');
   if (cancelBtn) {
     cancelBtn.addEventListener('click', function () {
-      cancelUnpaidBooking(reservationId, bookingId, paymentSection);
+      cancelUnpaidBooking(reservationId, bookingId, paymentSection, totalPrice, currency);
     });
   }
 }
