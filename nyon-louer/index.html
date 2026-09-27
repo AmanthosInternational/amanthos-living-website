@@ -80,7 +80,12 @@
 
   <script src="https://browser.sentry-cdn.com/10.68.0/bundle.tracing.min.js" crossorigin="anonymous" defer></script>
   <script src="../js/sentry-init.js" defer></script>
+  <!-- Reichweitenmessung ohne Cookies durch Plausible -->
   <script async src="https://plausible.io/js/pa-mc5nRTWoiejRsYUjlX_QM.js"></script>
+  <script>
+    window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+    plausible.init()
+  </script>
 </head>
 <body>
   <a href="#main" class="sr-only sr-only-focusable">Aller au contenu principal</a>
