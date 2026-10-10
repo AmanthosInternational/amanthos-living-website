@@ -25,11 +25,12 @@ const config = require(join(here, '..', 'js', 'longstay-config.js'));
 const src = readFileSync(scriptFile, 'utf8');
 const angebote = JSON.parse(readFileSync(join(here, 'fixtures', 'offers-gbal-30.json'), 'utf8'));
 
-// Genau die 19 Schluessel aus K3.
+// Genau die 20 Schluessel aus K3 (consent seit 11.10.2026).
 const K3_KEYS = [
   'form', 'name', 'email', 'phone', 'move_in', 'duration_months', 'persons',
   'quoted_month', 'quoted_price', 'quoted_unit', 'quoted_rate', 'message', 'event_id',
-  'utm_source', 'utm_medium', 'utm_campaign', 'gclid', 'fbclid', 'company_website'
+  'utm_source', 'utm_medium', 'utm_campaign', 'gclid', 'fbclid', 'company_website',
+  'consent'
 ];
 
 const VOLL = {
@@ -221,10 +222,10 @@ test('K2: die englische Fassung nennt dieselben Angaben', () => {
 
 // ---- K3: buildPayload -----------------------------------------------------
 
-test('K3: buildPayload liefert genau die 19 Schluessel des Kontrakts', () => {
+test('K3: buildPayload liefert genau die 20 Schluessel des Kontrakts', () => {
   const payload = page.buildPayload(VOLL);
   assert.deepEqual(Object.keys(payload).sort(), [...K3_KEYS].sort());
-  assert.equal(Object.keys(payload).length, 19);
+  assert.equal(Object.keys(payload).length, 20);
 });
 
 test('K3: buildPayload uebernimmt die Werte getrimmt und setzt form auf living-longstay', () => {
@@ -248,10 +249,10 @@ test('K3: buildPayload uebernimmt die Werte getrimmt und setzt form auf living-l
   assert.equal(payload.company_website, '');
 });
 
-test('K3: ohne Eingabe sind alle 19 Werte leere Strings, ausser form', () => {
+test('K3: ohne Eingabe sind alle 20 Werte leere Strings, ausser form', () => {
   for (const leer of [undefined, {}]) {
     const payload = page.buildPayload(leer);
-    assert.equal(Object.keys(payload).length, 19);
+    assert.equal(Object.keys(payload).length, 20);
     for (const key of K3_KEYS) {
       assert.equal(typeof payload[key], 'string', `${key} ist kein String`);
       if (key !== 'form') { assert.equal(payload[key], '', `${key} ist nicht leer`); }

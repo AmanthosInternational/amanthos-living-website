@@ -25,7 +25,7 @@ const src = readFileSync(scriptFile, 'utf8');
 const K3_KEYS = [
   'form', 'name', 'email', 'phone', 'unit', 'rooms', 'budget', 'move_in', 'wish_slot',
   'message', 'event_id', 'utm_source', 'utm_medium', 'utm_campaign', 'gclid', 'fbclid',
-  'company_website', 'locale'
+  'company_website', 'locale', 'consent'
 ];
 
 const VOLL = {
@@ -56,10 +56,10 @@ test('das Modul exportiert die reinen Helfer und laeuft ohne DOM', () => {
 
 // ---- K3: buildPayload -----------------------------------------------------
 
-test('K3: buildPayload liefert genau die 18 Schluessel des Kontrakts', () => {
+test('K3: buildPayload liefert genau die 19 Schluessel des Kontrakts', () => {
   const payload = page.buildPayload(VOLL);
   assert.deepEqual(Object.keys(payload).sort(), [...K3_KEYS].sort());
-  assert.equal(Object.keys(payload).length, 18);
+  assert.equal(Object.keys(payload).length, 19);
 });
 
 test('K3: buildPayload uebernimmt die Werte getrimmt und setzt form auf grenchen', () => {
@@ -79,7 +79,7 @@ test('K3: buildPayload uebernimmt die Werte getrimmt und setzt form auf grenchen
   assert.equal(payload.company_website, '');
 });
 
-test('K3: ohne Eingaben sind alle 18 Schluessel da und leer, ausser form und locale', () => {
+test('K3: ohne Eingaben sind alle 19 Schluessel da und leer, ausser form und locale', () => {
   const payload = page.buildPayload();
   assert.deepEqual(Object.keys(payload).sort(), [...K3_KEYS].sort());
   for (const key of K3_KEYS) {
