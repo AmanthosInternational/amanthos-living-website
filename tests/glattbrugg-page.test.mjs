@@ -25,11 +25,11 @@ const units = require(join(here, '..', 'js', 'glattbrugg-units.js'));
 const config = require(join(here, '..', 'js', 'glattbrugg-config.js'));
 const src = readFileSync(scriptFile, 'utf8');
 
-// Genau die 18 Schluessel aus K3, in dieser Reihenfolge.
+// Genau die 19 Schluessel aus K3 (consent seit 11.10.2026), in dieser Reihenfolge.
 const K3_KEYS = [
   'form', 'name', 'email', 'phone', 'company', 'unit', 'arrival_month', 'duration_months',
   'persons', 'message', 'event_id', 'locale', 'utm_source', 'utm_medium', 'utm_campaign',
-  'gclid', 'fbclid', 'company_website'
+  'gclid', 'fbclid', 'company_website', 'consent'
 ];
 
 const VOLL = {
@@ -148,10 +148,10 @@ test('localeOf: en bleibt en, alles andere ist de', () => {
 
 // ---- K3: Payload ----------------------------------------------------------
 
-test('K3: buildPayload liefert genau die 18 Schluessel in der Reihenfolge des Kontrakts', () => {
+test('K3: buildPayload liefert genau die 19 Schluessel in der Reihenfolge des Kontrakts', () => {
   const p = page.buildPayload(VOLL);
   assert.deepEqual(Object.keys(p), K3_KEYS);
-  assert.equal(Object.keys(p).length, 18);
+  assert.equal(Object.keys(p).length, 19);
   for (const k of K3_KEYS) assert.equal(typeof p[k], 'string', `${k} ist kein String`);
   assert.equal(p.form, 'glattbrugg');
   assert.equal(p.name, 'Testperson Muster');
@@ -169,7 +169,7 @@ test('K3: buildPayload liefert genau die 18 Schluessel in der Reihenfolge des Ko
   assert.equal(p.company_website, '');
 });
 
-test('K3: ohne Eingabe stehen alle 18 Schluessel mit leerem String da', () => {
+test('K3: ohne Eingabe stehen alle 19 Schluessel mit leerem String da', () => {
   for (const arg of [undefined, null, {}]) {
     const p = page.buildPayload(arg);
     assert.deepEqual(Object.keys(p), K3_KEYS);

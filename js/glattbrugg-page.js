@@ -158,6 +158,8 @@
     out.gclid = str(i.gclid).slice(0, 512);
     out.fbclid = str(i.fbclid).slice(0, 512);
     out.company_website = str(i.companyWebsite);
+    // Wahl aus dem Banner; ohne 'granted' kein Server-Lead an Meta (Datenschutz 4.4).
+    out.consent = i.consent === 'granted' ? 'granted' : '';
     return out;
   }
 
@@ -321,7 +323,8 @@
         name: v(D.name), email: v(D.email), phone: v(D.phone), company: v(D.company),
         unit: v(D.unit), arrival: v(D.arrival), duration: v(D.duration), persons: v(D.persons),
         message: v(D.message), companyWebsite: v(D.honig), eventId: newEventId(), lang: lang,
-        campaign: readCampaign(window.location.search), gclid: ids.gclid, fbclid: ids.fbclid
+        campaign: readCampaign(window.location.search), gclid: ids.gclid, fbclid: ids.fbclid,
+        consent: granted() ? 'granted' : ''
       });
     }
 

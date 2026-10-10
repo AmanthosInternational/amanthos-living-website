@@ -253,7 +253,10 @@
       event_id: str(i.eventId),
       gclid: str(i.gclid).slice(0, 512),
       fbclid: str(i.fbclid).slice(0, 512),
-      company_website: str(i.companyWebsite)
+      company_website: str(i.companyWebsite),
+      // Die Wahl aus dem Banner: ohne 'granted' meldet der Server keinen Lead an
+      // Meta (Datenschutzerklaerung Abschnitt 4.4, amanthos-platform #251).
+      consent: i.consent === 'granted' ? 'granted' : ''
     };
     UTM_KEYS.forEach(function (key) {
       var value = str(campaign[key]);
@@ -455,7 +458,8 @@
         quotedRate: angebot ? angebot.ratePlanCode : '',
         message: D.message ? D.message.value : '',
         eventId: eventId, campaign: campaign, gclid: ids.gclid, fbclid: ids.fbclid,
-        companyWebsite: D.honeypot ? D.honeypot.value : ''
+        companyWebsite: D.honeypot ? D.honeypot.value : '',
+        consent: granted() ? 'granted' : ''
       });
     }
 

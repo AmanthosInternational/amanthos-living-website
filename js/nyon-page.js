@@ -176,7 +176,10 @@
       locale: 'fr',
       gclid: str(i.gclid).slice(0, 512),
       fbclid: str(i.fbclid).slice(0, 512),
-      company_website: str(i.companyWebsite)
+      company_website: str(i.companyWebsite),
+      // Die Wahl aus dem Banner: ohne 'granted' meldet der Server keinen Lead an
+      // Meta (Datenschutzerklaerung Abschnitt 4.4, amanthos-platform #251).
+      consent: i.consent === 'granted' ? 'granted' : ''
     };
     UTM_KEYS.forEach(function (key) {
       var value = str(campaign[key]);
@@ -292,7 +295,8 @@
         campaign: pickCampaign(campaignFromUrl(window.location.search),
           storedCampaign(), trackedCampaign()),
         gclid: ids.gclid,
-        fbclid: ids.fbclid
+        fbclid: ids.fbclid,
+        consent: granted() ? 'granted' : ''
       });
     }
 
