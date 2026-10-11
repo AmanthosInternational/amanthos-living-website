@@ -257,7 +257,7 @@ test('K7: Zahlen im sichtbaren Text kommen aus K7, K2 oder dem Formular, keine a
   const text = sichtbar(page);
   const erlaubt = new Set([
     '30', '89', '59', '60', '75', '3.8', '9.4', '0.8', '11', '1', '2', '3', '10', '8152',
-    '41', '562', '97', '00'
+    '41', '563', '99', '00'
   ]);
   const gefunden = [...new Set(text.match(/\d+(?:\.\d+)?/g) || [])];
   const fremd = gefunden.filter((z) => !erlaubt.has(z));
@@ -279,12 +279,12 @@ test('K7: nichts aus der Liste "Nicht behaupten"', () => {
 });
 
 test('K7: Telefon und Adresse stammen aus K2, keine weitere Nummer, keine fremde Mailadresse', () => {
-  assert.equal(config.PHONE, '+41 41 562 97 00');
+  assert.equal(config.PHONE, '+41 41 563 99 00');
   assert.ok(page.includes('href="' + config.PHONE_HREF + '"'));
   assert.ok(page.includes('href="mailto:' + config.EMAIL + '"'));
   assert.ok(page.includes('Oberhauserstrasse 30, 8152 Glattbrugg'));
   const tel = new Set([...page.matchAll(/href="tel:([^"]+)"/g)].map((m) => m[1]));
-  assert.deepEqual([...tel], ['+41415629700']);
+  assert.deepEqual([...tel], ['+41415639900']);
   const mails = new Set([...page.matchAll(/[\w.+-]+@[\w-]+\.[\w.-]+/g)].map((m) => m[0]));
   assert.deepEqual([...mails].sort(), ['sales@amanthosliving.com']);
 });

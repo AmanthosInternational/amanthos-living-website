@@ -258,10 +258,13 @@ test('K2: ADS_SEND_TO ist das Label der eigenen Conversion-Aktion im eigenen Kon
   assert.notEqual(config.ADS_SEND_TO, abschnitt.ADS_SEND_TO);
 });
 
-test('K2: Telefon ist die Nummer aus dem JSON-LD von zurich/index.html, Adresse ist sales', () => {
-  assert.equal(config.PHONE, '+41 41 562 97 00');
+// Entscheid Bogdan 11.10.2026: Die Longstay-Seiten tragen die Vermietungsnummer (Teams-Warteschlange
+// "Warteschleife Grenchen Vermietung"). Die Nummer aus dem JSON-LD von zurich/index.html (562 97 00)
+// gehoert in Teams zum Konto "Amanthos Living Nyon" und darf hier nicht mehr stehen.
+test('K2: Telefon ist die Vermietungsnummer, nicht die Nummer von zurich/index.html, Adresse ist sales', () => {
+  assert.equal(config.PHONE, '+41 41 563 99 00');
   assert.equal(config.PHONE_HREF, 'tel:' + config.PHONE.replace(/\s/g, ''));
-  assert.ok(lies('zurich', 'index.html').includes('"telephone": "' + config.PHONE + '"'));
+  assert.ok(!config.PHONE.includes('562 97 00'));
   assert.equal(config.EMAIL, 'sales@amanthosliving.com');
 });
 
