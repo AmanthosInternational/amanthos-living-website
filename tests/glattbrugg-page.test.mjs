@@ -82,7 +82,8 @@ test('perNight rundet den Preis je 30 Naechte auf eine Nacht', () => {
 // ---- Karten ---------------------------------------------------------------
 
 test('cardModel liefert fuer jede gelistete Kategorie in de und en beide Preiszeilen und die Eckdaten', () => {
-  assert.deepEqual(listed.map((u) => u.key), ['business', 'business-plus']);
+  // Entscheid Bogdan 11.10.2026: Sky Suite (2 Einheiten) wird fuer Longstay gelistet, Preise aus K1.
+  assert.deepEqual(listed.map((u) => u.key), ['business', 'business-plus', 'sky']);
   for (const u of listed) {
     for (const lang of ['de', 'en']) {
       const m = page.cardModel(u, lang);
@@ -123,7 +124,7 @@ test('cardModel: die Texte stehen in der Sprache der Seite', () => {
 });
 
 test('nicht gelistete Kategorien werden nie gerendert', () => {
-  assert.equal(unlisted.length, 3);
+  assert.equal(unlisted.length, 2); // Entscheid Bogdan 11.10.2026: Sky Suite (2 Einheiten) wird fuer Longstay gelistet, Preise aus K1.
   for (const u of unlisted) {
     assert.equal(page.cardModel(u, 'de'), null, u.key);
     assert.equal(page.cardModel(u, 'en'), null, u.key);

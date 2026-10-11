@@ -44,8 +44,8 @@
     },
     {
       key: 'sky', code: 'SKS', name: 'Sky Suite',
-      sqm: 38, maxPersons: 3, units: 2, longstayUnits: 0,
-      price30: null, price60: null, listed: false
+      sqm: 38, maxPersons: 3, units: 2, longstayUnits: 2,
+      price30: 2640, price60: 2440, listed: true
     }
   ];
 

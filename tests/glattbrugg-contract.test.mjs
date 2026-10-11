@@ -39,7 +39,8 @@ const K1_ROWS = [
   ['business', 'BUS', 'Business Suite', 39, 2, 4, 4],
   ['superior', 'SUPS', 'Superior Suite', null, 3, 4, 0],
   ['business-plus', 'BUPS', 'Business Plus Suite', 41, 3, 4, 4],
-  ['sky', 'SKS', 'Sky Suite', 38, 3, 2, 0]
+  // Entscheid Bogdan 11.10.2026: Sky Suite (2 Einheiten) wird fuer Longstay gelistet, Preise aus K1.
+  ['sky', 'SKS', 'Sky Suite', 38, 3, 2, 2]
 ];
 const K2_KEYS = ['API_BASE', 'CONTACT_PATH', 'FORM_KIND', 'PAGE_URL_DE', 'PAGE_URL_EN', 'GA4_ID',
   'ADS_ID', 'ADS_SEND_TO', 'CONTENT_NAME', 'PHONE', 'PHONE_HREF', 'EMAIL', 'VERSION'];
@@ -172,13 +173,14 @@ test('K1: fuenf Kategorien, Schluessel, Codes, Namen, Flaechen, Personen und Bes
 
 test('K1: 22 Einheiten im Haus, 8 davon fuer Longstay', () => {
   assert.equal(units.UNITS.reduce((s, u) => s + u.units, 0), 22);
-  assert.equal(units.UNITS.reduce((s, u) => s + u.longstayUnits, 0), 8);
+  assert.equal(units.UNITS.reduce((s, u) => s + u.longstayUnits, 0), 10); // Entscheid Bogdan 11.10.2026: Sky Suite (2 Einheiten) wird fuer Longstay gelistet, Preise aus K1.
   for (const u of units.UNITS) assert.ok(u.longstayUnits <= u.units, `${u.key}: mehr frei als vorhanden`);
 });
 
 test('K1: gelistet genau dann, wenn Einheiten fuer Longstay frei sind', () => {
   for (const u of units.UNITS) assert.equal(u.listed, u.longstayUnits > 0, u.key);
-  assert.deepEqual(units.UNITS.filter((u) => u.listed).map((u) => u.key), ['business', 'business-plus']);
+  // Entscheid Bogdan 11.10.2026: Sky Suite (2 Einheiten) wird fuer Longstay gelistet, Preise aus K1.
+  assert.deepEqual(units.UNITS.filter((u) => u.listed).map((u) => u.key), ['business', 'business-plus', 'sky']);
 });
 
 test('K1: gelistet heisst beide Preise gesetzt, 200 Abstand und mindestens 2100 ab 60 Naechten', () => {
