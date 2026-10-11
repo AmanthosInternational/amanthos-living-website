@@ -34,8 +34,8 @@
     ADS_ID: 'AW-702540316',
     ADS_SEND_TO: 'AW-702540316/rBzHCJbBgJgdEJzU_84C',
     CONTENT_NAME: 'glattbrugg-longstay',
-    PHONE: '+41 41 562 97 00',
-    PHONE_HREF: 'tel:+41415629700',
+    PHONE: '+41 41 563 99 00',
+    PHONE_HREF: 'tel:+41415639900',
     EMAIL: 'sales@amanthosliving.com',
     VERSION: '1'
   };
