@@ -132,7 +132,7 @@ test('K2: API_BASE, Pfade und Kontaktdaten stehen fest', () => {
   assert.equal(config.PAGE_URL, 'https://www.amanthosliving.com/grenchen-mieten/');
   assert.equal(config.PHONE, '+41 41 563 99 00');
   assert.equal(config.PHONE_HREF, 'tel:' + config.PHONE.replace(/\s/g, ''));
-  assert.equal(config.EMAIL, 'info@amanthosliving.com');
+  assert.equal(config.EMAIL, 'sales@amanthosliving.com');
 });
 
 // ---- K5: DOM-Kontrakt -----------------------------------------------------

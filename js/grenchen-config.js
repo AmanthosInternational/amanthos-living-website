@@ -27,7 +27,7 @@
     PAGE_URL: 'https://www.amanthosliving.com/grenchen-mieten/',
     PHONE: '+41 41 563 99 00',
     PHONE_HREF: 'tel:+41415639900',
-    EMAIL: 'info@amanthosliving.com',
+    EMAIL: 'sales@amanthosliving.com',
     VERSION: '1'
   };
 
