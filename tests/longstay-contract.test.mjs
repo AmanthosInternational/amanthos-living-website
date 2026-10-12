@@ -105,7 +105,7 @@ test('K1: API_BASE, Pfade, Seite, Mess-IDs und Kontakt', () => {
   assert.equal(config.ADS_ID, 'AW-702540316');
   assert.equal(config.PHONE, '+41 41 562 97 00');
   assert.equal(config.PHONE_HREF, 'tel:' + config.PHONE.replace(/\s/g, ''));
-  assert.equal(config.EMAIL, 'info@amanthosliving.com');
+  assert.equal(config.EMAIL, 'sales@amanthosliving.com');
 });
 
 test('K1: die Telefonnummer ist die aus dem JSON-LD von zurich/index.html', () => {

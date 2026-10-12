@@ -35,7 +35,7 @@
     ADS_SEND_TO: 'AW-702540316/WwQJCKvhpPIcEJzU_84C',
     PHONE: '+41 41 562 97 00',
     PHONE_HREF: 'tel:+41415629700',
-    EMAIL: 'info@amanthosliving.com',
+    EMAIL: 'sales@amanthosliving.com',
     VERSION: '1'
   };
 
