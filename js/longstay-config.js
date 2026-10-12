@@ -13,8 +13,8 @@
  *
  * ADS_SEND_TO traegt seit der Verdrahtung das Label der Conversion-Aktion
  * eintraegt; leer heisst, kein Conversion-Aufruf (K4). MAX_PERSONS entspricht
- * MAX_GUESTS.GBAL in js/booking.js. Telefonnummer aus dem JSON-LD von
- * zurich/index.html.
+ * MAX_GUESTS.GBAL in js/booking.js. Telefonnummer der Vermietung, nicht die
+ * Hotelnummer aus dem JSON-LD (Entscheid des Inhabers, 12.10.2026).
  */
 (function () {
   'use strict';
@@ -33,8 +33,8 @@
     GA4_ID: 'G-8LPLG0BPJ6',
     ADS_ID: 'AW-702540316',
     ADS_SEND_TO: 'AW-702540316/WwQJCKvhpPIcEJzU_84C',
-    PHONE: '+41 41 562 97 00',
-    PHONE_HREF: 'tel:+41415629700',
+    PHONE: '+41 41 563 99 00',
+    PHONE_HREF: 'tel:+41415639900',
     EMAIL: 'sales@amanthosliving.com',
     VERSION: '1'
   };

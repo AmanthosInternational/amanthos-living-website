@@ -103,14 +103,21 @@ test('K1: API_BASE, Pfade, Seite, Mess-IDs und Kontakt', () => {
   assert.equal(config.PAGE_URL, 'https://www.amanthosliving.com/zurich/');
   assert.equal(config.GA4_ID, 'G-8LPLG0BPJ6');
   assert.equal(config.ADS_ID, 'AW-702540316');
-  assert.equal(config.PHONE, '+41 41 562 97 00');
+  assert.equal(config.PHONE, '+41 41 563 99 00');
   assert.equal(config.PHONE_HREF, 'tel:' + config.PHONE.replace(/\s/g, ''));
   assert.equal(config.EMAIL, 'sales@amanthosliving.com');
 });
 
-test('K1: die Telefonnummer ist die aus dem JSON-LD von zurich/index.html', () => {
+// Entscheid des Inhabers vom 12.10.2026: der Abschnitt Wohnen auf Zeit ruft die Vermietung an
+// (dieselbe Nummer wie Grenchen und Glattbrugg), das Hotel behaelt seine Nummer. Vorher koppelte
+// dieser Test den Abschnitt an die Hotelnummer aus dem JSON-LD; dort klingelte die Rezeption.
+test('K1: der Abschnitt nennt die Vermietungsnummer, das JSON-LD des Hotels bleibt', () => {
   const page = readFileSync(pageFile, 'utf8');
-  assert.ok(page.includes('"telephone": "' + config.PHONE + '"'));
+  assert.ok(page.includes('"telephone": "+41 41 562 97 00"'));
+  assert.notEqual(config.PHONE, '+41 41 562 97 00');
+  const zeile = page.split('\n').find((z) => z.includes('class="ls-contact">Telefon'));
+  assert.ok(zeile.includes('href="' + config.PHONE_HREF + '">' + config.PHONE + '</a>'));
+  assert.ok(!zeile.includes('562 97 00'));
 });
 
 test('K1: im Browser haengt die Konfiguration an window.LONGSTAY_CONFIG und folgt AMANTHOS_API_BASE', () => {
