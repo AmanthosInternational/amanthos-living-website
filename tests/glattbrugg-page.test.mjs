@@ -81,7 +81,9 @@ test('perNight rundet den Preis je 30 Naechte auf eine Nacht', () => {
 
 // ---- Karten ---------------------------------------------------------------
 
-test('cardModel liefert fuer jede gelistete Kategorie in de und en beide Preiszeilen und die Eckdaten', () => {
+// Geaenderte Erwartung (Entscheid Bogdan 14.10.2026): eine Preiszeile 60 bis 89 Naechte, die
+// Zeile 30 bis 59 Naechte ist gestrichen. Vorher verlangte der Test zwei Zeilen.
+test('cardModel liefert fuer jede gelistete Kategorie in de und en die Preiszeile ab 60 Naechten und die Eckdaten', () => {
   // Entscheid Bogdan 11.10.2026: Sky Suite (2 Einheiten) wird fuer Longstay gelistet, Preise aus K1.
   assert.deepEqual(listed.map((u) => u.key), ['business', 'business-plus', 'sky']);
   for (const u of listed) {
@@ -96,10 +98,9 @@ test('cardModel liefert fuer jede gelistete Kategorie in de und en beide Preisze
       assert.ok(m.sqmText.includes(String(u.sqm)), 'Flaeche fehlt');
       assert.ok(m.personsText.includes(String(u.maxPersons)), 'Personen fehlen');
       assert.ok(m.unitsText.includes(String(u.longstayUnits)), 'freie Einheiten fehlen');
-      assert.equal(m.lines.length, 2);
-      assert.deepEqual(m.lines.map((l) => l.price), [u.price30, u.price60]);
-      assert.ok(m.lines[0].priceText.includes(page.formatChf(u.price30)));
-      assert.ok(m.lines[1].priceText.includes(page.formatChf(u.price60)));
+      assert.equal(m.lines.length, 1);
+      assert.deepEqual(m.lines.map((l) => l.price), [u.price60]);
+      assert.ok(m.lines[0].priceText.includes(page.formatChf(u.price60)));
       for (const l of m.lines) {
         assert.ok(l.nightText.includes('CHF ' + page.perNight(l.price)), `${u.key}/${lang}: Nachtpreis`);
         assert.ok(l.label.length > 0);
@@ -112,15 +113,19 @@ test('cardModel liefert fuer jede gelistete Kategorie in de und en beide Preisze
 test('cardModel: die Texte stehen in der Sprache der Seite', () => {
   const de = page.cardModel(byKey('business-plus'), 'de');
   const en = page.cardModel(byKey('business-plus'), 'en');
-  assert.equal(de.lines[1].priceText, "CHF 2'240 je 30 Nächte");
-  assert.equal(de.lines[1].nightText, 'rund CHF 75 pro Nacht');
-  assert.equal(en.lines[1].priceText, "CHF 2'240 per 30 nights");
-  assert.equal(en.lines[1].nightText, 'about CHF 75 per night');
-  assert.equal(de.lines[0].label, '30 bis 59 Nächte');
-  assert.equal(de.lines[1].label, '60 bis 89 Nächte');
-  assert.equal(en.lines[0].label, '30 to 59 nights');
-  assert.equal(en.lines[1].label, '60 to 89 nights');
-  assert.equal(page.cardModel(byKey('business'), 'de').lines[1].nightText, 'rund CHF 70 pro Nacht');
+  assert.equal(de.lines[0].priceText, "CHF 2'240 je 30 Nächte");
+  assert.equal(de.lines[0].nightText, 'rund CHF 75 pro Nacht');
+  assert.equal(en.lines[0].priceText, "CHF 2'240 per 30 nights");
+  assert.equal(en.lines[0].nightText, 'about CHF 75 per night');
+  assert.equal(de.lines[0].label, '60 bis 89 Nächte');
+  assert.equal(en.lines[0].label, '60 to 89 nights');
+  assert.equal(page.cardModel(byKey('business'), 'de').lines[0].priceText, "CHF 2'100 je 30 Nächte");
+  assert.equal(page.cardModel(byKey('business'), 'de').lines[0].nightText, 'rund CHF 70 pro Nacht');
+  // Gegenprobe: kein Betrag der gestrichenen Staffel 30 bis 59 Naechte erscheint auf einer Karte.
+  for (const u of listed) {
+    const texte = JSON.stringify(page.cardModel(u, 'de'));
+    for (const alt of ["2'300", "2'640"]) assert.ok(!texte.includes(alt), `${u.key}: ${alt}`);
+  }
 });
 
 test('nicht gelistete Kategorien werden nie gerendert', () => {
@@ -420,7 +425,7 @@ test('K4: fehlende Kanaele werfen nicht', () => {
 
 test('der Quelltext traegt keinen Preis aus K1, kein Speichern im Browser und keine Klick-IDs aus der URL', () => {
   const ohneKommentare = src.replace(/\/\*[\s\S]*?\*\//g, '').replace(/^\s*\/\/.*$/gm, '');
-  const preise = units.UNITS.flatMap((u) => [u.price30, u.price60])
+  const preise = units.UNITS.flatMap((u) => [u.price60])
     .concat([units.EXTRA_PERSON]).filter((p) => p !== null);
   for (const p of new Set(preise)) {
     assert.ok(!new RegExp('\\b' + p + '\\b').test(src), `Preis ${p} im Quelltext`);

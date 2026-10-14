@@ -33,9 +33,8 @@
   var EVENT_RE = /^[A-Za-z0-9-]{8,64}$/;
   var SET_123 = /^[123]$/;
 
-  // Abrechnungseinheit der Preise (K1) und Beginn der zweiten Staffel.
+  // Abrechnungseinheit der Preise (K1).
   var BLOCK = 30;
-  var STAFFEL2_AB = 60;
 
   var TEXTE = {
     de: {
@@ -87,17 +86,15 @@
   /** Alles, was eine Karte zeigt, als Daten; null fuer jede nicht gelistete Kategorie. */
   function cardModel(unit, lang) {
     if (!unit || unit.listed !== true) { return null; }
-    if (typeof unit.price30 !== 'number' || typeof unit.price60 !== 'number') { return null; }
+    if (typeof unit.price60 !== 'number') { return null; }
     var t = T(lang);
-    var von = [DATA.MIN_NIGHTS || BLOCK, STAFFEL2_AB];
-    var bis = [STAFFEL2_AB - 1, DATA.MAX_NIGHTS];
-    var lines = [unit.price30, unit.price60].map(function (p, i) {
-      return {
-        label: von[i] + t.bis + bis[i] + t.naechte, price: p,
-        priceText: formatChf(p) + t.jeBlock,
-        nightText: t.rund + formatChf(perNight(p)) + t.proNacht
-      };
-    });
+    // Eine Staffel seit 14.10.2026: 60 bis 89 Naechte, kuerzer gilt der Hoteltarif.
+    var p = unit.price60;
+    var lines = [{
+      label: DATA.MIN_NIGHTS + t.bis + DATA.MAX_NIGHTS + t.naechte, price: p,
+      priceText: formatChf(p) + t.jeBlock,
+      nightText: t.rund + formatChf(perNight(p)) + t.proNacht
+    }];
     return {
       key: unit.key,
       name: unit.name,

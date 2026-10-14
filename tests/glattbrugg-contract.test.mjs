@@ -33,7 +33,7 @@ const skeleton = lies('tests', 'fixtures', 'glattbrugg-skeleton.html');
 const harness = lies('tests', 'dev-server.py');
 
 const UNIT_FIELDS = ['key', 'code', 'name', 'sqm', 'maxPersons', 'units', 'longstayUnits',
-  'price30', 'price60', 'listed'];
+  'price60', 'listed'];
 const K1_ROWS = [
   ['classic', 'CLS', 'Classic Suite', 34, 2, 8, 0],
   ['business', 'BUS', 'Business Suite', 39, 2, 4, 4],
@@ -79,7 +79,7 @@ function sichtbar(html) {
 // Preiszahlen, die im HTML nie stehen duerfen: jeder Preis aus K1, jede Zahl mit
 // Tausender-Apostroph und jeder CHF-Betrag ab 100. CHF 10 fuer den Parkplatz bleibt erlaubt.
 function preisTreffer(html) {
-  const k1 = units.UNITS.flatMap((u) => [u.price30, u.price60]).filter((p) => p !== null);
+  const k1 = units.UNITS.flatMap((u) => [u.price60]).filter((p) => p !== null);
   const muster = [/\b\d{1,3}['’]\d{3}\b/g, /CHF\s*\d{3,}/g,
     new RegExp('\\b(' + [...new Set(k1)].join('|') + ')\\b', 'g')];
   return muster.flatMap((re) => html.match(re) || []);
@@ -183,17 +183,20 @@ test('K1: gelistet genau dann, wenn Einheiten fuer Longstay frei sind', () => {
   assert.deepEqual(units.UNITS.filter((u) => u.listed).map((u) => u.key), ['business', 'business-plus', 'sky']);
 });
 
-test('K1: gelistet heisst beide Preise gesetzt, 200 Abstand und mindestens 2100 ab 60 Naechten', () => {
+// Geaenderte Erwartung (Entscheid Bogdan 14.10.2026): Longstay erst ab 60 Naechten. Die Staffel
+// 30 bis 59 Naechte (price30) ist gestrichen, kuerzere Aufenthalte laufen zum Hoteltarif. Frueher
+// verlangte dieser Test beide Preise und 200 Abstand.
+test('K1: gelistet heisst Preis ab 60 Naechten gesetzt, mindestens 2100, und keine Staffel 30 bis 59', () => {
   for (const u of units.UNITS.filter((x) => x.listed)) {
-    assert.ok(Number.isInteger(u.price30) && Number.isInteger(u.price60), `${u.key}: Preis fehlt`);
-    assert.equal(u.price30 - u.price60, 200, `${u.key}: Abstand`);
+    assert.ok(Number.isInteger(u.price60), `${u.key}: Preis fehlt`);
     assert.ok(u.price60 >= 2100, `${u.key}: price60 unter 2100`);
   }
+  for (const u of units.UNITS) assert.ok(!('price30' in u), `${u.key}: price30 ist gestrichen`);
+  assert.doesNotMatch(ohneKommentare(unitsSrc), /price30/);
 });
 
 test('K1: nicht gelistet heisst kein Preis, und nur superior ist ohne Flaeche', () => {
   for (const u of units.UNITS.filter((x) => !x.listed)) {
-    assert.equal(u.price30, null, `${u.key}: price30`);
     assert.equal(u.price60, null, `${u.key}: price60`);
   }
   assert.deepEqual(units.UNITS.filter((u) => u.sqm === null).map((u) => u.key), ['superior']);
@@ -203,7 +206,7 @@ test('K1: Zuschlag, Naechte, Steuer, Waehrung und Version', () => {
   assert.deepEqual(Object.keys(units), ['UNITS', 'EXTRA_PERSON', 'MIN_NIGHTS', 'MAX_NIGHTS',
     'VAT_LABEL', 'CURRENCY', 'VERSION']);
   assert.equal(units.EXTRA_PERSON, 250);
-  assert.equal(units.MIN_NIGHTS, 30);
+  assert.equal(units.MIN_NIGHTS, 60); // Entscheid Bogdan 14.10.2026, vorher 30
   assert.equal(units.MAX_NIGHTS, 89);
   assert.equal(units.VAT_LABEL, '3.8 %');
   assert.equal(units.CURRENCY, 'CHF');
@@ -215,7 +218,7 @@ test('K1: keine Zimmernummer und keine Zahl ausser den gelisteten Preisen im Cod
   assert.doesNotMatch(code, /rooms/);
   assert.doesNotMatch(code, /['"]\d{2,3}['"]/, 'eine Zimmernummer sieht so aus');
   const vierstellig = [...new Set(code.match(/\b\d{4,}\b/g) || [])].sort();
-  const erlaubt = units.UNITS.filter((u) => u.listed).flatMap((u) => [u.price30, u.price60]);
+  const erlaubt = units.UNITS.filter((u) => u.listed).flatMap((u) => [u.price60]);
   assert.deepEqual(vierstellig, [...new Set(erlaubt)].map(String).sort());
 });
 
@@ -313,8 +316,9 @@ test('K5: die Pflichtmuster P1 bis P8 stehen je Sprache im Fixture und sind guel
     assert.deepEqual(Object.keys(dom.pflichtmuster[lang]), P_KEYS, lang);
     for (const p of P_KEYS) assert.doesNotThrow(() => new RegExp(dom.pflichtmuster[lang][p], 'i'));
   }
-  assert.match(dom.pflichtmuster.de.P1, /30 bis höchstens 89/);
-  assert.match(dom.pflichtmuster.en.P1, /30 to a maximum of 89/);
+  // Entscheid Bogdan 14.10.2026: ab 60 Naechten, vorher ab 30.
+  assert.match(dom.pflichtmuster.de.P1, /60 bis höchstens 89/);
+  assert.match(dom.pflichtmuster.en.P1, /60 to a maximum of 89/);
   assert.ok(dom.pflichtmuster.de.P7.includes(units.VAT_LABEL.replace('.', '\\.')));
   assert.ok(dom.pflichtmuster.en.P7.includes(units.VAT_LABEL.replace('.', '\\.')));
 });
