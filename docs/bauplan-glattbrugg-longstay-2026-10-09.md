@@ -237,7 +237,7 @@ und P8.
 
 | Nr | Deutsch | Englisch |
 |---|---|---|
-| P1 | Hotelaufenthalt von 30 bis höchstens 89 Nächten | Hotel stay of 30 to a maximum of 89 nights |
+| P1 | Hotelaufenthalt von 60 bis höchstens 89 Nächten | Hotel stay of 60 to a maximum of 89 nights |
 | P2 | Die Endreinigung ist inklusive | Final cleaning is included |
 | P3 | Bettwäsche und Handtücher liegen bei der Anreise bereit | Bed linen and towels are ready on arrival |
 | P4 | Reinigung und Wäschetausch während des Aufenthalts können Sie gegen Aufpreis dazubuchen | Cleaning and linen change during your stay can be booked at an extra charge |
@@ -254,6 +254,11 @@ und P8.
 | 15 | Zahlung im Voraus je 30 Tage | Payment in advance for each 30 days |
 | 16 | Firmen: ab vier Suiten Konditionen auf Anfrage | Companies: terms for four suites or more on request |
 | 17 | Telefon und Adresse aus K2 | Phone and address from K2 |
+| 18 | Kürzere Aufenthalte sind möglich, zum normalen Hoteltarif | Shorter stays are possible at the regular hotel rate |
+
+Nachtrag 14.10.2026 (Entscheid Bogdan): Longstay erst ab 60 Nächten, P1 lautete vorher „von 30
+bis höchstens 89 Nächten“. Die Staffel 30 bis 59 Nächte entfällt in K1; wer kürzer bleibt, wird
+nicht abgewiesen, zahlt aber den normalen Hoteltarif (Nr. 18).
 
 **Nicht behaupten:** Bewertungen und Sterne, Kaffee und Tee, Verfügbarkeit zu einem Datum,
 Antwortfrist, Storno-Regeln, Parkplatzgarantie, Waschsalon in der Nähe, jede Zahl ausser K1,

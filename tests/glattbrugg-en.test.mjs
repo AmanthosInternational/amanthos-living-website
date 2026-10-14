@@ -52,7 +52,7 @@ const sichtbar = (h) => h
 // Preiszahlen, die im HTML nie stehen duerfen: jeder Preis aus K1, jede Zahl mit
 // Tausender-Apostroph und jeder CHF-Betrag ab 100. "CHF 10" (Parkplatz) bleibt erlaubt.
 function preisTreffer(h) {
-  const k1 = units.UNITS.flatMap((u) => [u.price30, u.price60]).filter((p) => p !== null);
+  const k1 = units.UNITS.flatMap((u) => [u.price60]).filter((p) => p !== null);
   const muster = [/\b\d{1,3}['’]\d{3}\b/g, /CHF\s*\d{3,}/g,
     new RegExp('\\b(' + [...new Set(k1)].join('|') + ')\\b', 'g')];
   return muster.flatMap((re) => h.match(re) || []);
@@ -61,7 +61,7 @@ function preisTreffer(h) {
 // K7, Spalte Englisch (Faktenblatt im Bauplan). Nr 13 und 17 verweisen auf K1 und K2 und
 // stehen deshalb nicht als Satz hier.
 const K7_EN = {
-  P1: 'Hotel stay of 30 to a maximum of 89 nights',
+  P1: 'Hotel stay of 60 to a maximum of 89 nights', // Entscheid Bogdan 14.10.2026, vorher 30
   P2: 'Final cleaning is included',
   P3: 'Bed linen and towels are ready on arrival',
   P4: 'Cleaning and linen change during your stay can be booked at an extra charge',
@@ -77,7 +77,9 @@ const K7_EN = {
   // deutschen Seite steht sie in Leistungsliste und FAQ.
   14: 'No cleaning and no linen change during the stay',
   15: 'Payment in advance for each 30 days',
-  16: 'Companies: terms for four suites or more on request'
+  16: 'Companies: terms for four suites or more on request',
+  // Entscheid Bogdan 14.10.2026: kuerzer als 60 Naechte gilt der Hoteltarif.
+  18: 'Shorter stays are possible at the regular hotel rate'
 };
 const K7_TEXTE = Object.values(K7_EN).map((s) => s.toLowerCase());
 
@@ -182,7 +184,7 @@ test('Kriterium 2: Kopf in der Reihenfolge des Kontrakts (head_order)', () => {
 });
 
 test('Kriterium 2: Titel aus K7, Beschreibung aus K7-Aussagen, JSON-LD ohne Preis und Bewertung', () => {
-  assert.match(html, /<title>Long stay suites at Zurich Airport, up to 89 nights \| Amanthos Living<\/title>/);
+  assert.match(html, /<title>Long stay suites at Zurich Airport, 60 to 89 nights \| Amanthos Living<\/title>/);
   const beschreibung = attr(/<meta\b[^>]*\bname="description"[^>]*>/.exec(html)[0], 'content');
   for (const s of saetze(beschreibung.replace(/^Furnished suites in Glattbrugg, /, ''))) {
     assert.ok(istK7(s), `Beschreibung: "${s}" steht nicht in K7`);
@@ -254,7 +256,7 @@ test('Kriterium 3: gb-cards ist leer, gb-unit hat nur die leere Option, Dauer 1 
 test('Kriterium 3: kein Preis aus K1, kein CHF-Betrag ab 100, keine Zahl mit Tausenderzeichen (mit Gegenprobe)', () => {
   assert.deepEqual(preisTreffer(html), []);
   // Gegenprobe: die Erkennung schlaegt bei jedem Preis an und laesst den Parkplatz durch.
-  for (const k1 of units.UNITS.flatMap((u) => [u.price30, u.price60]).filter((p) => p !== null)) {
+  for (const k1 of units.UNITS.flatMap((u) => [u.price60]).filter((p) => p !== null)) {
     assert.ok(preisTreffer('<p>' + k1 + '</p>').length > 0, 'K1-Preis ' + k1 + ' wird nicht erkannt');
   }
   assert.ok(preisTreffer("<p>CHF 2'100</p>").length > 0);

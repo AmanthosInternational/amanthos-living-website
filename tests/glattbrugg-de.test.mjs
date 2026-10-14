@@ -113,7 +113,7 @@ test('Kopf: Reihenfolge der Elemente nach head_order, Titel und Beschreibung nic
   const pos = dom.head_order.map((s) => page.indexOf(s));
   pos.forEach((p, i) => assert.ok(p >= 0, `${dom.head_order[i]} fehlt`));
   for (let i = 1; i < pos.length; i++) assert.ok(pos[i] > pos[i - 1], `${dom.head_order[i]} steht zu frueh`);
-  assert.match(head, /<title>Suite auf Zeit am Flughafen Zürich: Longstay bis 89 Nächte \| Amanthos Living<\/title>/);
+  assert.match(head, /<title>Suite auf Zeit am Flughafen Zürich: Longstay 60 bis 89 Nächte \| Amanthos Living<\/title>/);
   assert.match(head, /<meta name="description" content="[^"]{60,}">/);
   assert.match(head, /<meta property="og:image" content="https:\/\/www\.amanthosliving\.com\/images\/zurich\/hero\.webp">/);
 });
@@ -225,8 +225,8 @@ test('Formular: Dauer kennt 1, 2, 3, Personen 1, 2, 3, nie ein Wert ueber 3', ()
 });
 
 test('Preise: kein Preis aus K1, kein CHF-Betrag ab 100, keine Zahl mit Tausender-Apostroph', () => {
-  const k1 = units.UNITS.flatMap((u) => [u.price30, u.price60]).filter((p) => p !== null);
-  assert.ok(k1.length >= 4);
+  const k1 = units.UNITS.flatMap((u) => [u.price60]).filter((p) => p !== null);
+  assert.ok(k1.length >= 3); // seit 14.10.2026 ein Preis je gelisteter Kategorie, vorher zwei
   for (const p of k1) assert.doesNotMatch(page, new RegExp('(?<![\\w.])' + p + '(?![\\w])'), `Preis ${p} im HTML`);
   assert.doesNotMatch(page, /CHF\s*\d{3,}/);
   assert.doesNotMatch(page, /\b\d{1,3}['’]\d{3}\b/);
@@ -239,7 +239,10 @@ test('Preise: kein Preis aus K1, kein CHF-Betrag ab 100, keine Zahl mit Tausende
 test('Einheit: der Aufenthalt zaehlt in Naechten, nie in Monaten', () => {
   assert.doesNotMatch(lesbar(page), /\bMonat(e|en|s)?\b/i);
   assert.doesNotMatch(page, /pro Monat|je Monat|monatlich/i);
-  assert.match(sichtbar(page), /30 bis 59 Nächte/);
+  // Entscheid Bogdan 14.10.2026: keine Longstay-Staffel 30 bis 59 mehr, kuerzer gilt der Hoteltarif.
+  assert.doesNotMatch(sichtbar(page), /30 bis 59 Nächte/);
+  assert.match(sichtbar(page), /Unter 60 Nächten \(Hoteltarif\)/);
+  assert.match(sichtbar(page), /Kürzere Aufenthalte sind möglich, zum normalen Hoteltarif\./);
   assert.match(sichtbar(page), /60 bis 75 Nächte/);
   assert.match(sichtbar(page), /bis höchstens 89 Nächte/);
 });

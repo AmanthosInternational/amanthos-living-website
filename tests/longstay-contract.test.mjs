@@ -324,9 +324,10 @@ test('K5: jedes getElementById-Literal in js/longstay-page.js steht im Fixture',
 
 const NEUTRAL = {
   de: { nav: 'Longstay', label: 'Longstay', title: 'Suite auf Zeit am Flughafen Zürich',
-    intro: 'Hotelaufenthalt von 30 bis höchstens 89 Nächten, 1 km zum Flughafen Zürich.' },
+    // Entscheid Bogdan 14.10.2026: Longstay ab 60 Naechten, vorher "von 30 bis".
+    intro: 'Hotelaufenthalt von 60 bis höchstens 89 Nächten, 1 km zum Flughafen Zürich.' },
   en: { nav: 'Long stay', label: 'Long stay', title: 'Long stay suites at Zurich Airport',
-    intro: 'Hotel stay of 30 to a maximum of 89 nights, 1 km to Zurich Airport.' }
+    intro: 'Hotel stay of 60 to a maximum of 89 nights, 1 km to Zurich Airport.' }
 };
 
 // Sucht den Block <div id="ls-alt" ...> und sein schliessendes </div> ueber die Verschachtelung.

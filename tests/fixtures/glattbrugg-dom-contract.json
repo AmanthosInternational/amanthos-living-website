@@ -54,7 +54,7 @@
     "gb-cards ist im HTML ein leerer Container; das Skript rendert die gelisteten Kategorien aus K1.",
     "gb-unit traegt im HTML nur die erste, leere Option; weitere Optionen fuellt das Skript aus K1.",
     "gb-arrival: min ist der laufende Monat, max der laufende Monat plus zwoelf (YYYY-MM); das Skript setzt beide, sie werden nicht gegen das Fixture geprueft.",
-    "gb-duration: 1 heisst 30 bis 59 Naechte, 2 heisst 60 bis 75 Naechte, 3 heisst bis hoechstens 89 Naechte (K3); nie ein Wert ueber 3.",
+    "gb-duration: 1 heisst unter 60 Naechten zum Hoteltarif (seit 14.10.2026 kein Longstay-Preis), 2 heisst 60 bis 75 Naechte, 3 heisst bis hoechstens 89 Naechte (K3); nie ein Wert ueber 3.",
     "gb-company-website ist der Honigtopf und steht in <div class=\"hp\" aria-hidden=\"true\">.",
     "gb-consent ist der Knopf im Footer und ruft window.amConsent.open().",
     "In <noscript> innerhalb von #suiten steht der Hinweis, dass Preise auf Anfrage genannt werden, mit Telefon und Adresse aus K2."
@@ -121,7 +121,7 @@
   "pflichtmuster_hinweis": "Regulaere Ausdruecke fuer die acht Pflichtaussagen P1 bis P8 aus K7. Geprueft wird ohne Gross- und Kleinschreibung gegen den sichtbaren Text der Seite: Skripte, Styles und Tags entfernt, &nbsp; als Leerzeichen, Leerraum zusammengezogen.",
   "pflichtmuster": {
     "de": {
-      "P1": "Hotelaufenthalt von 30 bis höchstens 89 Nächten",
+      "P1": "Hotelaufenthalt von 60 bis höchstens 89 Nächten",
       "P2": "Die Endreinigung ist inklusive",
       "P3": "Bettwäsche und Handtücher liegen bei der Anreise bereit",
       "P4": "Reinigung und Wäschetausch während des Aufenthalts können Sie gegen Aufpreis dazubuchen",
@@ -131,7 +131,7 @@
       "P8": "Im Haus gibt es keine Waschküche"
     },
     "en": {
-      "P1": "Hotel stay of 30 to a maximum of 89 nights",
+      "P1": "Hotel stay of 60 to a maximum of 89 nights",
       "P2": "Final cleaning is included",
       "P3": "Bed linen and towels are ready on arrival",
       "P4": "Cleaning and linen change during your stay can be booked at an extra charge",
