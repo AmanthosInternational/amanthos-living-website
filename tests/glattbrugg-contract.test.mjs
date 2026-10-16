@@ -186,10 +186,13 @@ test('K1: gelistet genau dann, wenn Einheiten fuer Longstay frei sind', () => {
 // Geaenderte Erwartung (Entscheid Bogdan 14.10.2026): Longstay erst ab 60 Naechten. Die Staffel
 // 30 bis 59 Naechte (price30) ist gestrichen, kuerzere Aufenthalte laufen zum Hoteltarif. Frueher
 // verlangte dieser Test beide Preise und 200 Abstand.
-test('K1: gelistet heisst Preis ab 60 Naechten gesetzt, mindestens 2100, und keine Staffel 30 bis 59', () => {
+// Geaenderte Erwartung (Entscheid Bogdan 16.10.2026): Preise rund 10 % tiefer, BUS 1890. Die
+// Untergrenze ist jetzt der Break-even je Suite von rund 1770 (amanthos-standortabgabe,
+// docs/research/glattbrugg-longstay-2026-09-29/05-synthese.md), vorher 2100.
+test('K1: gelistet heisst Preis ab 60 Naechten gesetzt, mindestens 1770, und keine Staffel 30 bis 59', () => {
   for (const u of units.UNITS.filter((x) => x.listed)) {
     assert.ok(Number.isInteger(u.price60), `${u.key}: Preis fehlt`);
-    assert.ok(u.price60 >= 2100, `${u.key}: price60 unter 2100`);
+    assert.ok(u.price60 >= 1770, `${u.key}: price60 unter 1770`);
   }
   for (const u of units.UNITS) assert.ok(!('price30' in u), `${u.key}: price30 ist gestrichen`);
   assert.doesNotMatch(ohneKommentare(unitsSrc), /price30/);
