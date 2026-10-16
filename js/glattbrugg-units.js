@@ -11,8 +11,9 @@
  * price60 gilt fuer 60 bis 89 Naechte. Seit dem Entscheid vom 14.10.2026 gibt es
  * keinen Longstay-Preis fuer 30 bis 59 Naechte mehr: kuerzere Aufenthalte laufen zum
  * normalen Hoteltarif und werden hier nicht gefuehrt. Seit dem Entscheid vom 16.10.2026
- * liegen die Preise rund 10 % tiefer (vorher 2100, 2240, 2440): Longstay kostet je
- * belegter Suite kaum etwas, eine zusaetzliche Buchung zaehlt mehr als der Preisnachlass.
+ * liegen die Preise rund 5 % tiefer (vorher 2100, 2240, 2440); -10 % wurde am selben Tag
+ * verworfen, weil es bei gleicher Belegung rund 22000 bis 25000 im Jahr kostet. Untergrenze je
+ * Suite bei heutiger Miete rund 1750 bis 1820 (amanthos-standortabgabe, 02-zahlen/modell.py).
  *
  * listed steuert, was Seite und Auswahlfeld zeigen. Eine nicht gelistete
  * Kategorie traegt bewusst keinen Preis (null): die Zahl kommt erst mit dem
@@ -34,7 +35,7 @@
     {
       key: 'business', code: 'BUS', name: 'Business Suite',
       sqm: 39, maxPersons: 2, units: 4, longstayUnits: 4,
-      price60: 1890, listed: true
+      price60: 1990, listed: true
     },
     {
       key: 'superior', code: 'SUPS', name: 'Superior Suite',
@@ -44,12 +45,12 @@
     {
       key: 'business-plus', code: 'BUPS', name: 'Business Plus Suite',
       sqm: 41, maxPersons: 3, units: 4, longstayUnits: 4,
-      price60: 2020, listed: true
+      price60: 2130, listed: true
     },
     {
       key: 'sky', code: 'SKS', name: 'Sky Suite',
       sqm: 38, maxPersons: 3, units: 2, longstayUnits: 2,
-      price60: 2200, listed: true
+      price60: 2320, listed: true
     }
   ];
 

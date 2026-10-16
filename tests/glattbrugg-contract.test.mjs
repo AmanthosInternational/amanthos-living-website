@@ -186,7 +186,7 @@ test('K1: gelistet genau dann, wenn Einheiten fuer Longstay frei sind', () => {
 // Geaenderte Erwartung (Entscheid Bogdan 14.10.2026): Longstay erst ab 60 Naechten. Die Staffel
 // 30 bis 59 Naechte (price30) ist gestrichen, kuerzere Aufenthalte laufen zum Hoteltarif. Frueher
 // verlangte dieser Test beide Preise und 200 Abstand.
-// Geaenderte Erwartung (Entscheid Bogdan 16.10.2026): Preise rund 10 % tiefer, BUS 1890. Die
+// Geaenderte Erwartung (Entscheid Bogdan 16.10.2026): Preise rund 5 % tiefer, BUS 1990. Die
 // Untergrenze ist jetzt der Break-even je Suite von rund 1770 (amanthos-standortabgabe,
 // docs/research/glattbrugg-longstay-2026-09-29/05-synthese.md), vorher 2100.
 test('K1: gelistet heisst Preis ab 60 Naechten gesetzt, mindestens 1770, und keine Staffel 30 bis 59', () => {
