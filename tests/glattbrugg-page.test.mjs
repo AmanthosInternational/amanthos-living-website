@@ -110,22 +110,22 @@ test('cardModel liefert fuer jede gelistete Kategorie in de und en die Preiszeil
   }
 });
 
-// Geaenderte Erwartung (Entscheid Bogdan 16.10.2026): Preise rund 10 % tiefer, BUPS 2020, BUS 1890.
+// Geaenderte Erwartung (Entscheid Bogdan 16.10.2026): Preise rund 5 % tiefer, BUPS 2130, BUS 1990.
 test('cardModel: die Texte stehen in der Sprache der Seite', () => {
   const de = page.cardModel(byKey('business-plus'), 'de');
   const en = page.cardModel(byKey('business-plus'), 'en');
-  assert.equal(de.lines[0].priceText, "CHF 2'020 je 30 Nächte");
-  assert.equal(de.lines[0].nightText, 'rund CHF 67 pro Nacht');
-  assert.equal(en.lines[0].priceText, "CHF 2'020 per 30 nights");
-  assert.equal(en.lines[0].nightText, 'about CHF 67 per night');
+  assert.equal(de.lines[0].priceText, "CHF 2'130 je 30 Nächte");
+  assert.equal(de.lines[0].nightText, 'rund CHF 71 pro Nacht');
+  assert.equal(en.lines[0].priceText, "CHF 2'130 per 30 nights");
+  assert.equal(en.lines[0].nightText, 'about CHF 71 per night');
   assert.equal(de.lines[0].label, '60 bis 89 Nächte');
   assert.equal(en.lines[0].label, '60 to 89 nights');
-  assert.equal(page.cardModel(byKey('business'), 'de').lines[0].priceText, "CHF 1'890 je 30 Nächte");
-  assert.equal(page.cardModel(byKey('business'), 'de').lines[0].nightText, 'rund CHF 63 pro Nacht');
+  assert.equal(page.cardModel(byKey('business'), 'de').lines[0].priceText, "CHF 1'990 je 30 Nächte");
+  assert.equal(page.cardModel(byKey('business'), 'de').lines[0].nightText, 'rund CHF 66 pro Nacht');
   // Gegenprobe: kein Betrag der gestrichenen Staffel 30 bis 59 Naechte erscheint auf einer Karte.
   for (const u of listed) {
     const texte = JSON.stringify(page.cardModel(u, 'de'));
-    for (const alt of ["2'300", "2'640", "2'100", "2'240", "2'440"]) assert.ok(!texte.includes(alt), `${u.key}: ${alt}`);
+    for (const alt of ["2'300", "2'640", "2'100", "2'240", "2'440", "1'890", "2'020"]) assert.ok(!texte.includes(alt), `${u.key}: ${alt}`);
   }
 });
 
