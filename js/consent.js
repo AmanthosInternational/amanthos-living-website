@@ -255,7 +255,46 @@
     } catch (e) { /* egal */ }
   }
 
+  /*
+   * Erweiterte Conversions fuer Google Ads (20.10.2026, Regel KS-23).
+   *
+   * Mail und Telefon gehen nur an gtag, wenn die gespeicherte Wahl 'granted'
+   * ist: nur dann steht ad_user_data auf granted (applyState). gtag hasht die
+   * Werte selbst (SHA-256) vor dem Versand. Nichts davon wird geloggt.
+   * Telefon in E.164; eine nationale Nummer mit fuehrender 0 gilt als Schweiz.
+   */
+  function adUserDataGranted() {
+    return readStored() === 'granted';
+  }
+
+  function normEmail(v) {
+    var s = String(v == null ? '' : v).trim().toLowerCase();
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s) ? s : '';
+  }
+
+  function normPhone(v) {
+    var s = String(v == null ? '' : v).replace(/\(0\)/g, '').replace(/[\s().\/-]/g, '');
+    if (/^00/.test(s)) { s = '+' + s.slice(2); } else if (/^0[1-9]/.test(s)) { s = '+41' + s.slice(1); }
+    return /^\+[1-9]\d{7,14}$/.test(s) ? s : '';
+  }
+
+  function setAdsUserData(email, phone) {
+    try {
+      if (!adUserDataGranted()) return false;
+      var data = {};
+      var e = normEmail(email);
+      var p = normPhone(phone);
+      if (e) data.email = e;
+      if (p) data.phone_number = p;
+      if (!e && !p) return false;
+      gtag('set', 'user_data', data);
+      return true;
+    } catch (err) { return false; }
+  }
+
   var api = {
+    adUserDataGranted: adUserDataGranted,
+    setAdsUserData: setAdsUserData,
     get: function () {
       return readStored();
     },

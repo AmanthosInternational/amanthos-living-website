@@ -206,6 +206,8 @@
   function leadEvents(payload) {
     ga4('generate_lead', { lead_form: 'nyon', unit: payload.unit });
     if (granted() && str(CFG.ADS_SEND_TO) && typeof window.gtag === 'function') {
+      // Erweiterte Conversions: consent.js prueft ad_user_data und normalisiert.
+      try { if (window.amConsent && window.amConsent.setAdsUserData) { window.amConsent.setAdsUserData(payload.email, payload.phone); } } catch (e) { /* nie werfen */ }
       try { window.gtag('event', 'conversion', { send_to: CFG.ADS_SEND_TO }); } catch (e) { /* nie werfen */ }
     }
     if (granted() && typeof window.fbq === 'function') {
