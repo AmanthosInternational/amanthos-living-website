@@ -185,12 +185,15 @@
     try { if (typeof window.gtag === 'function') { window.gtag('event', name, params || {}); } } catch (e) { /* nie werfen */ }
   }
 
-  /** Lead an alle Kanaele nach 200, ohne Personendaten; Ads und Meta nur mit Einwilligung. */
+  /** Lead an alle Kanaele nach 200; Ads und Meta nur mit Einwilligung, Mail und Telefon nur gehasht an Ads. */
   function leadEvents(payload, cfg) {
     var c = cfg || CFG;
     ga4('generate_lead', { lead_form: 'glattbrugg', unit: payload.unit,
       duration_months: payload.duration_months, locale: payload.locale });
-    if (granted() && str(c.ADS_SEND_TO)) { ga4('conversion', { send_to: c.ADS_SEND_TO }); }
+    if (granted() && str(c.ADS_SEND_TO)) {
+      try { if (window.amConsent && window.amConsent.setAdsUserData) { window.amConsent.setAdsUserData(payload.email, payload.phone); } } catch (e) { /* nie werfen */ }
+      ga4('conversion', { send_to: c.ADS_SEND_TO });
+    }
     try {
       if (granted() && typeof window.fbq === 'function') {
         window.fbq('track', 'Lead', { content_name: c.CONTENT_NAME }, { eventID: String(payload.event_id) });

@@ -80,10 +80,16 @@ test('ungueltige Mail und fehlendes Telefon setzen nichts', () => {
 });
 
 test('Formularskripte setzen user_data direkt vor dem conversion-Event', () => {
-  for (const name of ['grenchen-page', 'nyon-page', 'longstay-page']) {
+  const CONV = {
+    'grenchen-page': "window.gtag('event', 'conversion'",
+    'nyon-page': "window.gtag('event', 'conversion'",
+    'longstay-page': "window.gtag('event', 'conversion'",
+    'glattbrugg-page': "ga4('conversion'"
+  };
+  for (const [name, marke] of Object.entries(CONV)) {
     const src = readFileSync(join(root, 'js', name + '.js'), 'utf8');
     const set = src.indexOf('window.amConsent.setAdsUserData(payload.email, payload.phone)');
-    const conv = src.indexOf("window.gtag('event', 'conversion'");
+    const conv = src.indexOf(marke);
     assert.ok(set > 0 && conv > set, name);
     assert.ok(src.slice(set, conv).split('\n').length <= 2, `${name}: Aufruf steht unmittelbar davor`);
   }
@@ -108,4 +114,27 @@ test('jede Seite konfiguriert den Ads-Tag mit allow_enhanced_conversions', () =>
     assert.ok(html.includes("gtag('config', 'AW-702540316', { allow_enhanced_conversions: true });"), p);
   }
   assert.ok(treffer >= 13, `nur ${treffer} Seiten mit Ads-Tag gefunden`);
+});
+
+test('glattbrugg: leadEvents gibt Mail und Telefon vor der Conversion weiter, ohne Einwilligung nicht', async () => {
+  const { createRequire } = await import('node:module');
+  const page = createRequire(import.meta.url)(join(root, 'js', 'glattbrugg-page.js'));
+  const payload = page.buildPayload({ name: 'Redacted', email: 'a@example.invalid', phone: '079 000 00 00' });
+  for (const wahl of ['granted', 'denied']) {
+    const spur = [];
+    globalThis.window = {
+      gtag: (...a) => spur.push(['gtag', a[1]]),
+      amConsent: { get: () => wahl, setAdsUserData: (e, p) => spur.push(['user_data', e, p]) }
+    };
+    try { page.leadEvents(payload, { ADS_SEND_TO: 'AW-000/test' }); } finally { delete globalThis.window; }
+    const i = spur.findIndex((s) => s[0] === 'user_data');
+    const k = spur.findIndex((s) => s[0] === 'gtag' && s[1] === 'conversion');
+    if (wahl === 'granted') {
+      assert.deepEqual(spur[i], ['user_data', 'a@example.invalid', '079 000 00 00']);
+      assert.ok(i >= 0 && k > i, 'user_data vor conversion');
+    } else {
+      assert.equal(i, -1);
+      assert.equal(k, -1);
+    }
+  }
 });
